@@ -2,6 +2,8 @@
   <h1>Hello World!</h1>
   <router-link to="/dashboard">Dashboard</router-link>
   <router-link to="/login">login</router-link>
+  <router-link to="/register" class="register-link">Register</router-link>
+
 
   <div>
     <router-view></router-view>

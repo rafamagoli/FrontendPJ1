@@ -64,7 +64,7 @@
   <style scoped>
   /* Fundo da página */
   .login-page {
-    background-image: url('public/images/main_background.webp');
+    background-image: url('public/main_background.webp');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -77,18 +77,7 @@
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   
-  /* Overlay */
-  .login-page::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: -1;
-  }
-  
+
   /* Container central */
   .login-container {
     display: flex;
@@ -151,6 +140,7 @@
     padding: 10px 20px;
     font-size: 16px;
     border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Suave sombra */
     margin-top: 1.5rem; /* Espaço entre o botão e os campos acima */
   }
   
