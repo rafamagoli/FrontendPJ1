@@ -1,63 +1,38 @@
 <template>
-  <h1>Hello!</h1>
-  <router-link to="/dashboard">Dashboard</router-link>
-  <!-- <router-link to="/login">Login</router-link>
-  <router-link to="/register" class="register-link">Register</router-link>
- -->
+  <!-- Navigation Links -->
+  <div id="nav">
+    <router-link to="/dashboard">Dashboard</router-link>
+    <router-link to="/login">Login</router-link>
+    <router-link to="/register" class="register-link">Register</router-link>
+  </div>
 
-  
-
+  <!-- Main App Container -->
   <div id="app">
-    <header>
-
-    </header>
-
     <main>
+      <!-- Dynamic Component Based on Routes -->
       <router-view></router-view>
     </main>
-
-    <!-- <footer>
-      <p>&copy; 2024 ABR Technology. All rights reserved.</p>
-    </footer> -->
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: "App",
 };
 </script>
 
-<style scoped>
-#app {
-  font-family: open sans-serif, sans-serif;
-  text-align: center;
+<style>
+/* Global Reset to Remove Default Margins and Paddings */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Faz a sidebar não ir pra cima do main content */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit; /* Inherits box-sizing for all elements */
 }
 
-
-.logo-container {
-  text-align: center;
-}
-
-.logo {
-  width: 150px;
-}
-
-h1 {
-  margin-top: 1rem;
-  font-size: 2rem;
-}
-
-h2 {
-  font-size: 1.2rem;
-  color: #555;
-}
-
-/*footer {
-  background-color: #f4f4f4;
-  padding: 1rem;
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-}*/
 </style>

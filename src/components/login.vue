@@ -37,7 +37,6 @@
             <button type="submit" class="btn btn-primary w-100">Login</button>
           </div>
           </form>
-  
           <!-- Register link -->
           <p class=" center text-center mt-3">
             <router-link to="/register" class="register-link center">Are you an admin? Register here</router-link>

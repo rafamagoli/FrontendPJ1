@@ -13,7 +13,8 @@
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/vue3": "^6.1.15",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "vue3-calendar": "^0.1.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
