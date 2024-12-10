@@ -3,7 +3,7 @@
       <!-- Login Card -->
       <div class="login-container">
         <div class="card p-4 shadow-sm">
-          <h2 class="card-title text-center mb-4"><strong>Login</strong></h2>
+          <h2 class="card-title center text-center mb-4"><strong>Login</strong></h2>
           <form @submit.prevent="handleLogin">
             <!-- Username field -->
             <div class="mb-3">
@@ -32,12 +32,14 @@
             </div>
   
             <!-- Login button -->
+             <div class="center">
             <button type="submit" class="btn btn-primary w-100">Login</button>
+          </div>
           </form>
   
           <!-- Register link -->
-          <p class="text-center mt-3">
-            <router-link to="/register" class="register-link">Are you an admin? Register here</router-link>
+          <p class=" center text-center mt-3">
+            <router-link to="/register" class="register-link center">Are you an admin? Register here</router-link>
           </p>
         </div>
       </div>
@@ -62,9 +64,12 @@
   </script>
   
   <style scoped>
+  .center {
+    text-align: center;
+  }
   /* Fundo da página */
   .login-page {
-    background-image: url('public/main_background.webp');
+    background-image: url('/main_background.webp');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
