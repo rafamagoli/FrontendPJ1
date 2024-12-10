@@ -1,13 +1,11 @@
 <template>
-  <h1>Hello World!</h1>
+  <h1>Hello!</h1>
   <router-link to="/dashboard">Dashboard</router-link>
-  <router-link to="/login">login</router-link>
+  <!-- <router-link to="/login">Login</router-link>
   <router-link to="/register" class="register-link">Register</router-link>
+ -->
 
-
-  <div>
-    <router-view></router-view>
-  </div>
+  
 
   <div id="app">
     <header>
@@ -18,9 +16,9 @@
       <router-view></router-view>
     </main>
 
-    <footer>
+    <!-- <footer>
       <p>&copy; 2024 ABR Technology. All rights reserved.</p>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
@@ -55,11 +53,11 @@ h2 {
   color: #555;
 }
 
-footer {
+/*footer {
   background-color: #f4f4f4;
   padding: 1rem;
   position: fixed;
   width: 100%;
   bottom: 0;
-}
+}*/
 </style>
