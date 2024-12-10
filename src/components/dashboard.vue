@@ -201,7 +201,7 @@ h3#username {
 .dashboard-link {
   display: block;
   padding: 10px 15px;
-  font-size: ;
+  font-size: 1.5rem;
   background-color: #fff;
   color: #000;
   margin-bottom: 15px; 
