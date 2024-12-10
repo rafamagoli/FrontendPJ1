@@ -3,7 +3,7 @@
     <!-- Register Card -->
     <div class="register-container">
       <div class="card p-4 shadow-sm">
-        <h2 class="card-title text-center mb-4"><strong>Register</strong></h2>
+        <h2 class="card-title center mb-4"><strong>Register</strong></h2>
         <form @submit.prevent="handleRegister">
           <!-- Username field -->
           <div class="mb-3">
@@ -66,8 +66,8 @@
         </form>
 
         <!-- Back to Login link -->
-        <p class="text-center mt-3">
-          <router-link to="/" class="login-link">Back to Login</router-link>
+        <p class="text-center center mt-3">
+          <router-link to="/" class="login-link center">Back to Login</router-link>
         </p>
       </div>
     </div>
@@ -101,6 +101,10 @@ export default {
 </script>
 
 <style scoped>
+
+.center{
+  text-align: center;
+}
 /* Background styling */
 .register-page {
   background-image: url("public/main_background.webp");
@@ -137,7 +141,6 @@ export default {
 
 /* Card title */
 .card-title {
-  text-align: center;
   font-size: 40px;
   margin-bottom: 1rem;
   color: #000000;
