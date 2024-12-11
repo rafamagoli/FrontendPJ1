@@ -4,6 +4,9 @@
     <router-link to="/dashboard">Dashboard</router-link>
     <router-link to="/login">Login</router-link>
     <router-link to="/register" class="register-link">Register</router-link>
+    <router-link to="/employees" class="employees-link">Employees</router-link>
+    <router-link to="/addEmployee" class="addEmployee-link">Add Employee</router-link>
+
   </div>
 
   <!-- Main App Container -->
