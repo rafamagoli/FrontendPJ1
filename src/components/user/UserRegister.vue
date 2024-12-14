@@ -107,7 +107,7 @@ export default {
 }
 /* Background styling */
 .register-page {
-  background-image: url("public/main_background.webp");
+  background-image: url("/main_background.webp");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

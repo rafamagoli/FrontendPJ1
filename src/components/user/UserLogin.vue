@@ -64,6 +64,7 @@
   </script>
   
   <style scoped>
+  
   .center {
     text-align: center;
   }
