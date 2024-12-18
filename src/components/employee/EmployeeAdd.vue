@@ -1,111 +1,10 @@
-<template>
-  <div id="addEmployee-page">
-    <div class="main-content">
-
-      <!-- Cards Section -->
-      <p></p>
-      <h1 id="page-title">Add Employee</h1>
-      <!-- Add Employee Form -->
-      <section class="add-employee-form">
-        <h2>Add New Employee</h2>
-        <form @submit.prevent="handleSubmit">
-          <!-- Name -->
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" v-model="employee.name" required />
-          </div>
-
-          <!-- Department -->
-          <div class="form-group">
-            <label for="department">Department</label>
-            <input
-              type="text"
-              id="department"
-              v-model="employee.department"
-              required
-            />
-          </div>
-
-          <!-- Username -->
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              v-model="employee.username"
-              required
-            />
-          </div>
-
-          <!-- Balance -->
-          <div class="form-group">
-            <label for="balance">Balance</label>
-            <input
-              type="text"
-              id="balance"
-              v-model="employee.balance"
-              disabled
-            />
-          </div>
-
-          <!-- Password -->
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              v-model="employee.password"
-              required
-            />
-          </div>
-
-          <!-- Confirm Password -->
-          <div class="form-group">
-            <label for="confirm-password">Confirm Password</label>
-            <input
-              type="password"
-              id="confirm-password"
-              v-model="employee.confirmPassword"
-              required
-            />
-          </div>
-
-          <!-- NIF -->
-          <div class="form-group">
-            <label for="nif">NIF</label>
-            <input type="text" id="nif" v-model="employee.nif" required />
-          </div>
-
-          <!-- Role -->
-          <div class="form-group">
-            <label for="role">Role</label>
-            <select id="role" v-model="employee.role" required>
-              <option value="" disabled>Select a role</option>
-              <option value="Employee">Employee</option>
-              <option value="HR Manager">HR Manager</option>
-              <option value="Canteen Manager">Canteen Manager</option>
-              <option value="Inactive">Inactive</option>
-            </select>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="form-actions">
-            <button type="button" class="cancel-button" @click="cancel">
-              Cancel
-            </button>
-            <button type="submit" class="create-button">Create</button>
-          </div>
-        </form>
-      </section>
-    </div>
-  </div>
-</template>
-
 <script>
-/* PADRÃO DA ESTRUTURA DA PÁGINA */
-
+import EmployeeAddFormInput from './EmployeeAddFormInput.vue';
 export default {
-  data() {
+  components: {
+    EmployeeAddFormInput
+  },
+    data() {
     return {
       //Username
       /* PADRÃO DA ESTRUTURA DA PÁGINA */
@@ -175,8 +74,66 @@ export default {
   },
 };
 </script>
+<template>
+  <div id="addEmployee-page">
+    <div class="main-content">
 
-<style scoped>
+      <!-- Cards Section -->
+      <p></p>
+      <h1 id="page-title">Add Employee</h1>
+      <!-- Add Employee Form -->
+      <section class="add-employee-form">
+        <h2>Add New Employee</h2>
+        <form @submit.prevent="handleSubmit">
+          <!-- Name -->
+
+          <EmployeeAddFormInput name="Name" identifier="name" v-model="employee.name"/>
+          <!--
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" v-model="employee.name" required />
+          </div>
+          -->
+          <!-- Department -->
+          <EmployeeAddFormInput identifier="department" name="Department" v-model="employee.department"/>
+          <!-- Username -->
+          <EmployeeAddFormInput identifier="username" name="Username" v-model="employee.username"/>
+          <!-- Balance -->
+          <EmployeeAddFormInput identifier="balance" name="Balance" v-model="employee.balance"/> 
+          <!-- Password -->
+          <EmployeeAddFormInput identifier="password" name="Password" v-model="employee.password" type="password"/>
+          <!-- Confirm Password -->
+          <EmployeeAddFormInput identifier="confirm-password" name="Confirm Password" v-model="employee.confirmPassword" type="password"/>
+          <!-- NIF -->
+          <EmployeeAddFormInput identifier="nif" name="NIF" v-model="employee.nif" />
+          <!-- Role -->
+          <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role" v-model="employee.role" required>
+              <option value="" disabled>Select a role</option>
+              <option value="Employee">Employee</option>
+              <option value="HR Manager">HR Manager</option>
+              <option value="Canteen Manager">Canteen Manager</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <button type="button" class="cancel-button" @click="cancel">
+              Cancel
+            </button>
+            <button type="submit" class="create-button">Create</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+</template>
+
+
+
+<style>
 
 /* Add Employee Form Styling */
 .add-employee-form {
