@@ -7,6 +7,7 @@ import UserRegister from "./components/user/UserRegister.vue";
 import EmployeeList from "./components/employee/EmployeeList.vue";
 import EmployeeAdd from "./components/employee/EmployeeAdd.vue";
 import DefaultPageLayout from "./core/components/DefaultPageLayout.vue";
+import TaskList from "./components/task/TaskList.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -41,6 +42,12 @@ const router = createRouter({
           path: "employee/add",
           component: EmployeeAdd,
           meta: { allowedRoles: ["admin", "manager"] },
+        },
+        {
+          name: "task-list",
+          path: "task/list",
+          component: TaskList,
+          meta: { allowedRoles: ["admin"] },
         },
       ],
     },

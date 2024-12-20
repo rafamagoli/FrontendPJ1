@@ -6,6 +6,7 @@
   <router-link :to="{ name: 'rota-default'}">rota-default</router-link>
   <router-link :to="{ name: 'employee-list'}">employee-list</router-link>
   <router-link :to="{ name: 'employee-add'}">employee-add</router-link>
+  <router-link :to="{ name: 'task-list'}">task-list</router-link>
 
 </div>
 

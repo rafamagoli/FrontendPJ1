@@ -164,6 +164,7 @@ h3#username {
 }
 
 .logout-button {
+  border-radius: 10px;
   padding: 5px 10px; /* Button padding */
   background-color: rgb(0, 0, 0); /* Black background */
   color: white; /* White text */
@@ -176,7 +177,23 @@ h3#username {
   background-color: #a4a4a4;
 }
 
-/* Cards grid layout */
+.cancel-button,
+  .create-button {
+    width: 48%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #000000;
+    color: white;
+  }
+  
+  .cancel-button:hover,
+  .create-button:hover {
+    background: rgb(158, 158, 158);
+  }
+
+/****** Cards grid layout ******/
 .cards {
   display: grid; /* Use CSS grid */
   grid-template-columns: repeat(

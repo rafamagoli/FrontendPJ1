@@ -6,11 +6,9 @@ export default {
   },
     data() {
     return {
-      //Username
-      /* PADRÃO DA ESTRUTURA DA PÁGINA */
       /* PADRÃO DA ESTRUTURA DA PÁGINA ABAIXO */
       userName: "Bulma Garcia",
-      /* PADRÃO DA ESTRUTURA DA PÁGINA ACIMA */
+      /* FIM DO PADRÃO DA ESTRUTURA DA PÁGINA */
 
       employee: {
         name: "",
@@ -80,7 +78,6 @@ export default {
 
       <!-- Cards Section -->
       <p></p>
-      <h1 id="page-title">Add Employee</h1>
       <!-- Add Employee Form -->
       <section class="add-employee-form">
         <h2>Add New Employee</h2>
@@ -184,6 +181,7 @@ export default {
 
 .cancel-button,
 .create-button {
+  border-radius: 10px;
   width: 48%;
   padding: 10px;
   font-size: 1rem;
