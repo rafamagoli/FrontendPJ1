@@ -30,10 +30,10 @@ export default {
         return;
       }
       console.log("Employee created:", this.employee);
-      this.$router.push("/employeelist"); // Redirect to employees page
+      this.$router.push("/employee/list"); // Redirect to employees page
     },
     cancel() {
-      this.$router.push("/employees");
+      this.$router.push("/employee/list");
     },
 
 

@@ -15,4 +15,16 @@
 <style>
 </style>
 <script>
+export default {
+  methods: {
+    logout() {
+      console.log("You have been logged out!");
+      this.$router.push("/user/login");
+    },
+    toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.classList.toggle("open");
+    },
+  },
+};
 </script>

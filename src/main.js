@@ -12,6 +12,9 @@ import DefaultPageLayout from "./core/components/DefaultPageLayout.vue";
 import DepartmentEdit from "./components/department/DepartmentEdit.vue";
 import DepartmentDetail from "./components/department/DepartmentDetail.vue";
 import TaskList from "./components/task/TaskList.vue";
+import TaskAdd from "./components/task/TaskAdd.vue";
+import TaskUpdate from "./components/task/TaskUpdate.vue";
+
 
 const router = createRouter({
   history: createWebHistory(),
@@ -76,6 +79,18 @@ const router = createRouter({
           name: "task-list",
           path: "task/list",
           component: TaskList,
+          meta: { allowedRoles: ["admin"] },
+        },
+        {
+          name: "task-add",
+          path: "task/add",
+          component: TaskAdd,
+          meta: { allowedRoles: ["admin"] },
+        },
+        {
+          name: "task-update",
+          path: "task/update",
+          component: TaskUpdate,
           meta: { allowedRoles: ["admin"] },
         },
       ],

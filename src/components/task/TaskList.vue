@@ -20,12 +20,18 @@
           <div class="task-list">
             <ul>
               <li v-for="task in filteredTasks" :key="task.id">
+                <!-- Checkbox -->
                 <input
                   type="checkbox"
                   :id="'task-' + task.id"
                   @change="markAsCompleted(task)"
+                  class="task-checkbox"
+                  :checked="task.completed"
                 />
-                <label :for="'task-' + task.id">{{ task.title }}</label>
+                <!-- Task Title -->
+                <span class="task-title" @click="goToUpdateTask(task)">
+                  {{ task.title }}
+                </span>
               </li>
             </ul>
           </div>
@@ -82,10 +88,41 @@ export default {
   },
   methods: {
     markAsCompleted(task) {
-      task.completed = true;
+      task.completed = !task.completed;
     },
     goToAddTask() {
-      this.$router.push("/addTask");
+      this.$router.push("/task/add");
+    },
+    goToUpdateTask(task) {
+      this.$router.push({
+        name: "task-update",
+        query: {
+          id: task.id, // Mudar quando tivermos as APIs integradas
+          title: task.title, // Add `title` if it’s relevant
+          employee: task.employee || "", // Add `employee` if it’s relevant
+          description: task.description,
+          limitDate: task.limitDate || "",
+          completed: task.completed,
+        },
+      });
+    },
+    created() {
+      const { id, title, employee, description, limitDate, completed } =
+        this.$route.query;
+
+      if (id && title && description) {
+        this.task = {
+          id: parseInt(id, 10),
+          title,
+          employee,
+          description,
+          limitDate,
+          completed: completed === "true", // Convert string to boolean
+        };
+      } else {
+        console.error("No task data received. Redirecting...");
+        this.$router.push("/task/list");
+      }
     },
   },
 };
@@ -129,6 +166,7 @@ export default {
   border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Space between checkbox and title */
 }
 
 .task-list li:last-child {
@@ -136,7 +174,18 @@ export default {
 }
 
 .task-list input[type="checkbox"] {
-  margin-right: 10px; /* aumenta a distância entre a checkbox e o texto */
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.task-title {
+  flex: 1; /* Ensures the title takes the remaining space */
+  cursor: pointer;
+  color: #000000;
+}
+
+.task-title:hover {
+  text-decoration: underline;
 }
 
 .completed-tasks-card ul {
