@@ -9,7 +9,6 @@
   <router-link :to="{ name: 'department-list'}">department-list</router-link>
   <router-link :to="{ name: 'department-add'}">department-add</router-link>
   <router-link :to="{ name: 'department-edit'}">department-edit</router-link>
-
 </div>
 
   <div id="app">

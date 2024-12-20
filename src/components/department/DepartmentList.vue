@@ -58,19 +58,17 @@ export default {
         },
     },
     methods: {
-        goToAddDepartment() {
-            this.$router.push("/department/add");
-        },
-        handleDepartmentClick(department) {
-            console.log('Clicked department:', department.name);
-            // You can add navigation to department details page here
-            // this.$router.push(`/department/${department.id}`);
-        },
-        logout() {
-            console.log("You have been logged out!");
-            this.$router.push("/login");
-        },
+    goToAddDepartment() {
+        this.$router.push("/department/add");
     },
+    handleDepartmentClick(department) {
+        this.$router.push(`/department/${department.id}`);
+    },
+    logout() {
+        console.log("You have been logged out!");
+        this.$router.push("/login");
+    },
+},
 };
 </script>
 

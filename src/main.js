@@ -10,6 +10,7 @@ import DepartmentList from "./components/department/DepartmentList.vue";
 import DepartmentAdd from "./components/department/DepartmentAdd.vue";
 import DefaultPageLayout from "./core/components/DefaultPageLayout.vue";
 import DepartmentEdit from "./components/department/DepartmentEdit.vue";
+import DepartmentDetail from "./components/department/DepartmentDetail.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -19,7 +20,7 @@ const router = createRouter({
       name: "user-register",
       path: "/user/register",
       component: UserRegister,
-      meta: { allowedRoles: ["admin"] },
+      meta: { },
     },
     {
       name: "rota-default",
@@ -63,6 +64,13 @@ const router = createRouter({
           component: DepartmentEdit,
           meta: { allowedRoles: ["admin", "manager"] },
         },
+        {
+          name: "department-detail",
+          path: "/department/:id",
+          component:DepartmentDetail,
+          meta: { allowedRoles: ["admin", "manager"] },
+        },
+        
       ],
     },
   ],
