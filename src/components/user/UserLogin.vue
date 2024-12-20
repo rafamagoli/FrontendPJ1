@@ -10,6 +10,8 @@ export default {
     handleLogin() {
       console.log("Username:", this.username);
       console.log("Password:", this.password);
+      this.$router.push("/user/dashboard");
+
     },
   },
 };
@@ -52,7 +54,7 @@ export default {
 
           <!-- Login button -->
           <div class="center">
-            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <button type="submit" class="btn btn-primary w-100" @click="handleLogin">Login</button>
           </div>
         </form>
         <!-- Register link -->

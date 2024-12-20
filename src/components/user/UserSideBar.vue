@@ -58,6 +58,10 @@
             </ul>
           </li>
         </div>
+        <div class="section-sidebar">
+        CANTEEN
+                  
+        </div>
       </ul>
     </nav>
   </aside>
