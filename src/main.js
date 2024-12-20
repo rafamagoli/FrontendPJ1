@@ -11,6 +11,7 @@ import DepartmentAdd from "./components/department/DepartmentAdd.vue";
 import DefaultPageLayout from "./core/components/DefaultPageLayout.vue";
 import DepartmentEdit from "./components/department/DepartmentEdit.vue";
 import DepartmentDetail from "./components/department/DepartmentDetail.vue";
+import TaskList from "./components/task/TaskList.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -71,6 +72,12 @@ const router = createRouter({
           meta: { allowedRoles: ["admin", "manager"] },
         },
         
+        {
+          name: "task-list",
+          path: "task/list",
+          component: TaskList,
+          meta: { allowedRoles: ["admin"] },
+        },
       ],
     },
   ],

@@ -173,7 +173,7 @@ export default {
   background-color: #000000;
   color: white;
   border: none;
-  border-radius: 1px;
+  border-radius: 10px;
   box-shadow: #333;
   font-size: 1rem;
   cursor: pointer;

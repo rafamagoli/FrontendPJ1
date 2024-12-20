@@ -8,7 +8,8 @@
   <router-link :to="{ name: 'employee-add'}">employee-add</router-link>
   <router-link :to="{ name: 'department-list'}">department-list</router-link>
   <router-link :to="{ name: 'department-add'}">department-add</router-link>
-  <router-link :to="{ name: 'department-edit'}">department-edit</router-link>
+  <router-link :to="{ name: 'department-edit'}">department-edit</router-link>  <router-link :to="{ name: 'task-list'}">task-list</router-link>
+
 </div>
 
   <div id="app">
