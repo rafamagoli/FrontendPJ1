@@ -126,7 +126,7 @@ export default {
             this.$router.push('/department/add');
         },
         goToEditDepartment() {
-            this.$router.push(`/department/edit/${this.$route.params.id}`);
+            this.$router.push('/department/edit');
         },
         fetchDepartmentDetails() {
             const departmentId = this.$route.params.id;
