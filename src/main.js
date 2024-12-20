@@ -6,7 +6,10 @@ import UserLogin from "./components/user/UserLogin.vue";
 import UserRegister from "./components/user/UserRegister.vue";
 import EmployeeList from "./components/employee/EmployeeList.vue";
 import EmployeeAdd from "./components/employee/EmployeeAdd.vue";
+import DepartmentList from "./components/department/DepartmentList.vue";
+import DepartmentAdd from "./components/department/DepartmentAdd.vue";
 import DefaultPageLayout from "./core/components/DefaultPageLayout.vue";
+import DepartmentEdit from "./components/department/DepartmentEdit.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -40,6 +43,24 @@ const router = createRouter({
           name: "employee-add",
           path: "employee/add",
           component: EmployeeAdd,
+          meta: { allowedRoles: ["admin", "manager"] },
+        },
+        {
+          name: "department-list",
+          path: "department/list",
+          component: DepartmentList,
+          meta: { allowedRoles: ["admin", "manager"] },
+        },
+        {
+          name: "department-add",
+          path: "department/add",
+          component: DepartmentAdd,
+          meta: { allowedRoles: ["admin", "manager"] },
+        },
+        {
+          name: "department-edit",
+          path: "department/edit",
+          component: DepartmentEdit,
           meta: { allowedRoles: ["admin", "manager"] },
         },
       ],
