@@ -5,80 +5,55 @@
 
     <nav>
       <ul>
-        <!-- Dashboard menu com submenus -->
+        <!-- Dashboard menu -->
         <li class="nav-item">
-          <router-link class="nav-link dashboard-link">Dashboard</router-link>
+          <button class="nav-link" @click="navigateTo('user-dashboard')">Dashboard</button>
         </li>
 
         <!-- Sidebar HUMAN RESOURCES Section -->
         <div class="section-sidebar">
           HUMAN RESOURCES
-          <!-- Tasks menu com submenus -->
-          <li class="nav-item" @click="toggleMenu">
-            <router-link class="nav-link">Tasks <span class="arrow">▼</span></router-link>
-            <ul class="submenu">
+          <!-- Tasks menu with submenus -->
+          <li class="nav-item">
+            <button class="nav-link" @click="toggleSubmenu('tasks')">
+              Tasks <span class="arrow">▼</span>
+            </button>
+            <ul class="submenu" :class="{ active: activeMenu === 'tasks' }">
               <li>
-                <router-link activeClass="active" class="nav-link">Create Tasks</router-link>
+                <button class="nav-link" @click="navigateTo('task-add')">Create Tasks</button>
               </li>
               <li>
-                <router-link activeClass="active" class="nav-link">View Tasks</router-link>
-              </li>
-            </ul>
-          </li>
-
-          <!-- Departments menu com submenus -->
-          <li class="nav-item" @click="toggleMenu">
-            <router-link class="nav-link">Departments <span class="arrow">▼</span></router-link>
-            <ul class="submenu">
-              <li>
-                <router-link class="nav-link">Create Department</router-link>
-              </li>
-              <li>
-                <router-link class="nav-link">View Department</router-link>
-              </li>
-            </ul>
-          </li>
-          <!-- Employees menu com submenus -->
-          <li class="nav-item" @click="toggleMenu">
-            <router-link class="nav-link">Employees <span class="arrow">▼</span></router-link>
-            <ul class="submenu">
-              <li>
-                <router-link class="nav-link" :to="{ name: 'employee-add' }">Add Employee</router-link>
-              </li>
-              <li>
-                <router-link class="nav-link" :to="{ name: 'employee-list' }">View Employees</router-link>
-              </li>
-            </ul>
-          </li>
-        </div>
-        <!-- Fim div Ruman Resources-->
-
-        <p></p>
-
-        <div class="section-sidebar">
-          CANTEEN
-          <!-- Plates menu com submenus -->
-          <li class="nav-item" @click="toggleMenu">
-            <router-link class="nav-link">Plates <span class="arrow">▼</span></router-link>
-            <ul class="submenu">
-              <li>
-                <router-link class="nav-link">Create Plate</router-link>
-              </li>
-              <li>
-                <router-link class="nav-link">View Plates</router-link>
+                <button class="nav-link" @click="navigateTo('task-list')">View Tasks</button>
               </li>
             </ul>
           </li>
 
-          <!-- Reservations menu com submenus -->
-          <li class="nav-item" @click="toggleMenu">
-            <router-link class="nav-link">Reservations <span class="arrow">▼</span></router-link>
-            <ul class="submenu">
+          <!-- Departments menu -->
+          <li class="nav-item">
+            <button class="nav-link" @click="toggleSubmenu('departments')">
+              Departments <span class="arrow">▼</span>
+            </button>
+            <ul class="submenu" :class="{ active: activeMenu === 'departments' }">
               <li>
-                <router-link class="nav-link">Create Reservation</router-link>
+                <button class="nav-link" @click="navigateTo('department-add')">Create Department</button>
               </li>
               <li>
-                <router-link class="nav-link">View Reservations</router-link>
+                <button class="nav-link" @click="navigateTo('department-list')">View Department</button>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Employees menu -->
+          <li class="nav-item">
+            <button class="nav-link" @click="toggleSubmenu('employees')">
+              Employees <span class="arrow">▼</span>
+            </button>
+            <ul class="submenu" :class="{ active: activeMenu === 'employees' }">
+              <li>
+                <button class="nav-link" @click="navigateTo('employee-add')">Add Employee</button>
+              </li>
+              <li>
+                <button class="nav-link" @click="navigateTo('employee-list')">View Employees</button>
               </li>
             </ul>
           </li>
@@ -86,28 +61,100 @@
       </ul>
     </nav>
   </aside>
-
 </template>
 
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const activeMenu = ref(null);
+
+function toggleSubmenu(menu) {
+  activeMenu.value = activeMenu.value === menu ? null : menu;
+}
+
+function navigateTo(routeName) {
+  router.push({ name: routeName });
+}
+</script>
+
 <style>
-.nav-link :has(.submenu) :after {
-  content: "▼"
+.sidebar-logo {
+  display: block;
+  margin: 0 auto;
+  max-width: 100px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-white {
+  color: white;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.nav-item {
+  margin-bottom: 1rem;
+}
+
+/* Button styling inside nav-item */
+.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  background-color: white;
+  color: #2c3e50;
+  text-align: left;
+  padding: 0.75rem;
+  width: 100%;
+  border-radius: 2px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: #f0f0f0;
+  color: #34495e;
+}
+
+/* Styling for submenus */
+.submenu {
+  display: none;
+  margin-top: 0.5rem;
+  margin-bottom: 2px;
+}
+
+
+.submenu.active {
+  display: block;
+}
+
+/* Submenu items styled like buttons but slightly indented */
+.submenu .nav-link {
+  padding: 0.5rem;
+  background-color: #f9f9f9;
+  color: #000000;
+}
+
+.submenu .nav-link:hover {
+  background-color: #e9e9e9;
+}
+
+/* Section title styling */
+.section-sidebar {
+  margin-top: 1.5rem;
+  font-weight: bold;
+  color: #bdc3c7;
+}
+
+/* Arrow icon alignment */
+.arrow {
+  margin-left: auto;
 }
 </style>
-
-<script setup>
-
-function toggleMenu(event) {
-  const parentItem = event.target.closest(".nav-item");
-  if (parentItem) {
-    parentItem.classList.toggle("active");
-
-    const submenu = parentItem.querySelector(".submenu");
-    if (submenu) {
-      submenu.style.display =
-        submenu.style.display === "block" ? "none" : "block";
-    }
-  }
-}
-
-</script>

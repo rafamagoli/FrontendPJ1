@@ -7,6 +7,8 @@
   <router-link :to="{ name: 'employee-list'}">employee-list</router-link>
   <router-link :to="{ name: 'employee-add'}">employee-add</router-link>
   <router-link :to="{ name: 'task-list'}">task-list</router-link>
+  <router-link :to="{ name: 'task-add'}">task-add</router-link>
+  <router-link :to="{ name: 'task-update'}">task-update</router-link>
 
 </div>
 

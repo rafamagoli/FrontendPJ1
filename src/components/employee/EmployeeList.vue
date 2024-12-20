@@ -1,3 +1,72 @@
+<script>
+export default {
+  data() {
+    return {
+      //Username
+      userName: "Bulma Garcia",
+      searchQuery: "",
+      employees: [
+        { id: 1, name: "Bulma Garcia", active: true },
+        { id: 2, name: "Pepper Stark", active: true },
+        { id: 3, name: "Martini Silva", active: true },
+        { id: 4, name: "Sansa Stark", active: true },
+        { id: 5, name: "Roberto Silva", active: true },
+        { id: 6, name: "Rafaela Oliveira", active: true },        
+        { id: 7, name: "Ana Garcia", active: true },
+        { id: 8, name: "Caio Lacerda", active: true },       
+        { id: 9, name: "Lucas Oliveira", active: true },
+        { id: 10, name: "Tony Stark", active: false },
+        { id: 11, name: "Pepper Potts", active: false },
+      ],
+    };
+  },
+  computed: {
+    filteredEmployees() {
+      return this.employees.filter(
+        (employee) =>
+          employee.active &&
+          employee.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
+    inactiveEmployees() {
+      return this.employees.filter((employee) => !employee.active);
+    },
+  },
+  methods: {
+    //LEVA para a página de criar novo employee
+    goToAddEmployee() {
+      this.$router.push("/employee/add");
+    },
+    // Logout method
+    logout() {
+      // Perform logout logic here (e.g., clearing tokens, user data)
+      console.log("You have been logged out!"); // Optional: Log message to console 
+    
+      // Redirect to login page
+      this.$router.push("/login");
+    },
+
+    toggleMenu(event) {
+      const parentItem = event.target.closest(".nav-item");
+      if (parentItem) {
+        parentItem.classList.toggle("active");
+
+        const submenu = parentItem.querySelector(".submenu");
+        if (submenu) {
+          submenu.style.display =
+            submenu.style.display === "block" ? "none" : "block";
+        }
+      }
+    },
+
+    toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.classList.toggle("open");
+    },
+  },
+};
+</script>
+
 <template>
   <div id="employees-page">
 
@@ -49,74 +118,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      //Username
-      userName: "Bulma Garcia",
-      searchQuery: "",
-      employees: [
-        { id: 1, name: "Bulma Garcia", active: true },
-        { id: 2, name: "Pepper Stark", active: true },
-        { id: 3, name: "Martini Silva", active: true },
-        { id: 4, name: "Sansa Stark", active: true },
-        { id: 5, name: "Roberto Silva", active: true },
-        { id: 6, name: "Rafaela Oliveira", active: true },        
-        { id: 7, name: "Ana Garcia", active: true },
-        { id: 8, name: "Caio Lacerda", active: true },       
-        { id: 9, name: "Lucas Oliveira", active: true },
-        { id: 10, name: "Tony Stark", active: false },
-        { id: 11, name: "Pepper Potts", active: false },
-      ],
-    };
-  },
-  computed: {
-    filteredEmployees() {
-      return this.employees.filter(
-        (employee) =>
-          employee.active &&
-          employee.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    },
-    inactiveEmployees() {
-      return this.employees.filter((employee) => !employee.active);
-    },
-  },
-  methods: {
-    //LEVA para a página de criar novo employee
-    goToAddEmployee() {
-      this.$router.push("/addEmployee");
-    },
-    // Logout method
-    logout() {
-      // Perform logout logic here (e.g., clearing tokens, user data)
-      console.log("You have been logged out!"); // Optional: Log message to console 
-    
-      // Redirect to login page
-      this.$router.push("/login");
-    },
-
-    toggleMenu(event) {
-      const parentItem = event.target.closest(".nav-item");
-      if (parentItem) {
-        parentItem.classList.toggle("active");
-
-        const submenu = parentItem.querySelector(".submenu");
-        if (submenu) {
-          submenu.style.display =
-            submenu.style.display === "block" ? "none" : "block";
-        }
-      }
-    },
-
-    toggleSidebar() {
-      const sidebar = document.querySelector(".sidebar");
-      sidebar.classList.toggle("open");
-    },
-  },
-};
-</script>
 
 <style scoped>
 
