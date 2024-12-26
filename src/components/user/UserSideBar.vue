@@ -59,8 +59,49 @@
           </li>
         </div>
         <div class="section-sidebar">
-        CANTEEN
-                  
+          CANTEEN
+          <!-- Ingredients menu -->
+          <li class="nav-item">
+            <button class="nav-link" @click="toggleSubmenu('ingredients')">
+              Ingredients <span class="arrow">▼</span>
+            </button>
+            <ul class="submenu" :class="{ active: activeMenu === 'ingredients' }">
+              <li>
+                <button class="nav-link" @click="navigateTo('ingredient-add')">Create Ingredient</button>
+              </li>
+              <li>
+                <button class="nav-link" @click="navigateTo('ingredient-list')">View Ingridients</button>
+              </li>
+            </ul>
+          </li>
+          <!-- Plates menu -->
+          <li class="nav-item">
+            <button class="nav-link" @click="toggleSubmenu('plates')">
+              Plates <span class="arrow">▼</span>
+            </button>
+            <ul class="submenu" :class="{ active: activeMenu === 'plates' }">
+              <li>
+                <button class="nav-link" @click="navigateTo('plate-add')">Create Plate</button>
+              </li>
+              <li>
+                <button class="nav-link" @click="navigateTo('plate-list')">View Plates</button>
+              </li>
+            </ul>
+          </li>
+          <!-- Reservation menu -->
+          <li class="nav-item">
+            <button class="nav-link" @click="toggleSubmenu('reservation')">
+              Reservation <span class="arrow">▼</span>
+            </button>
+            <ul class="submenu" :class="{ active: activeMenu === 'reservation' }">
+              <li>
+                <button class="nav-link" @click="navigateTo('reservation-add')">Create Reservation</button>
+              </li>
+              <li>
+                <button class="nav-link" @click="navigateTo('reservation-list')">View Reservation</button>
+              </li>
+            </ul>
+          </li>
         </div>
       </ul>
     </nav>
