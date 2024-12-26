@@ -14,7 +14,9 @@ import DepartmentDetail from "./components/department/DepartmentDetail.vue";
 import TaskList from "./components/task/TaskList.vue";
 import TaskAdd from "./components/task/TaskAdd.vue";
 import TaskUpdate from "./components/task/TaskUpdate.vue";
-
+import IngredientList from "./components/ingredient/IngredientList.vue";
+import IngredientAdd from "./components/ingredient/IngredientAdd.vue";
+import IngredientEdit from "./components/ingredient/IngredientEdit.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -92,6 +94,30 @@ const router = createRouter({
           path: "task/update",
           component: TaskUpdate,
           meta: { allowedRoles: ["admin"] },
+        },
+        {
+          name: "ingredient-list",
+          path: "ingredient/list",
+          component: IngredientList,
+          meta: { allowedRoles: ["admin", "manager"] },
+        },
+        {
+          name: "ingredient-add",
+          path: "ingredient/add",
+          component: IngredientAdd,
+          meta: { allowedRoles: ["admin", "manager"] },
+        },
+        {
+          name: "ingredient-edit",
+          path: "ingredient/edit/:id",
+          component: IngredientAdd,
+          meta: { allowedRoles: ["admin", "manager"] },
+        },
+        {
+          name: "ingredient-edit",
+          path: "ingredient/edit/:id",
+          component: IngredientEdit,  // Now points to the separate edit component
+          meta: { allowedRoles: ["admin", "manager"] },
         },
       ],
     },

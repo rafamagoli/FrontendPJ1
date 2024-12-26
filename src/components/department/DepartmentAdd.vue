@@ -22,42 +22,23 @@
                         <label for="manager">Manager</label>
                         <select 
                             id="manager" 
-                            v-model="department.manager"
+                            v-model="department.managerUsername"
                             @click="fetchManagers"
                         >
                             <option value="" disabled selected>Select manager</option>
                             <option 
                                 v-for="manager in managers" 
                                 :key="manager.id" 
-                                :value="manager.id"
+                                :value="manager.username"
                             >
                                 {{ manager.name }}
                             </option>
                         </select>
                     </div>
 
-                    <!-- Employees -->
-                    <div class="form-group">
-                        <label for="employees">Employees</label>
-                        <select 
-                            id="employees" 
-                            v-model="department.selectedEmployees"
-                            @click="fetchEmployees"
-                        >
-                            <option value="" disabled selected>Select employees</option>
-                            <option 
-                                v-for="employee in employees" 
-                                :key="employee.id" 
-                                :value="employee.id"
-                            >
-                                {{ employee.name }}
-                            </option>
-                        </select>
-                    </div>
-
                     <!-- Associated Discount -->
                     <div class="form-group">
-                        <label for="discount">Associated Discount</label>
+                        <label for="discount">Canteen Discount (%)</label>
                         <input 
                             type="text" 
                             id="discount" 
@@ -86,12 +67,10 @@ export default {
         return {
             department: {
                 name: '',
-                manager: '',
-                selectedEmployees: '',
-                discount: 0.00
+                managerUsername: '',
+                canteenDiscount: 0
             },
-            managers: [], // Will be populated from API
-            employees: [], // Will be populated from API
+            managers: [], 
             formattedDiscount: '0,00%'
         }
     },
@@ -101,61 +80,55 @@ export default {
             
             if (value === '') {
                 this.formattedDiscount = '0,00%';
-                this.department.discount = 0;
+                this.department.canteenDiscount = 0;
                 return;
             }
 
-            // Convert to number with 2 decimal places
             const numericValue = parseFloat(value) / 100;
-            
-            // Update the formatted display
             this.formattedDiscount = numericValue.toFixed(2).replace('.', ',') + '%';
-            
-            // Update the actual value
-            this.department.discount = numericValue;
+            this.department.canteenDiscount = numericValue;
         },
         async fetchManagers() {
             try {
-                // Mock data - replace with actual API call
-                this.managers = [
-                    { id: 1, name: "Ana Garcia" },
-                    { id: 2, name: "John Smith" },
-                    { id: 3, name: "Maria Silva" }
-                ];
+                const response = await fetch('http://localhost:8080/api/users/managers');
+                if (response.ok) {
+                    this.managers = await response.json();
+                }
             } catch (error) {
                 console.error('Error fetching managers:', error);
-            }
-        },
-        async fetchEmployees() {
-            try {
-                // Mock data - replace with actual API call
-                this.employees = [
-                    { id: 1, name: "Ana Garcia" },
-                    { id: 2, name: "Rafaela Magalhães" },
-                    { id: 3, name: "Roberto Silva" }
-                ];
-            } catch (error) {
-                console.error('Error fetching employees:', error);
+                alert('Error fetching managers. Please try again.');
             }
         },
         async createDepartment() {
             try {
-                console.log('Department to create:', this.department);
-                // Implement your API call here
-                // Example:
-                // const response = await fetch('your-api-endpoint/departments', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify(this.department)
-                // });
-                
-                // if (response.ok) {
-                //     this.$router.push('/departments');
-                // }
+                // Validação
+                if (!this.department.name) {
+                    alert('Department name is required');
+                    return;
+                }
+
+                const response = await fetch('http://localhost:8080/api/departments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: this.department.name,
+                        managerUsername: this.department.managerUsername || undefined,
+                        canteenDiscount: this.department.canteenDiscount
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Department created successfully!');
+                    this.$router.push('/departments');
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.message || error.error || 'Failed to create department');
+                }
             } catch (error) {
                 console.error('Error creating department:', error);
+                alert('Error creating department: ' + error.message);
             }
         }
     }
@@ -196,14 +169,13 @@ export default {
     font-size: 16px;
 }
 
-/* Estilo específico apenas para os selects */
 .form-group select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: right 35px center; /* Valor aumentado para mover a setinha mais para a esquerda */
+    background-position: right 35px center;
     background-size: 1em;
     padding-right: 45px;
 }
