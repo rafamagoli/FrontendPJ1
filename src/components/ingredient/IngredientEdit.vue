@@ -54,8 +54,9 @@ export default {
 <template>
   <div id="edit-ingredient-page">
     <div class="main-content">
+        <h1>Edit Ingredient</h1>
+
       <section class="edit-ingredient-form">
-        <h2>Edit Ingredient</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Ingredient Name - Now read-only -->
           <div class="form-group">
@@ -100,8 +101,8 @@ export default {
 <style scoped>
 .edit-ingredient-form {
   max-width: 600px;
-  margin: 20px auto;
-  background: white;
+  margin: 60px auto;
+  background: #f6f5f5;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);

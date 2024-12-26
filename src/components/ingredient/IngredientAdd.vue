@@ -38,8 +38,9 @@ export default {
 <template>
   <div id="add-ingredient-page">
     <div class="main-content">
+      <h1>New Ingredient</h1>
+
       <section class="add-ingredient-form">
-        <h2>New Ingredient</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Ingredient Name -->
           <IngredientFormInput 
@@ -79,8 +80,8 @@ export default {
 <style scoped>
 .add-ingredient-form {
   max-width: 600px;
-  margin: 20px auto;
-  background: white;
+  margin: 60px auto;
+  background: #f6f5f5;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
