@@ -37,8 +37,8 @@ export default {
     createPlate() {
       this.$router.push("/plate/add");
     },
-    createIngredient() {
-      this.$router.push("/ingredient/add");
+    deletePlate() {
+      this.$router.push("/plate/delete");
     }
   }
 };
@@ -87,6 +87,9 @@ export default {
       <div class="button-container">
         <button @click="createPlate" class="action-button">
           Create New Plate
+        </button>
+        <button type="button" class="delete-button" @click="deletePlate">
+              Delete Plate
         </button>
       </div>
     </div>
@@ -150,6 +153,21 @@ export default {
 
 .action-button:hover {
   background-color: #333;
+}
+
+.delete-button {
+  width: 19%;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  background: #000000;
+  color: white;
+}
+
+.delete-button:hover {
+  background: #333;
 }
 
 @media (max-width: 768px) {
