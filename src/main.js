@@ -20,28 +20,36 @@ import IngredientEdit from "./components/ingredient/IngredientEdit.vue";
 import PlateList from "./components/plate/PlateList.vue";
 import PlateAdd from "./components/plate/PlateAdd.vue";
 import PlateEdit from "./components/plate/PlateEdit.vue";
+import ReservationAdd from "./components/reservation/ReservationAdd.vue";
+import ReservationEdit from "./components/reservation/ReservationEdit.vue";
+import ReservationList from "./components/reservation/ReservationList.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { name: "user-login", path: "/user/login", component: UserLogin, meta: {} },
+    { 
+      name: "user-login", 
+      path: "/user/login", 
+      component: UserLogin, 
+      meta: {} 
+    },
     {
       name: "user-register",
       path: "/user/register",
       component: UserRegister,
-      meta: { },
+      meta: {},
     },
     {
-      name: "rota-default",
+      name: "default-route",
       path: "/",
       component: DefaultPageLayout,
       meta: {},
       children: [
         {
-            name: "user-dashboard",
-            path: "/user/dashboard",
-            component: UserDashboard,
-            meta: { allowedRoles: ["admin", "manager"] },
+          name: "user-dashboard",
+          path: "/user/dashboard",
+          component: UserDashboard,
+          meta: { allowedRoles: ["admin", "manager"] },
         },
         {
           name: "employee-list",
@@ -76,10 +84,9 @@ const router = createRouter({
         {
           name: "department-detail",
           path: "/department/:id",
-          component:DepartmentDetail,
+          component: DepartmentDetail,
           meta: { allowedRoles: ["admin", "manager"] },
         },
-        
         {
           name: "task-list",
           path: "task/list",
@@ -113,13 +120,7 @@ const router = createRouter({
         {
           name: "ingredient-edit",
           path: "ingredient/edit/:id",
-          component: IngredientAdd,
-          meta: { allowedRoles: ["admin", "manager"] },
-        },
-        {
-          name: "ingredient-edit",
-          path: "ingredient/edit/:id",
-          component: IngredientEdit,  // Now points to the separate edit component
+          component: IngredientEdit,
           meta: { allowedRoles: ["admin", "manager"] },
         },
         {
@@ -140,6 +141,24 @@ const router = createRouter({
           component: PlateEdit,
           meta: { allowedRoles: ["admin", "manager"] },
         },
+        {
+          name: "reservation-list",
+          path: "reservation/list",
+          component: ReservationList,
+          meta: { allowedRoles: ["admin", "manager", "employee"] },
+        },
+        {
+          name: "reservation-add",
+          path: "reservation/add",
+          component: ReservationAdd,
+          meta: { allowedRoles: ["admin", "manager", "employee"] },
+        },
+        {
+          name: "reservation-edit",
+          path: "reservation/edit/:id",
+          component: ReservationEdit,
+          meta: { allowedRoles: ["admin", "manager", "employee"] },
+        }
       ],
     },
   ],
