@@ -128,6 +128,46 @@ export default {
           limitDate: "2024-01-20",
           completed: true,
         },
+        {
+          id: "3",
+          title: "Update project documentation",
+          employee: "Martini Silva",
+          description: "Revise and update the technical documentation.",
+          limitDate: "2024-02-01",
+          completed: false,
+        },
+        {
+          id: "4",
+          title: "Design mockup for new feature",
+          employee: "Sansa Stark",
+          description: "Create UI/UX mockups for the upcoming release.",
+          limitDate: "2024-02-15",
+          completed: false,
+        },
+        {
+          id: "5",
+          title: "Call the supplier",
+          employee: "Roberto Silva",
+          description: "Confirm delivery schedule for new office supplies.",
+          limitDate: "2024-01-10",
+          completed: false,
+        },
+        {
+          id: "6",
+          title: "Organize team-building event",
+          employee: "Rafaela Oliveira",
+          description: "Plan and organize a team-building event for Q1.",
+          limitDate: "2024-01-25",
+          completed: true,
+        },
+        {
+          id: "7",
+          title: "Submit annual report",
+          employee: "Ana Garcia",
+          description: "Finalize and submit the company's annual report.",
+          limitDate: "2024-01-30",
+          completed: true,
+        },
       ];
 
       const task = mockTasks.find((t) => t.id === taskId.toString());

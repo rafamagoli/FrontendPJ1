@@ -1,9 +1,11 @@
 <script>
-import PlateFormInput from './PlateFormInput.vue';
+import PlateFormInput from "./PlateFormInput.vue";
+import UserCancelButton from "@/components/user/UserCancelButton.vue";
 
 export default {
   components: {
-    PlateFormInput
+    PlateFormInput,
+    UserCancelButton,
   },
   data() {
     return {
@@ -11,7 +13,7 @@ export default {
         name: "",
         type: "",
         price: "",
-        ingredients: []
+        ingredients: [],
       },
       typeOptions: ["meat", "fish", "vegan", "vegetarian"],
       availableIngredients: {
@@ -24,7 +26,7 @@ export default {
           { id: 7, name: "Salt", category: "common" },
           { id: 8, name: "Potato", category: "common" },
           { id: 14, name: "Mixed Vegetables", category: "common" },
-          { id: 15, name: "Black Pepper", category: "common" }
+          { id: 15, name: "Black Pepper", category: "common" },
         ],
         fish: [
           { id: 1, name: "Rice", category: "common" },
@@ -35,7 +37,7 @@ export default {
           { id: 6, name: "Tomato", category: "common" },
           { id: 7, name: "Salt", category: "common" },
           { id: 14, name: "Mixed Vegetables", category: "common" },
-          { id: 15, name: "Black Pepper", category: "common" }
+          { id: 15, name: "Black Pepper", category: "common" },
         ],
         vegan: [
           { id: 4, name: "Onion", category: "common" },
@@ -47,7 +49,7 @@ export default {
           { id: 10, name: "Pasta", category: "common" },
           { id: 11, name: "Tomato Sauce", category: "common" },
           { id: 14, name: "Mixed Vegetables", category: "common" },
-          { id: 15, name: "Black Pepper", category: "common" }
+          { id: 15, name: "Black Pepper", category: "common" },
         ],
         vegetarian: [
           { id: 1, name: "Rice", category: "common" },
@@ -61,88 +63,81 @@ export default {
           { id: 11, name: "Tomato Sauce", category: "common" },
           { id: 17, name: "Cheese", category: "vegetarian" },
           { id: 14, name: "Mixed Vegetables", category: "common" },
-          { id: 15, name: "Black Pepper", category: "common" }
-        ]
+          { id: 15, name: "Black Pepper", category: "common" },
+        ],
       },
-      error: null
+      error: null,
     };
   },
   computed: {
     relevantIngredients() {
       if (!this.plate.type) return [];
       return this.availableIngredients[this.plate.type] || [];
-    }
+    },
   },
-  async created() {
-    const plateName = this.$route.params.name;
-    try {
-      const response = await fetch(`http://localhost:8081/api/plates/${plateName}`);
-      const data = await response.json();
-      if (data.status === 'success') {
-        this.plate = {
-          ...data.data.plate,
-          ingredients: data.data.plate.ingredients.map(name => ({
-            name,
-            id: this.findIngredientIdByName(name),
-            category: this.findIngredientCategoryByName(name)
-          }))
-        };
-      } else {
-        this.error = 'Failed to load plate details';
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      this.error = 'Failed to load plate details';
+  created() {
+    const plateId = this.$route.params.id; // Retrieve the plate ID from route params
+    if (plateId) {
+      this.fetchPlateData(plateId); // Fetch plate data based on ID
+    } else {
+      console.error("No plate ID found. Redirecting...");
+      this.$router.push("/plate/list");
     }
   },
   methods: {
-    findIngredientIdByName(name) {
-      for (const type in this.availableIngredients) {
-        const ingredient = this.availableIngredients[type].find(i => i.name === name);
-        if (ingredient) return ingredient.id;
-      }
-      return null;
-    },
-    findIngredientCategoryByName(name) {
-      for (const type in this.availableIngredients) {
-        const ingredient = this.availableIngredients[type].find(i => i.name === name);
-        if (ingredient) return ingredient.category;
-      }
-      return 'common';
-    },
-    async handleSubmit() {
-      try {
-        const response = await fetch(`http://localhost:8081/api/plates/${this.plate.name}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: this.plate.name,
-            type: this.plate.type,
-            price: parseFloat(this.plate.price),
-            ingredients: this.plate.ingredients.map(ing => ing.name)
-          })
-        });
+    fetchPlateData(plateId) {
+      // Mock plates data for fetching details based on ID
+      const mockPlates = [
+        {
+          id: 1,
+          name: "Grilled Fish with Rice",
+          price: "25.99",
+          ingredients: ["Rice", "Grilled Fish", "Vegetables"],
+        },
+        {
+          id: 2,
+          name: "Steak with Potatoes",
+          price: "32.99",
+          ingredients: ["Steak", "Potatoes", "Vegetables"],
+        },
+        {
+          id: 3,
+          name: "Vegetarian Pasta",
+          price: "18.99",
+          ingredients: ["Pasta", "Tomato Sauce", "Mushrooms"],
+        },
+        {
+          id: 4,
+          name: "Chicken Curry",
+          price: "23.99",
+          ingredients: ["Chicken", "Rice", "Curry Sauce"],
+        },
+      ];
 
-        const data = await response.json();
-        if (data.status === 'success') {
-          this.$router.push("/plate/list");
-        } else {
-          this.error = data.message || 'Failed to update plate';
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        this.error = 'Failed to update plate';
+      const plate = mockPlates.find((p) => p.id === parseInt(plateId, 10));
+      if (plate) {
+        this.plate = { ...plate };
+      } else {
+        this.error = "Plate not found.";
+        console.error("Plate not found. Redirecting...");
+        this.$router.push("/plate/list");
       }
     },
-    async deletePlate() {
+    handleSubmit() {
+      console.log("Plate updated:", this.plate);
+      this.$router.push("/plate/list");
+    },
+    cancel() {
+      this.$router.push("/plate/list");
+    },
+  },
+  /*async deletePlate() {
       if (confirm("Are you sure you want to delete this plate?")) {
         try {
           const response = await fetch(`http://localhost:8081/api/plates/${this.plate.name}`, {
             method: 'DELETE'
           });
-          
+
           if (response.status === 204) {
             this.$router.push("/plate/list");
           } else {
@@ -165,8 +160,7 @@ export default {
     },
     isSelected(ingredient) {
       return this.plate.ingredients.some(i => i.name === ingredient.name);
-    }
-  }
+    }*/
 };
 </script>
 
@@ -182,11 +176,7 @@ export default {
           <!-- Plate Name - Read Only -->
           <div class="form-group">
             <label for="name">Plate Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              v-model="plate.name"
-            />
+            <input type="text" id="name" v-model="plate.name" />
           </div>
 
           <!-- Type Selection -->
@@ -194,18 +184,16 @@ export default {
             <label for="type">Type</label>
             <select id="type" v-model="plate.type" required>
               <option value="" disabled>Select type</option>
-              <option v-for="type in typeOptions" 
-                      :key="type" 
-                      :value="type">
+              <option v-for="type in typeOptions" :key="type" :value="type">
                 {{ type }}
               </option>
             </select>
           </div>
 
           <!-- Price -->
-          <PlateFormInput 
-            name="Price" 
-            identifier="price" 
+          <PlateFormInput
+            name="Price"
+            identifier="price"
             type="number"
             step="0.01"
             v-model="plate.price"
@@ -218,13 +206,13 @@ export default {
               Please select a plate type to see available ingredients
             </div>
             <div v-else class="ingredients-grid">
-              <div 
+              <div
                 v-for="ingredient in relevantIngredients"
                 :key="ingredient.id"
                 class="ingredient-item"
-                :class="{ 
+                :class="{
                   selected: isSelected(ingredient),
-                  'common-ingredient': ingredient.category === 'common'
+                  'common-ingredient': ingredient.category === 'common',
                 }"
                 @click="toggleIngredient(ingredient)"
               >
@@ -238,12 +226,10 @@ export default {
 
           <!-- Action Buttons -->
           <div class="form-actions">
-            <button type="button" class="delete-button" @click="deletePlate">
+            <UserCancelButton :cancel="cancel" />            <button type="button" class="delete-button" @click="deletePlate">
               Delete
             </button>
-            <button type="submit" class="update-button">
-              Update
-            </button>
+            <button type="submit" class="update-button">Update</button>
           </div>
         </form>
       </section>
@@ -286,7 +272,6 @@ export default {
   border-radius: 4px;
   box-sizing: border-box;
 }
-
 
 .ingredients-grid {
   display: grid;
@@ -388,7 +373,7 @@ export default {
     flex-direction: column;
     gap: 10px;
   }
-
+  .cancel-button,
   .delete-button,
   .update-button {
     width: 100%;

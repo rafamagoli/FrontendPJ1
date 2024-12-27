@@ -70,7 +70,7 @@
                 <button class="nav-link" @click="navigateTo('ingredient-add')">Create Ingredient</button>
               </li>
               <li>
-                <button class="nav-link" @click="navigateTo('ingredient-list')">View Ingridients</button>
+                <button class="nav-link" @click="navigateTo('ingredient-list')">View Ingredients</button>
               </li>
             </ul>
           </li>

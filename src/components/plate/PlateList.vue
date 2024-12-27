@@ -3,44 +3,42 @@ export default {
   data() {
     return {
       plates: [
-        { 
-          id: 1, 
+        {
+          id: 1,
           name: "Grilled Fish with Rice",
           price: "25.99",
-          ingredients: ["Rice", "Grilled Fish", "Vegetables"]
+          ingredients: ["Rice", "Grilled Fish", "Vegetables"],
         },
-        { 
-          id: 2, 
+        {
+          id: 2,
           name: "Steak with Potatoes",
           price: "32.99",
-          ingredients: ["Steak", "Potatoes", "Vegetables"]
+          ingredients: ["Steak", "Potatoes", "Vegetables"],
         },
-        { 
-          id: 3, 
+        {
+          id: 3,
           name: "Vegetarian Pasta",
           price: "18.99",
-          ingredients: ["Pasta", "Tomato Sauce", "Mushrooms"]
+          ingredients: ["Pasta", "Tomato Sauce", "Mushrooms"],
         },
-        { 
-          id: 4, 
+        {
+          id: 4,
           name: "Chicken Curry",
           price: "23.99",
-          ingredients: ["Chicken", "Rice", "Curry Sauce"]
-        }
-      ]
+          ingredients: ["Chicken", "Rice", "Curry Sauce"],
+        },
+      ],
     };
   },
   methods: {
     editPlate(plate) {
-      this.$router.push(`/plate/edit/${plate.name}`);
+      // Redirection using plate ID
+      this.$router.push({ name: "plate-edit", params: { id: plate.id } });
     },
     createPlate() {
       this.$router.push("/plate/add");
     },
-    deletePlate() {
-      this.$router.push("/plate/delete");
-    }
-  }
+  },
 };
 </script>
 
@@ -48,15 +46,17 @@ export default {
   <div id="plates-page">
     <div class="main-content">
       <h1 id="page-title">Plates</h1>
-      
+
       <section class="cards">
         <!-- Left Column -->
         <div class="card plates-card">
           <div class="plate-grid">
-            <div v-for="plate in plates.slice(0, 2)" 
-                 :key="plate.id"
-                 class="plate-box"
-                 @click="editPlate(plate)">
+            <div
+              v-for="plate in plates.slice(0, 2)"
+              :key="plate.id"
+              class="plate-box"
+              @click="editPlate(plate)"
+            >
               <div class="plate-name">{{ plate.name }}</div>
               <div class="plate-price">${{ plate.price }}</div>
               <div class="plate-ingredients">
@@ -69,10 +69,12 @@ export default {
         <!-- Right Column -->
         <div class="card plates-card">
           <div class="plate-grid">
-            <div v-for="plate in plates.slice(2, 4)" 
-                 :key="plate.id"
-                 class="plate-box"
-                 @click="editPlate(plate)">
+            <div
+              v-for="plate in plates.slice(2, 4)"
+              :key="plate.id"
+              class="plate-box"
+              @click="editPlate(plate)"
+            >
               <div class="plate-name">{{ plate.name }}</div>
               <div class="plate-price">${{ plate.price }}</div>
               <div class="plate-ingredients">
@@ -87,9 +89,6 @@ export default {
       <div class="button-container">
         <button @click="createPlate" class="action-button">
           Create New Plate
-        </button>
-        <button type="button" class="delete-button" @click="deletePlate">
-              Delete Plate
         </button>
       </div>
     </div>
@@ -110,7 +109,7 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .plate-box:hover {
@@ -134,13 +133,13 @@ export default {
 
 .button-container {
   display: flex;
-  justify-content: center;  
+  justify-content: center;
   margin-top: 20px;
   gap: 15px;
 }
 
 .action-button {
-  width: 200px;  
+  width: 200px;
   padding: 10px;
   background-color: #000;
   color: white;
@@ -155,26 +154,11 @@ export default {
   background-color: #333;
 }
 
-.delete-button {
-  width: 19%;
-  padding: 10px;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  border-radius: 10px;
-  background: #000000;
-  color: white;
-}
-
-.delete-button:hover {
-  background: #333;
-}
-
 @media (max-width: 768px) {
   .button-container {
     flex-direction: column;
   }
-  
+
   .action-button {
     width: 100%;
   }
