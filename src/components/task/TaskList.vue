@@ -29,7 +29,7 @@
                   :checked="task.completed"
                 />
                 <!-- Task Title -->
-                <span class="task-title" @click="goToUpdateTask(task)">
+                <span class="task-title" @click="goToEditTask(task)">
                   {{ task.title }}
                 </span>
               </li>
@@ -93,36 +93,11 @@ export default {
     goToAddTask() {
       this.$router.push("/task/add");
     },
-    goToUpdateTask(task) {
+    goToEditTask(task) {
       this.$router.push({
-        name: "task-update",
-        query: {
-          id: task.id, // Mudar quando tivermos as APIs integradas
-          title: task.title, // Add `title` if it’s relevant
-          employee: task.employee || "", // Add `employee` if it’s relevant
-          description: task.description,
-          limitDate: task.limitDate || "",
-          completed: task.completed,
-        },
+        name: "task-edit",
+        params: { id: task.id }, // Passa apenas o ID via params
       });
-    },
-    created() {
-      const { id, title, employee, description, limitDate, completed } =
-        this.$route.query;
-
-      if (id && title && description) {
-        this.task = {
-          id: parseInt(id, 10),
-          title,
-          employee,
-          description,
-          limitDate,
-          completed: completed === "true", // Convert string to boolean
-        };
-      } else {
-        console.error("No task data received. Redirecting...");
-        this.$router.push("/task/list");
-      }
     },
   },
 };

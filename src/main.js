@@ -13,7 +13,7 @@ import DepartmentEdit from "./components/department/DepartmentEdit.vue";
 import DepartmentDetail from "./components/department/DepartmentDetail.vue";
 import TaskList from "./components/task/TaskList.vue";
 import TaskAdd from "./components/task/TaskAdd.vue";
-import TaskUpdate from "./components/task/TaskUpdate.vue";
+import TaskEdit from "./components/task/TaskEdit.vue";
 import IngredientList from "./components/ingredient/IngredientList.vue";
 import IngredientAdd from "./components/ingredient/IngredientAdd.vue";
 import IngredientEdit from "./components/ingredient/IngredientEdit.vue";
@@ -100,9 +100,9 @@ const router = createRouter({
           meta: { allowedRoles: ["admin"] },
         },
         {
-          name: "task-update",
-          path: "task/update",
-          component: TaskUpdate,
+          name: "task-edit",
+          path: "task/edit/:id",
+          component: TaskEdit,
           meta: { allowedRoles: ["admin"] },
         },
         {
