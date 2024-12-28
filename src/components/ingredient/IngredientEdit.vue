@@ -1,15 +1,19 @@
 <script>
-import IngredientFormInput from './IngredientFormInput.vue';
+import IngredientFormInput from "./IngredientFormInput.vue";
+import UserCancelButton from "@/components/user/UserCancelButton.vue";
+
 
 export default {
   components: {
-    IngredientFormInput
+    IngredientFormInput,
+    UserCancelButton,
   },
   data() {
     return {
       ingredient: {
+        id: null,
         name: "",
-        allergen: ""
+        allergen: "",
       },
       allergenOptions: [
         "None",
@@ -19,19 +23,37 @@ export default {
         "Fish",
         "Shellfish",
         "Nuts",
-        "Soy"
-      ]
+        "Soy",
+      ],
     };
   },
   created() {
-    // In a real application, you would fetch the ingredient data using the ID from the route
-    const ingredientId = this.$route.params.id;
-    // Simulating fetching ingredient data
-    this.ingredient = {
-      id: ingredientId,
-      name: "Example Ingredient",
-      allergen: "None"
-    };
+    const ingredientId = this.$route.params.id; // Get ingredient ID from route params
+
+    // Mock data simulating an API or database fetch
+    const mockIngredients = [
+      { id: 1, name: "Rice", allergen: "None" },
+      { id: 2, name: "Grilled Fish", allergen: "Fish" },
+      { id: 3, name: "Stewed Meat", allergen: "None" },
+      { id: 4, name: "Onion", allergen: "None" },
+      { id: 5, name: "Garlic", allergen: "None" },
+      { id: 6, name: "Tomato", allergen: "None" },
+      { id: 7, name: "Salt", allergen: "None" },
+      { id: 8, name: "Potato", allergen: "None" },
+    ];
+
+    // Fetch the ingredient details
+    const ingredient = mockIngredients.find(
+      (item) => item.id === parseInt(ingredientId, 10)
+    );
+
+    if (ingredient) {
+      // Set the fetched ingredient data
+      this.ingredient = { ...ingredient };
+    } else {
+      console.error("Ingredient not found. Redirecting...");
+      this.$router.push("/ingredient/list");
+    }
   },
   methods: {
     handleSubmit() {
@@ -46,8 +68,8 @@ export default {
     },
     cancel() {
       this.$router.push("/ingredient/list");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -85,6 +107,8 @@ export default {
 
           <!-- Action Buttons -->
           <div class="form-actions">
+            <UserCancelButton :cancel="cancel" />            
+
             <button type="button" class="delete-button" @click="deleteIngredient">
               Delete
             </button>
@@ -144,6 +168,9 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+}
+.form-actions > * {
+  margin: 0; /* Remove the space between cancel and delete btn */
 }
 
 .delete-button,

@@ -226,7 +226,8 @@ export default {
 
           <!-- Action Buttons -->
           <div class="form-actions">
-            <UserCancelButton :cancel="cancel" />            <button type="button" class="delete-button" @click="deletePlate">
+            <UserCancelButton :cancel="cancel" />            
+            <button type="button" class="delete-button" @click="deletePlate">
               Delete
             </button>
             <button type="submit" class="update-button">Update</button>
@@ -325,7 +326,9 @@ export default {
   justify-content: space-between;
   margin-top: 20px;
 }
-
+.form-actions > * {
+  margin: 0; /* Remove the space between cancel and delete btn */
+}
 .delete-button,
 .update-button {
   width: 48%;
