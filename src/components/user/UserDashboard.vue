@@ -1,33 +1,36 @@
 <template>
   <div id="dashboard">
-    <!-- Sidebar/ Barra preta lateral-->
-    <!-- Conteúdo principal (parte branca) -->
     <div class="main-content">
-  
-
       <!-- Cards Section -->
       <section class="cards">
         <!-- Tasks card -->
         <div class="card tasks-card">
           <h2>Tasks Overview</h2>
-          <div class="sub-box">Human Resources</div>
-          <div class="sub-box">Canteen</div>
-          <div class="sub-box">Technology</div>
-          <div class="sub-box">Finance</div>
+          <div class="sub-box" @click="TaskList">View All</div>
+          <div class="sub-box" @click="TaskAdd">Add a New Task</div>
+          <!-- Weekly Tasks Overview -->
+          <div class="weekly-tasks">
+            <h4>This Week's Tasks</h4>
+            <ul>
+              <li v-for="task in weeklyTasks" :key="task.id">
+                <span class="task-title">{{ task.title }}</span>
+                <span class="task-date">Limit date: {{ formatDate(task.limitDate) }}</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <!-- Employees card -->
         <div class="card employees-card">
           <h2>Employee Overview</h2>
-          <div class="sub-box" @click="employeeList">View All</div>
-          <div class="sub-box" @click="employeeAdd">Add a New Employee</div>
+          <div class="sub-box" @click="EmployeeList">View All</div>
+          <div class="sub-box" @click="EmployeeAdd">Add a New Employee</div>
         </div>
 
         <!-- Calendar card -->
         <div class="card">
           <h2>Reservations</h2>
           <div class="calendar-card">
-            <!-- FullCalendar component displays a calendar -->
             <FullCalendar :options="calendarOptions" />
           </div>
         </div>
@@ -37,70 +40,131 @@
 </template>
 
 <script>
-// Import FullCalendar and its plugins
-import FullCalendar from "@fullcalendar/vue3"; // FullCalendar Vue integration
-import dayGridPlugin from "@fullcalendar/daygrid"; // Day grid plugin for calendar views
+import FullCalendar from "@fullcalendar/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid";
 
 export default {
-  components: { FullCalendar }, // Register FullCalendar as a component
+  components: { FullCalendar },
   data() {
     return {
-      //Username
       userName: "Bulma Garcia",
-      // Calendar configuration options
+      tasks: [
+        { id: 1, title: "Prepare meeting agenda", limitDate: "2024-12-18", completed: false },
+        { id: 2, title: "Fix website bugs", limitDate: "2024-12-19", completed: false },
+        { id: 3, title: "Submit project report", limitDate: "2024-12-20", completed: true },
+        { id: 4, title: "Organize team event", limitDate: "2024-12-22", completed: false },
+        { id: 5, title: "Finalize budget", limitDate: "2024-12-23", completed: false },
+      ],
       calendarOptions: {
-        plugins: [dayGridPlugin], // Use the day grid plugin
-        initialView: "dayGridMonth", // Set the initial calendar view
-        height: "auto", // Make the calendar height adjust dynamically
+        plugins: [dayGridPlugin],
+        initialView: "dayGridMonth",
+        height: "auto",
         events: [
-          { title: "Ana Garcia", start: "2024-12-15" }, // Example reservation event
-          { title: "Felisberto Silva", start: "2024-12-20" }, // Another reservation event
+          { title: "Ana Garcia", start: "2024-12-15" },
+          { title: "Felisberto Silva", start: "2024-12-20" },
         ],
       },
     };
   },
-  methods: {
-    // Logout method
-    logout() {
-      // Perform logout logic here (e.g., clearing tokens, user data)
-      console.log("You have been logged out!"); // Optional: Log message to console
-      // Redirect to login page
-      this.$router.push("/login");
-    },
+  computed: {
+    weeklyTasks() {
+      const today = new Date();
+      const startOfWeek = this.getStartOfWeek(today);
+      const endOfWeek = this.getEndOfWeek(today);
 
-    toggleSidebar() {
-      const sidebar = document.querySelector(".sidebar");
-      sidebar.classList.toggle("open");
+      return this.tasks.filter((task) => {
+        const dueDate = new Date(task.limitDate);
+        return dueDate >= startOfWeek && dueDate <= endOfWeek;
+      });
     },
-    employeeList() {
+  },
+  methods: {
+    formatDate(dateStr) {
+      const options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
+      return new Date(dateStr).toLocaleDateString(undefined, options);
+    },
+    getStartOfWeek(date) {
+      const newDate = new Date(date); // Clone the date
+      const day = newDate.getDay();
+      const diff = newDate.getDate() - day + (day === 0 ? -6 : 1); // Adjust for Monday start
+      newDate.setDate(diff);
+      newDate.setHours(0, 0, 0, 0);
+      return newDate;
+    },
+    getEndOfWeek(date) {
+      const startOfWeek = this.getStartOfWeek(date);
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+      endOfWeek.setHours(23, 59, 59, 999);
+      return endOfWeek;
+    },
+    TaskList() {
+      this.$router.push("/task/list");
+    },
+    TaskAdd() {
+      this.$router.push("/task/add");
+    },
+    EmployeeList() {
       this.$router.push("/employee/list");
-    },  
-    employeeAdd() {
+    },
+    EmployeeAdd() {
       this.$router.push("/employee/add");
-    },  
+    },
   },
 };
 </script>
 
 <style scoped>
+/* Weekly Tasks List */
+.weekly-tasks {
+  margin-top: 20px;
+}
 
-/* Card headings */
+.weekly-tasks h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.weekly-tasks ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.weekly-tasks li {
+  background-color: white;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+}
+
+.weekly-tasks li:last-child {
+  border-bottom: none;
+}
+
+.task-title {
+}
+
+.task-date {
+  font-size: 0.9rem;
+  color: #666;
+}
+
 .tasks-card h2,
 .employees-card h2,
 .card h2 {
-  margin-bottom: 10px; /* Space below heading */
+  margin-bottom: 10px;
 }
 
 .calendar-card {
   font-size: 10px;
   flex-direction: column;
-  height: 100%; /* Full height of the card */
+  height: 100%;
 }
 
 .calendar-card .fc {
-  /* FullCalendar container */
-  flex: 1; /* Allow FullCalendar to expand */
-  width: 100%; /* Ensure it spans the card width */
+  flex: 1;
+  width: 100%;
 }
-
 </style>

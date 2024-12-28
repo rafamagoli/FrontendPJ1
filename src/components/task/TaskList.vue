@@ -65,19 +65,13 @@ export default {
       searchQuery: "",
       // Atualizado para incluir departmentId
       tasks: [
-        { id: 1, title: "Prepare meeting agenda", completed: false, departmentId: 1 },
-        { id: 2, title: "Fix website bugs", completed: false, departmentId: 3 },
-        { id: 3, title: "Update project documentation", completed: false, departmentId: 3 },
-        { id: 4, title: "Design mockup for new feature", completed: false, departmentId: 3 },
-        { id: 5, title: "Call the supplier", completed: false, departmentId: 4 },
-        { id: 6, title: "Organize team-building event", completed: true, departmentId: 1 },
-        { id: 7, title: "Submit annual report", completed: true, departmentId: 4 },
-      ],
-      departments: [
-        { id: 1, name: "Human Resources", active: true },
-        { id: 2, name: "Canteen", active: true },
-        { id: 3, name: "Technology", active: true },
-        { id: 4, name: "Finance", active: true },
+        { id: 1, title: "Prepare meeting agenda", completed: false },
+        { id: 2, title: "Fix website bugs", completed: false },
+        { id: 3, title: "Update project documentation", completed: false },
+        { id: 4, title: "Design mockup for new feature", completed: false },
+        { id: 5, title: "Call the supplier", completed: false },
+        { id: 6, title: "Organize team-building event", completed: true },
+        { id: 7, title: "Submit annual report", completed: true },
       ],
     };
   },
