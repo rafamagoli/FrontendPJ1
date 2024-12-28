@@ -19,8 +19,8 @@
         <!-- Employees card -->
         <div class="card employees-card">
           <h2>Employee Overview</h2>
-          <div class="sub-box">View All</div>
-          <div class="sub-box">Add a New Employee</div>
+          <div class="sub-box" @click="employeeList">View All</div>
+          <div class="sub-box" @click="employeeAdd">Add a New Employee</div>
         </div>
 
         <!-- Calendar card -->
@@ -72,6 +72,12 @@ export default {
       const sidebar = document.querySelector(".sidebar");
       sidebar.classList.toggle("open");
     },
+    employeeList() {
+      this.$router.push("/employee/list");
+    },  
+    employeeAdd() {
+      this.$router.push("/employee/add");
+    },  
   },
 };
 </script>
