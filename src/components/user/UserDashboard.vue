@@ -31,7 +31,7 @@
         <div class="card">
           <h2>Reservations</h2>
           <div class="calendar-card">
-            <FullCalendar :options="calendarOptions" />
+            <UserCalendar :reservations="reservations" />
           </div>
         </div>
       </section>
@@ -40,11 +40,10 @@
 </template>
 
 <script>
-import FullCalendar from "@fullcalendar/vue3";
-import dayGridPlugin from "@fullcalendar/daygrid";
+import UserCalendar from "./UserCalendar.vue";
 
 export default {
-  components: { FullCalendar },
+  components: { UserCalendar },
   data() {
     return {
       userName: "Bulma Garcia",
@@ -55,15 +54,11 @@ export default {
         { id: 4, title: "Organize team event", limitDate: "2024-12-22", completed: false },
         { id: 5, title: "Finalize budget", limitDate: "2024-12-23", completed: false },
       ],
-      calendarOptions: {
-        plugins: [dayGridPlugin],
-        initialView: "dayGridMonth",
-        height: "auto",
-        events: [
-          { title: "Ana Garcia", start: "2024-12-15" },
-          { title: "Felisberto Silva", start: "2024-12-20" },
-        ],
-      },
+      reservations: [
+        { id: 1, dish: "Grilled Fish", date: "2024-12-10" },
+        { id: 2, dish: "Grilled Steak", date: "2024-12-15" },
+        { id: 3, dish: "Shrimp Stew", date: "2024-12-19" },
+      ],
     };
   },
   computed: {
@@ -155,16 +150,5 @@ export default {
 .employees-card h2,
 .card h2 {
   margin-bottom: 10px;
-}
-
-.calendar-card {
-  font-size: 10px;
-  flex-direction: column;
-  height: 100%;
-}
-
-.calendar-card .fc {
-  flex: 1;
-  width: 100%;
 }
 </style>
