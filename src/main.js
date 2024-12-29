@@ -6,6 +6,7 @@ import UserLogin from "./components/user/UserLogin.vue";
 import UserRegister from "./components/user/UserRegister.vue";
 import EmployeeList from "./components/employee/EmployeeList.vue";
 import EmployeeAdd from "./components/employee/EmployeeAdd.vue";
+import EmployeeEdit from "./components/employee/EmployeeEdit.vue";
 import DepartmentList from "./components/department/DepartmentList.vue";
 import DepartmentAdd from "./components/department/DepartmentAdd.vue";
 import DefaultPageLayout from "./core/components/DefaultPageLayout.vue";
@@ -27,11 +28,11 @@ import ReservationList from "./components/reservation/ReservationList.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { 
-      name: "user-login", 
-      path: "/user/login", 
-      component: UserLogin, 
-      meta: {} 
+    {
+      name: "user-login",
+      path: "/user/login",
+      component: UserLogin,
+      meta: {},
     },
     {
       name: "user-register",
@@ -62,10 +63,11 @@ const router = createRouter({
           path: "employee/add",
           component: EmployeeAdd,
           meta: { allowedRoles: ["admin", "manager"] },
-        }, {
+        },
+        {
           name: "employee-edit",
-          path: "employee/edit/:id",
-          component: EmployeeAdd,
+          path: "employee/edit/:username",
+          component: EmployeeEdit,
           meta: { allowedRoles: ["admin", "HRmanager"] },
         },
         {
@@ -163,7 +165,7 @@ const router = createRouter({
           path: "reservation/edit/:id",
           component: ReservationEdit,
           meta: { allowedRoles: ["admin", "manager", "employee"] },
-        }
+        },
       ],
     },
   ],

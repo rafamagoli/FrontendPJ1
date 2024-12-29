@@ -81,7 +81,7 @@ export default {
     },
     handleEmployeeClick(employee) {
       // Navega para a página de edição do funcionário
-      this.$router.push(`/employee/edit/${employee.id}`);
+      this.$router.push(`/employee/edit/${employee.username}`);
     },
     // Exemplo de chamada de API para obter funcionários
     // async fetchEmployees() {

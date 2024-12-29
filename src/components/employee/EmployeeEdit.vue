@@ -27,9 +27,9 @@ export default {
     };
   },
   created() {
-    const employeeId = this.$route.params.id;
+    const username = this.$route.params.username; // Obtém o username da rota
 
-    // Mock para buscar dados do funcionário com base no id
+    // Mock para buscar dados do funcionário com base no username
     const mockEmployees = [
       {
         id: 1,
@@ -40,7 +40,7 @@ export default {
         password: "password123",
         confirmPassword: "password123",
         nif: "123456789",
-        role: "HR Manager",
+        role: "Manager",
       },
       {
         id: 2,
@@ -51,12 +51,34 @@ export default {
         password: "pepper123",
         confirmPassword: "pepper123",
         nif: "987654321",
-        role: "Canteen Manager",
+        role: "Manager",
+      },
+      {
+        id: 3,
+        name: "Martini Silva",
+        department: 3, // Technology
+        username: "martini_s",
+        balance: 200.0,
+        role: "Employee",
+        password: "martini123",
+        nif: "123789456",
+        active: true,
+      },
+      {
+        id: 4,
+        name: "Sansa Stark",
+        department: 4, // Finance
+        username: "sansa_s",
+        balance: 0.0,
+        role: "Admin",
+        password: "sansa123",
+        nif: "987123654",
+        active: true,
       },
     ];
 
-    // Busca o funcionário pelo id
-    const employee = mockEmployees.find((e) => e.id === parseInt(employeeId, 10));
+    // Busca o funcionário pelo username
+    const employee = mockEmployees.find((e) => e.username === username);
 
     if (employee) {
       this.employee = { ...employee, confirmPassword: employee.password }; // Carrega os dados
@@ -64,6 +86,23 @@ export default {
       console.error("Employee not found.");
       this.$router.push("/employee/list"); // Redireciona se não encontrar
     }
+
+      // Simulação de API
+      /*  async fetchEmployeeByUsername(username) {
+        try {
+          const response = await fetch(`/api/employees/${username}`);
+          if (response.ok) {
+            this.employee = await response.json();
+          } else {
+            console.error("Failed to fetch employee data");
+            this.$router.push("/employee/list");
+          }
+        } catch (error) {
+          console.error("Error fetching employee:", error);
+          this.$router.push("/employee/list");
+        }
+      } */
+
   },
   methods: {
     handleSubmit() {
@@ -72,19 +111,6 @@ export default {
         return;
       }
       console.log("Employee updated:", this.employee);
-
-      // Simulação de API
-      // fetch(`/api/employees/${this.$route.params.id}`, {
-      //   method: "PUT",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(this.employee),
-      // }).then((response) => {
-      //   if (response.ok) {
-      //     this.$router.push("/employee/list");
-      //   } else {
-      //     alert("Failed to update employee.");
-      //   }
-      // });
 
       this.$router.push("/employee/list");
     },
@@ -105,24 +131,40 @@ export default {
         <h2>Edit Employee</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Name -->
-          <EmployeeAddFormInput name="Name" identifier="name" v-model="employee.name" />
+          <EmployeeAddFormInput
+            name="Name"
+            identifier="name"
+            v-model="employee.name"
+          />
 
           <!-- Department -->
           <div class="form-group">
             <label for="department">Department</label>
             <select id="department" v-model="employee.department" required>
               <option value="" disabled>Select a department</option>
-              <option v-for="dept in departments" :key="dept.id" :value="dept.id">
+              <option
+                v-for="dept in departments"
+                :key="dept.id"
+                :value="dept.id"
+              >
                 {{ dept.name }}
               </option>
             </select>
           </div>
 
           <!-- Username -->
-          <EmployeeAddFormInput identifier="username" name="Username" v-model="employee.username" />
+          <EmployeeAddFormInput
+            identifier="username"
+            name="Username"
+            v-model="employee.username"
+          />
 
           <!-- Balance -->
-          <EmployeeAddFormInput identifier="balance" name="Balance" v-model="employee.balance" />
+          <EmployeeAddFormInput
+            identifier="balance"
+            name="Balance"
+            v-model="employee.balance"
+          />
 
           <!-- Password -->
           <EmployeeAddFormInput
@@ -141,16 +183,20 @@ export default {
           />
 
           <!-- NIF -->
-          <EmployeeAddFormInput identifier="nif" name="NIF" v-model="employee.nif" />
+          <EmployeeAddFormInput
+            identifier="nif"
+            name="NIF"
+            v-model="employee.nif"
+          />
 
           <!-- Role -->
           <div class="form-group">
             <label for="role">Role</label>
             <select id="role" v-model="employee.role" required>
               <option value="" disabled>Select a role</option>
+              <option value="Employee">Admin</option>
               <option value="Employee">Employee</option>
-              <option value="HR Manager">HR Manager</option>
-              <option value="Canteen Manager">Canteen Manager</option>
+              <option value="HR Manager">Manager</option>
               <option value="Inactive">Inactive</option>
             </select>
           </div>
