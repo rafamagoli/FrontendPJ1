@@ -2,21 +2,64 @@
 export default {
   data() {
     return {
-      //Username
       userName: "Bulma Garcia",
       searchQuery: "",
       employees: [
-        { id: 1, name: "Bulma Garcia", active: true },
-        { id: 2, name: "Pepper Stark", active: true },
-        { id: 3, name: "Martini Silva", active: true },
-        { id: 4, name: "Sansa Stark", active: true },
-        { id: 5, name: "Roberto Silva", active: true },
-        { id: 6, name: "Rafaela Oliveira", active: true },        
-        { id: 7, name: "Ana Garcia", active: true },
-        { id: 8, name: "Caio Lacerda", active: true },       
-        { id: 9, name: "Lucas Oliveira", active: true },
-        { id: 10, name: "Tony Stark", active: false },
-        { id: 11, name: "Pepper Potts", active: false },
+        {
+          id: 1,
+          name: "Bulma Garcia",
+          department: 1, // Human Resources
+          username: "bulma_g",
+          balance: 500.0,
+          role: "HR Manager",
+          password: "password123",
+          nif: "123456789",
+          active: true,
+        },
+        {
+          id: 2,
+          name: "Pepper Stark",
+          department: 2, // Canteen
+          username: "pepper_s",
+          balance: 150.0,
+          role: "Canteen Manager",
+          password: "pepper123",
+          nif: "987654321",
+          active: true,
+        },
+        {
+          id: 3,
+          name: "Martini Silva",
+          department: 3, // Technology
+          username: "martini_s",
+          balance: 200.0,
+          role: "Employee",
+          password: "martini123",
+          nif: "123789456",
+          active: true,
+        },
+        {
+          id: 4,
+          name: "Sansa Stark",
+          department: 4, // Finance
+          username: "sansa_s",
+          balance: 0.0,
+          role: "Admin",
+          password: "sansa123",
+          nif: "987123654",
+          active: true,
+        },
+        {
+          id: 5,
+          name: "Tony Stark",
+          department: 3, // Technology
+          username: "tony_s",
+          balance: 5000.0,
+          role: "Inactive",
+          password: "tony123",
+          nif: "567891234",
+          active: false,
+        },
       ],
     };
   },
@@ -33,51 +76,30 @@ export default {
     },
   },
   methods: {
-    //LEVA para a página de criar novo employee
     goToAddEmployee() {
       this.$router.push("/employee/add");
     },
-    // Logout method
-    logout() {
-      // Perform logout logic here (e.g., clearing tokens, user data)
-      console.log("You have been logged out!"); // Optional: Log message to console 
-    
-      // Redirect to login page
-      this.$router.push("/login");
+    handleEmployeeClick(employee) {
+      // Navega para a página de edição do funcionário
+      this.$router.push(`/employee/edit/${employee.id}`);
     },
-
-    toggleMenu(event) {
-      const parentItem = event.target.closest(".nav-item");
-      if (parentItem) {
-        parentItem.classList.toggle("active");
-
-        const submenu = parentItem.querySelector(".submenu");
-        if (submenu) {
-          submenu.style.display =
-            submenu.style.display === "block" ? "none" : "block";
-        }
-      }
-    },
-
-    toggleSidebar() {
-      const sidebar = document.querySelector(".sidebar");
-      sidebar.classList.toggle("open");
-    },
+    // Exemplo de chamada de API para obter funcionários
+    // async fetchEmployees() {
+    //   const response = await fetch('/api/employees');
+    //   const data = await response.json();
+    //   this.employees = data;
+    // },
   },
 };
 </script>
 
 <template>
   <div id="employees-page">
-
-
     <div class="main-content">
-      <!-- Cards Section -->
-       <p></p>
-       <h1 id="page-title">Employees</h1>
+      <h1 id="page-title">Employees</h1>
       <!-- Employee Management Section -->
       <section class="cards">
-        <!-- Employees Card with Search and Scroll -->
+        <!-- Active Employees -->
         <div class="card employees-card">
           <h2>Active Employees</h2>
           <div class="search-bar">
@@ -90,25 +112,35 @@ export default {
           </div>
           <div class="employee-list">
             <ul>
-              <li v-for="employee in filteredEmployees" :key="employee.id">
+              <li
+                v-for="employee in filteredEmployees"
+                :key="employee.id"
+                @click="handleEmployeeClick(employee)"
+                class="employee-item"
+              >
                 {{ employee.name }}
               </li>
             </ul>
           </div>
         </div>
 
-        <!-- Inactive Employees Card -->
+        <!-- Inactive Employees -->
         <div class="card inactive-employees-card">
           <h2>Inactive Employees</h2>
           <ul>
-            <li v-for="employee in inactiveEmployees" :key="employee.id">
-              <div class="employee-list">{{ employee.name }}</div>
+            <li
+              v-for="employee in inactiveEmployees"
+              :key="employee.id"
+              @click="handleEmployeeClick(employee)"
+              class="employee-item"
+            >
+              {{ employee.name }}
             </li>
           </ul>
         </div>
 
         <!-- Add New Employee Button -->
-        <div class=" add-employee-button">
+        <div class="add-employee-button">
           <button @click="goToAddEmployee" class="create-employee-btn">
             Create New Employee
           </button>
@@ -118,12 +150,11 @@ export default {
   </div>
 </template>
 
-
 <style scoped>
-
 #page-title {
-    padding-top: 15px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  padding-top: 15px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .search-bar {
@@ -137,6 +168,7 @@ export default {
   border: 1px solid #ccc;
   border-radius: 1px;
 }
+
 .employee-list {
   max-height: 200px;
   overflow-y: auto;
@@ -144,29 +176,48 @@ export default {
   padding: 10px;
   background: #fff;
 }
+
 .employee-list ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-.employee-list li {
-  padding: 6px 0; /*distância entre os nomes*/
+
+.employee-item {
+  padding: 6px 0;
   border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
+
+.employee-item:hover {
+  background-color: #f5f5f5;
+}
+
 .employee-list li:last-child {
   border-bottom: none;
 }
+
 .inactive-employees-card ul {
   list-style: none;
   padding: 0;
 }
+
 .inactive-employees-card li {
   padding: 5px 0;
   border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
+
+.inactive-employees-card li:hover {
+  background-color: #f5f5f5;
+}
+
 .inactive-employees-card li:last-child {
   border-bottom: none;
 }
+
 .create-employee-btn {
   display: block;
   width: 90%;
@@ -179,10 +230,8 @@ export default {
   font-size: 1rem;
   cursor: pointer;
 }
+
 .create-employee-btn:hover {
   background-color: #a4a4a4;
 }
-
-
-/* ************************************** */
 </style>

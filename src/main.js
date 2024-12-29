@@ -62,6 +62,11 @@ const router = createRouter({
           path: "employee/add",
           component: EmployeeAdd,
           meta: { allowedRoles: ["admin", "manager"] },
+        }, {
+          name: "employee-edit",
+          path: "employee/edit/:id",
+          component: EmployeeAdd,
+          meta: { allowedRoles: ["admin", "HRmanager"] },
         },
         {
           name: "department-list",
