@@ -31,6 +31,20 @@
             />
           </div>
 
+          <!-- nif field -->
+          <div class="mb-3">
+            <label for="nif" class="form-label">nif</label>
+            <input
+              id="nif"
+              v-model="nif"
+              type="text"
+              class="form-control"
+              placeholder="Enter your full nif"
+              required
+            />
+          </div>
+
+
           <!-- Password -->
           <div class="mb-3">
             <label for="password" class="form-label">PASSWORD</label>
@@ -75,26 +89,35 @@
 </template>
 
 <script>
+import UserService from '@/core/services/UserService';
+
 export default {
   data() {
     return {
       username: "",
       name: "",
+      nif: "",
       password: "",
       confirmPassword: "",
     };
   },
   methods: {
-    handleRegister() {
+    async handleRegister() {
       if (this.password !== this.confirmPassword) {
         alert("Passwords do not match!");
         return;
       }
-      console.log("Registration details:", {
-        username: this.username,
-        name: this.name,
-        password: this.password,
-      });
+
+      try {
+        let result = await UserService.registeAdmin(
+          this.username, this.password, this.name,
+          this.nif,
+          "Admin"
+        )
+        alert(result.message)
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 };
