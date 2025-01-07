@@ -1,7 +1,7 @@
 <template>
   <aside class="sidebar">
     <img src="/abr_logo.png" alt="Logo" class="sidebar-logo" />
-    <h3 id="username" class="text-center text-white mb-4">{{ userName }}</h3>
+    <h3 id="username" class="text-center text-white mb-4">{{ currentUser.username }}</h3>
 
     <nav>
       <ul>
@@ -62,7 +62,7 @@
         <div class="section-sidebar">
           CANTEEN
           <!-- Ingredients menu -->
-          <li class="nav-item" v-if="isCanteenManager">
+          <li class="nav-item" v-if="currentUser.isCanteenManager">
             <button class="nav-link" @click="toggleSubmenu('ingredients')">
               Ingredients <span class="arrow">▼</span>
             </button>
@@ -119,13 +119,7 @@ import UserService from "@/core/services/UserService";
 const router = useRouter();
 const activeMenu = ref(null);
 
-
 let currentUser = UserService.getCurrentUser();
-
-// Computed property para verificar se é "canteenManager"
-const isCanteenManager = computed(() => {
-  return currentUser.role === 'Manager' && currentUser.department === 'canteen';
-});
 
 function toggleSubmenu(menu) {
   activeMenu.value = activeMenu.value === menu ? null : menu;

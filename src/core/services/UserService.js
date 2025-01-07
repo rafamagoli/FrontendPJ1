@@ -35,7 +35,17 @@ const UserService = {
     }
   },
   
-  getCurrentUser: ()=> JSON.parse(localStorage.getItem('currentUser')),
+  getCurrentUser: function(){
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'))
+
+    currentUser.isCanteenManager = currentUser.role === 'Manager' && currentUser.department === 'canteen';
+    currentUser.isAdmin = currentUser.role === 'Admin';
+    currentUser.isHRManager = currentUser.role === 'HRmanager' && currentUser.department === 'Human Resources';
+    currentUser.isManager = currentUser.role === 'Manager';
+    currentUser.isEmployee = currentUser.role === 'Employee';
+
+    return currentUser
+  },
 
   logout: () =>
     axios.post(`${API_URL}/logout`, {}),
