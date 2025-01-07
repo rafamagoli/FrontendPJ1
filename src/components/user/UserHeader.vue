@@ -6,7 +6,7 @@
         <div class="top-bar-content">
           <img src="/balance_pig.png" alt="Balance Icon" class="balance-icon" />
           <!--  Balance information -->
-          <span class="balance">$500</span>
+          <span class="balance">{{ balance }}</span>
           <!-- Logout button -->
           <button @click="logout" class="logout-button">Logout</button>
         </div>
@@ -15,7 +15,17 @@
 <style>
 </style>
 <script>
+
+import UserService from "@/core/services/UserService";
+
+let currentUser = UserService.getCurrentUser();
+
 export default {
+  data() {
+    return {
+      balance: currentUser.balance,
+    };
+  },
   methods: {
     logout() {
       console.log("You have been logged out!");

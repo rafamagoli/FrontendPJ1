@@ -114,17 +114,17 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import UserService from "@/core/services/UserService";
 
 const router = useRouter();
 const activeMenu = ref(null);
 
-// Usuário e roles
-const userRole = ref('manager'); // Exemplo: pode ser 'admin', 'manager', 'employee'
-const userDepartment = ref('canteen'); // Exemplo: 'canteen', 'HR', etc.
+
+let currentUser = UserService.getCurrentUser();
 
 // Computed property para verificar se é "canteenManager"
 const isCanteenManager = computed(() => {
-  return userRole.value === 'manager' && userDepartment.value === 'canteen';
+  return currentUser.role === 'Manager' && currentUser.department === 'canteen';
 });
 
 function toggleSubmenu(menu) {

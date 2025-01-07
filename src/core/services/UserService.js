@@ -25,10 +25,14 @@ const UserService = {
     localStorage.setItem('authToken', token);
     
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  
-    let user = await this.getUserByUsername(username)
-    
-    localStorage.setItem('currentUser', JSON.stringify(user)[0]);
+
+    // TODO: remove try catch once API is fixed
+    try {
+      let user = await this.getUserByUsername(username);
+      localStorage.setItem('currentUser', JSON.stringify(user[0]));
+    } catch (error) {
+      localStorage.setItem('currentUser', JSON.stringify({}));
+    }
   },
   
   getCurrentUser: ()=> JSON.parse(localStorage.getItem('currentUser')),
