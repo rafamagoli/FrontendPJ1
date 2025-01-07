@@ -1,55 +1,53 @@
-import axios from "axios"
-import { rh } from "../constants/apis"
+import axios from 'axios';
 
+const API_URL = 'http://localhost:8080/api/users';
 
-export default class UserService{
-    // 8080 // 401
-    static async login (username,password){
-        return await axios.post(
-            `${rh}/api/users/login`,
-            {
-                username: username,
-                password: password,
-            }
-        )
+const UserService = {
+  setAuthToken(token) {
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
     }
+  },
+  getAllUsers: () =>
+    axios.get(`${API_URL}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    }),
+  getUserByUsername: (username) =>
+    axios.get(`${API_URL}/username/${username}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    }),
+  getUserById: (id) =>
+    axios.get(`${API_URL}/by-id/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    }),
+  createUser: (userData) =>
+    axios.post(`${API_URL}/register-user`, userData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    }),
+  updateUserByUsername: (username, updatedData) =>
+    axios.put(`${API_URL}/username/${username}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    }),
+  login: (username, password) =>
+    axios.post(`${API_URL}/login`, { username, password }),
+  logout: () =>
+    axios.post(`${API_URL}/logout`, {}, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    }),
+};
 
-    static async registe(username,password,name,nif,department,role) {
-        
-        return await axios.post(
-            `${rh}/api/users/register-user`,
-            {
-                username: username,
-                password: password,
-                name: name,
-                nif: nif,
-                departmentName: department,
-                role: role,
-            }
-        )
-    }
-
-    static async registeAdmin(username,password,name,nif,role) {
-
-        return await axios.post(
-            `${rh}/api/users/create-admin`,
-            {
-                username: username,
-                password: password,
-                name: name,
-                nif: nif,
-                role: role,
-            },
-
-        ).then(
-            reason=> reason.response.data
-        ).catch(
-            reason=> reason.response.data
-        )
-    }
-
-    static async getAll() {
-        return await axios.get(`${rh}/api/users`)
-    }
-
-}
+export default UserService;

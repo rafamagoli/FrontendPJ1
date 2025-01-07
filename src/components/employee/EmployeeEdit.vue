@@ -1,5 +1,7 @@
 <script>
 import EmployeeAddFormInput from "./EmployeeAddFormInput.vue";
+import UserService from "@/core/services/UserService";
+import DepartmentService from "@/core/services/DepartmentService";
 
 export default {
   components: {
@@ -7,7 +9,6 @@ export default {
   },
   data() {
     return {
-      userName: "Bulma Garcia", // Estrutura padrão
       employee: {
         name: "",
         department: "",
@@ -18,101 +19,83 @@ export default {
         nif: "",
         role: "",
       },
-      departments: [
-        { id: 1, name: "Human Resources" },
-        { id: 2, name: "Canteen" },
-        { id: 3, name: "Technology" },
-        { id: 4, name: "Finance" },
-      ],
+      departments: [],
     };
   },
-  created() {
-    const username = this.$route.params.username; // Obtém o username da rota
+  async created() {
+    const username = this.$route.params.username;
 
-    // Mock para buscar dados do funcionário com base no username
-    const mockEmployees = [
-      {
-        id: 1,
-        name: "Bulma Garcia",
-        department: 1,
-        username: "bulma_g",
-        balance: "500.00",
-        password: "password123",
-        confirmPassword: "password123",
-        nif: "123456789",
-        role: "Manager",
-      },
-      {
-        id: 2,
-        name: "Pepper Stark",
-        department: 2,
-        username: "pepper_s",
-        balance: "150.00",
-        password: "pepper123",
-        confirmPassword: "pepper123",
-        nif: "987654321",
-        role: "Manager",
-      },
-      {
-        id: 3,
-        name: "Martini Silva",
-        department: 3, // Technology
-        username: "martini_s",
-        balance: 200.0,
-        role: "Employee",
-        password: "martini123",
-        nif: "123789456",
-        active: true,
-      },
-      {
-        id: 4,
-        name: "Sansa Stark",
-        department: 4, // Finance
-        username: "sansa_s",
-        balance: 0.0,
-        role: "Admin",
-        password: "sansa123",
-        nif: "987123654",
-        active: true,
-      },
-    ];
+    try {
+      const employeeResponse = await UserService.getUserByUsername(username);
+      console.log("Employee Data from API:", employeeResponse.data);
 
-    // Busca o funcionário pelo username
-    const employee = mockEmployees.find((e) => e.username === username);
+      this.employee = {
+        ...employeeResponse.data,
+        confirmPassword: employeeResponse.data.password || "",
+      };
 
-    if (employee) {
-      this.employee = { ...employee, confirmPassword: employee.password }; // Carrega os dados
-    } else {
-      console.error("Employee not found.");
-      this.$router.push("/employee/list"); // Redireciona se não encontrar
+      const departmentsResponse = await DepartmentService.getAllDepartments();
+      console.log("Departments Data from API:", departmentsResponse.data);
+
+      this.departments = departmentsResponse.data;
+    } catch (error) {
+      console.error("Error fetching employee or departments:", error);
+      alert("Failed to load data. Redirecting to employee list.");
+      this.$router.push("/employee/list");
     }
-
-      // Simulação de API
-      /*  async fetchEmployeeByUsername(username) {
-        try {
-          const response = await fetch(`/api/employees/${username}`);
-          if (response.ok) {
-            this.employee = await response.json();
-          } else {
-            console.error("Failed to fetch employee data");
-            this.$router.push("/employee/list");
-          }
-        } catch (error) {
-          console.error("Error fetching employee:", error);
-          this.$router.push("/employee/list");
-        }
-      } */
-
   },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
       if (this.employee.password !== this.employee.confirmPassword) {
         alert("Passwords do not match!");
         return;
       }
-      console.log("Employee updated:", this.employee);
 
-      this.$router.push("/employee/list");
+      try {
+        const formattedBalance = parseFloat(
+          this.employee.balance.toString().replace(",", ".")
+        );
+
+        const updatedEmployee = {
+          name: this.employee.name,
+          department: this.employee.department,
+          username: this.employee.username,
+          balance: formattedBalance,
+          password: this.employee.password,
+          nif: this.employee.nif,
+          role: this.employee.role,
+        };
+
+        await UserService.updateUserByUsername(
+          this.employee.username,
+          updatedEmployee
+        );
+
+        alert("Employee updated successfully!");
+        this.$router.push("/employee/list");
+      } catch (error) {
+        console.error("Error updating employee:", error);
+        alert(
+          "Error updating employee: " +
+            (error.response?.data?.message || error.message)
+        );
+      }
+    },
+    async markAsInactive() {
+      try {
+        await UserService.updateUserByUsername(this.employee.username, {
+          role: "Inactive",
+        });
+
+        alert("Employee marked as inactive successfully!");
+        this.$router.push("/employee/list");
+      } catch (error) {
+        console.error("Error marking employee as inactive:", error);
+        alert(
+          "Error inactivating employee: " +
+            (error.response?.data?.message || error.message)
+        );
+      }
     },
     cancel() {
       this.$router.push("/employee/list");
@@ -124,8 +107,6 @@ export default {
 <template>
   <div id="editEmployee-page">
     <div class="main-content">
-      <!-- Cards Section -->
-      <p></p>
       <!-- Edit Employee Form -->
       <section class="edit-employee-form">
         <h2>Edit Employee</h2>
@@ -194,10 +175,9 @@ export default {
             <label for="role">Role</label>
             <select id="role" v-model="employee.role" required>
               <option value="" disabled>Select a role</option>
-              <option value="Employee">Admin</option>
+              <option value="Admin">Admin</option>
               <option value="Employee">Employee</option>
               <option value="HR Manager">Manager</option>
-              <option value="Inactive">Inactive</option>
             </select>
           </div>
 
@@ -207,6 +187,9 @@ export default {
               Cancel
             </button>
             <button type="submit" class="update-button">Update</button>
+            <button type="button" class="inactive-button" @click="markAsInactive">
+              Inactive Employee
+            </button>
           </div>
         </form>
       </section>
@@ -260,23 +243,27 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+  gap: 10px; /* Add spacing between buttons */
 }
 
 .cancel-button,
-.update-button {
+.update-button,
+.inactive-button { /* Apply same styles to all buttons */
   border-radius: 10px;
-  width: 48%;
+  width: 32%; /* Ensure all buttons are the same width */
   padding: 10px;
   font-size: 1rem;
   border: none;
   cursor: pointer;
   background: #000000;
   color: white;
+  text-align: center;
 }
 
 .cancel-button:hover,
-.update-button:hover {
-  background: #999999;
+.update-button:hover,
+.inactive-button:hover {
+  background: #999999; /* Same hover effect for all buttons */
 }
 
 /* Responsiveness */
@@ -287,15 +274,17 @@ export default {
 
   .form-actions {
     flex-direction: column;
+    gap: 10px;
   }
 
   .cancel-button,
-  .update-button {
+  .update-button,
+  .inactive-button {
     width: 100%;
     margin-bottom: 10px;
   }
 
-  .update-button {
+  .inactive-button {
     margin-bottom: 0;
   }
 }

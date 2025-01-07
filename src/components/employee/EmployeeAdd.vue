@@ -1,14 +1,15 @@
 <script>
 import EmployeeAddFormInput from './EmployeeAddFormInput.vue';
+import UserService from "@/core/services/UserService";
+import DepartmentService from "@/core/services/DepartmentService";
+
 export default {
   components: {
-    EmployeeAddFormInput
+    EmployeeAddFormInput,
   },
-    data() {
+  data() {
     return {
-      /* PADRÃO DA ESTRUTURA DA PÁGINA ABAIXO */
       userName: "Bulma Garcia",
-      /* FIM DO PADRÃO DA ESTRUTURA DA PÁGINA */
 
       employee: {
         name: "",
@@ -20,106 +21,124 @@ export default {
         nif: "",
         role: "",
       },
+
+      departments: [],
     };
   },
-
   methods: {
-    handleSubmit() {
+    async fetchDepartments() {
+      try {
+        const response = await DepartmentService.getAllDepartments();
+        this.departments = response.data;
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+        alert("Unable to fetch departments. Please try again.");
+      }
+    },
+
+    async handleSubmit() {
       if (this.employee.password !== this.employee.confirmPassword) {
         alert("Passwords do not match!");
         return;
       }
-      console.log("Employee created:", this.employee);
-      this.$router.push("/employee/list"); // Redirect to employees page
+
+      try {
+        const formattedBalance = parseFloat(this.employee.balance.replace(',', '.'));
+
+        const newEmployee = {
+          name: this.employee.name,
+          department: this.employee.department,
+          username: this.employee.username,
+          balance: formattedBalance,
+          password: this.employee.password,
+          nif: this.employee.nif,
+          role: this.employee.role,
+        };
+
+        await EmployeeService.createEmployee(newEmployee);
+
+        alert("Employee created successfully!");
+        this.$router.push("/employee/list");
+      } catch (error) {
+        console.error("Error creating employee:", error);
+        alert("Error creating employee: " + (error.response?.data?.message || error.message));
+      }
     },
+
     cancel() {
       this.$router.push("/employee/list");
     },
 
-
-
-
-    // Logout Método
-    /* PADRÃO DA ESTRUTURA DA PÁGINA INICIO */
-    addEmployee() {
-      this.$router.push("/addEmployee");
-    },
     logout() {
-      console.log("You have been logged out!"); // fazer funcionar
-
-      // Redirect to login page
+      console.log("You have been logged out!");
       this.$router.push("/login");
     },
-    toggleMenu(event) {
-      const parentItem = event.target.closest(".nav-item");
-      if (parentItem) {
-        parentItem.classList.toggle("active");
-
-        const submenu = parentItem.querySelector(".submenu");
-        if (submenu) {
-          submenu.style.display =
-            submenu.style.display === "block" ? "none" : "block";
-        }
-      }
-    },
-
-    toggleSidebar() {
-      const sidebar = document.querySelector(".sidebar");
-      sidebar.classList.toggle("open");
-    },
-    /* PADRÃO DA ESTRUTURA DA PÁGINA FIM */
-
+  },
+  async created() {
+    await this.fetchDepartments();
   },
 };
 </script>
+
 <template>
   <div id="addEmployee-page">
     <div class="main-content">
-
-      <!-- Cards Section -->
-      <p></p>
       <!-- Add Employee Form -->
       <section class="add-employee-form">
         <h2>Add New Employee</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Name -->
+          <EmployeeAddFormInput name="Name" identifier="name" v-model="employee.name" />
 
-          <EmployeeAddFormInput name="Name" identifier="name" v-model="employee.name"/>
-          <!--
+          <!-- Department (Dropdown) -->
           <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" v-model="employee.name" required />
+            <label for="department">Department</label>
+            <select id="department" v-model="employee.department" required>
+              <option value="" disabled>Select department</option>
+              <option v-for="dept in departments" :key="dept.id" :value="dept.id">
+                {{ dept.name }}
+              </option>
+            </select>
           </div>
-          -->
-          <!-- Department -->
-          <EmployeeAddFormInput identifier="department" name="Department" v-model="employee.department"/>
+
           <!-- Username -->
-          <EmployeeAddFormInput identifier="username" name="Username" v-model="employee.username"/>
+          <EmployeeAddFormInput identifier="username" name="Username" v-model="employee.username" />
+
           <!-- Balance -->
-          <EmployeeAddFormInput identifier="balance" name="Balance" v-model="employee.balance"/> 
+          <EmployeeAddFormInput identifier="balance" name="Balance" v-model="employee.balance" />
+
           <!-- Password -->
-          <EmployeeAddFormInput identifier="password" name="Password" v-model="employee.password" type="password"/>
+          <EmployeeAddFormInput
+            identifier="password"
+            name="Password"
+            v-model="employee.password"
+            type="password"
+          />
+
           <!-- Confirm Password -->
-          <EmployeeAddFormInput identifier="confirm-password" name="Confirm Password" v-model="employee.confirmPassword" type="password"/>
+          <EmployeeAddFormInput
+            identifier="confirm-password"
+            name="Confirm Password"
+            v-model="employee.confirmPassword"
+            type="password"
+          />
+
           <!-- NIF -->
           <EmployeeAddFormInput identifier="nif" name="NIF" v-model="employee.nif" />
-          <!-- Role -->
+
+          <!-- Role (Dropdown) -->
           <div class="form-group">
             <label for="role">Role</label>
             <select id="role" v-model="employee.role" required>
               <option value="" disabled>Select a role</option>
-              <option value="Employee">Admin</option>
+              <option value="Manager">Manager</option>
               <option value="Employee">Employee</option>
-              <option value="HR Manager">Manager</option>
-              <option value="Inactive">Inactive</option>
             </select>
           </div>
 
           <!-- Action Buttons -->
           <div class="form-actions">
-            <button type="button" class="cancel-button" @click="cancel">
-              Cancel
-            </button>
+            <button type="button" class="cancel-button" @click="cancel">Cancel</button>
             <button type="submit" class="create-button">Create</button>
           </div>
         </form>
@@ -127,8 +146,6 @@ export default {
     </div>
   </div>
 </template>
-
-
 
 <style>
 

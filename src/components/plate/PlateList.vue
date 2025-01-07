@@ -1,46 +1,36 @@
 <script>
+import PlateService from "@/core/services/PlateService";
+
 export default {
   data() {
     return {
-      plates: [
-        {
-          id: 1,
-          name: "Grilled Fish with Rice",
-          price: "25.99",
-          ingredients: ["Rice", "Grilled Fish", "Vegetables"],
-        },
-        {
-          id: 2,
-          name: "Steak with Potatoes",
-          price: "32.99",
-          ingredients: ["Steak", "Potatoes", "Vegetables"],
-        },
-        {
-          id: 3,
-          name: "Vegetarian Pasta",
-          price: "18.99",
-          ingredients: ["Pasta", "Tomato Sauce", "Mushrooms"],
-        },
-        {
-          id: 4,
-          name: "Chicken Curry",
-          price: "23.99",
-          ingredients: ["Chicken", "Rice", "Curry Sauce"],
-        },
-      ],
+      plates: [], // Plates fetched from the backend
     };
   },
+  async created() {
+    await this.fetchPlates(); // Fetch plates when the component is created
+  },
   methods: {
+    async fetchPlates() {
+      try {
+        const response = await PlateService.getAllPlates();
+        this.plates = response.data.data.plates; // Assign plates from response
+      } catch (error) {
+        console.error("Error fetching plates:", error);
+        alert("Failed to load plates. Please try again later.");
+      }
+    },
     editPlate(plate) {
-      // Redirection using plate ID
-      this.$router.push({ name: "plate-edit", params: { id: plate.id } });
+      // Redirect to the edit page using plate ID
+      this.$router.push({ name: "plate-edit", params: { id: plate._id } });
     },
     createPlate() {
-      this.$router.push("/plate/add");
+      this.$router.push("/plate/add"); // Redirect to the add plate page
     },
   },
 };
 </script>
+
 
 <template>
   <div id="plates-page">

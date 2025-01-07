@@ -1,7 +1,7 @@
 <script>
 import IngredientFormInput from "./IngredientFormInput.vue";
 import UserCancelButton from "@/components/user/UserCancelButton.vue";
-
+import IngredientService from "@/core/services/IngredientService";
 
 export default {
   components: {
@@ -15,55 +15,66 @@ export default {
         name: "",
         allergen: "",
       },
-      allergenOptions: [
-        "None",
-        "Gluten",
-        "Milk",
-        "Egg",
-        "Fish",
-        "Shellfish",
-        "Nuts",
-        "Soy",
-      ],
+      allergenOptions: ["Yes", "No"],
     };
   },
-  created() {
-    const ingredientId = this.$route.params.id; // Get ingredient ID from route params
+  async created() {
+    const ingredientId = this.$route.params.id;
 
-    // Mock data simulating an API or database fetch
-    const mockIngredients = [
-      { id: 1, name: "Rice", allergen: "None" },
-      { id: 2, name: "Grilled Fish", allergen: "Fish" },
-      { id: 3, name: "Stewed Meat", allergen: "None" },
-      { id: 4, name: "Onion", allergen: "None" },
-      { id: 5, name: "Garlic", allergen: "None" },
-      { id: 6, name: "Tomato", allergen: "None" },
-      { id: 7, name: "Salt", allergen: "None" },
-      { id: 8, name: "Potato", allergen: "None" },
-    ];
+    try {
+      const response = await IngredientService.getAllIngredients();
+      const ingredient = response.data.find(
+        (item) => item.id === ingredientId || item._id === ingredientId
+      );
 
-    // Fetch the ingredient details
-    const ingredient = mockIngredients.find(
-      (item) => item.id === parseInt(ingredientId, 10)
-    );
-
-    if (ingredient) {
-      // Set the fetched ingredient data
-      this.ingredient = { ...ingredient };
-    } else {
-      console.error("Ingredient not found. Redirecting...");
+      if (ingredient) {
+        this.ingredient = {
+          id: ingredient.id || ingredient._id,
+          name: ingredient.name,
+          allergen: ingredient.allergen || "No",
+        };
+      } else {
+        console.error("Ingredient not found. Redirecting...");
+        this.$router.push("/ingredient/list");
+      }
+    } catch (error) {
+      console.error("Error fetching ingredient:", error.response?.data || error.message);
+      alert("Failed to fetch ingredient details. Redirecting to list.");
       this.$router.push("/ingredient/list");
     }
   },
   methods: {
-    handleSubmit() {
-      console.log("Ingredient updated:", this.ingredient);
-      this.$router.push("/ingredient/list");
-    },
-    deleteIngredient() {
-      if (confirm("Are you sure you want to delete this ingredient?")) {
-        console.log("Ingredient deleted:", this.ingredient);
+    async handleSubmit() {
+      try {
+        if (!this.ingredient.name.trim()) {
+          alert("Ingredient name is required!");
+          return;
+        }
+
+        const updatedData = {
+          name: this.ingredient.name.trim(),
+          allergen: this.ingredient.allergen || "No",
+        };
+
+        await IngredientService.updateIngredient(this.ingredient.id, updatedData);
+
+        alert("Ingredient updated successfully!");
         this.$router.push("/ingredient/list");
+      } catch (error) {
+        console.error("Error updating ingredient:", error.response?.data || error.message);
+        alert("Failed to update ingredient. Please try again.");
+      }
+    },
+    async deleteIngredient() {
+      if (confirm("Are you sure you want to delete this ingredient?")) {
+        try {
+          await IngredientService.deleteIngredient(this.ingredient.id);
+          alert("Ingredient deleted successfully!");
+          this.$router.push("/ingredient/list");
+        } catch (error) {
+          console.error("Error deleting ingredient:", error.response?.data || error.message);
+          alert("Failed to delete ingredient. Please try again.");
+        }
       }
     },
     cancel() {

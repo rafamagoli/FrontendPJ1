@@ -1,185 +1,168 @@
+<script>
+import PlateService from "@/core/services/PlateService";
+
+export default {
+  data() {
+    return {
+      plates: [], // Plates fetched dynamically
+      reservation: {
+        plateId: "", // Plate ID selected from dropdown
+        date: "", // Date entered by the user
+      },
+    };
+  },
+  computed: {
+    availableDates() {
+      const dates = [];
+      const now = new Date();
+      const currentHour = now.getHours();
+
+      // Include today if it's before 10 AM
+      let startDate = new Date();
+      if (currentHour >= 10) {
+        startDate.setDate(startDate.getDate() + 1);
+      }
+
+      // Add the next 7 days
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        dates.push(date.toISOString().split("T")[0]);
+      }
+
+      return dates;
+    },
+  },
+  async created() {
+    try {
+      // Fetch plates
+      const plateResponse = await PlateService.getAllPlates();
+      this.plates = plateResponse.data.data.plates.map((plate) => ({
+        id: plate._id,
+        name: plate.name,
+      }));
+    } catch (error) {
+      console.error("Error fetching plates:", error.response?.data || error.message);
+      alert("Failed to load plates. Please try again.");
+    }
+  },
+  methods: {
+    async handleSubmit() {
+      try {
+        // Prepare the reservation data
+        const reservationData = {
+          plateId: this.reservation.plateId,
+          date: this.reservation.date,
+        };
+
+        // Log reservation data for debugging
+        console.log("Reservation data to be sent:", reservationData);
+
+        // Add API call here to send the reservation data to the backend
+        alert("Reservation created successfully!");
+        this.$router.push("/reservation/list");
+      } catch (error) {
+        console.error("Error creating reservation:", error.response?.data || error.message);
+        alert("Failed to create reservation. Please try again.");
+      }
+    },
+    cancel() {
+      this.$router.push("/reservation/list");
+    },
+  },
+};
+</script>
+
 <template>
+  <div id="add-reservation-page">
     <div class="main-content">
-      <h1 id="page-title">New Reservation</h1>
-  
-      <div class="reservation-form">
-        <form @submit.prevent="handleSubmit">
-          <div class="form-group">
-            <label for="employeeId">Employee</label>
-            <select 
-              id="employeeId" 
-              v-model="reservation.employeeId" 
-              required
-            >
-              <option value="">Select an employee</option>
-              <option v-for="employee in employees" 
-                      :key="employee.id" 
-                      :value="employee.id">
-                {{ employee.name }}
-              </option>
-            </select>
-          </div>
-  
-          <div class="form-group">
-            <label for="date">Date</label>
-            <select 
-              id="date" 
-              v-model="reservation.date" 
-              required
-            >
-              <option value="">Select a date</option>
-              <option 
-                v-for="date in availableDates" 
-                :key="date"
-                :value="date"
-              >
-                {{ formatDate(date) }}
-              </option>
-            </select>
-          </div>
-  
-          <div class="form-group">
-            <label for="dish">Dish</label>
-            <select 
-              id="dish" 
-              v-model="reservation.dish" 
-              required
-            >
-              <option value="">Select a dish</option>
-              <option 
-                v-for="plate in plates" 
-                :key="plate.id" 
-                :value="plate.name"
-              >
-                {{ plate.name }} - ${{ plate.price }}
-              </option>
-            </select>
-          </div>
-  
-          <button type="submit" class="action-button">
+      <h1>Create New Reservation</h1>
+
+      <form @submit.prevent="handleSubmit">
+        <!-- Date Input -->
+        <div class="form-group">
+          <label for="date">Reservation Date</label>
+          <input
+            type="date"
+            id="date"
+            v-model="reservation.date"
+            required
+          />
+        </div>
+
+        <!-- Plate Dropdown -->
+        <div class="form-group">
+          <label for="plate">Select Plate</label>
+          <select id="plate" v-model="reservation.plateId" required>
+            <option value="" disabled>Select a plate</option>
+            <option v-for="plate in plates" :key="plate.id" :value="plate.id">
+              {{ plate.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button type="button" class="cancel-button" @click="cancel">
+            Cancel
+          </button>
+          <button type="submit" class="create-button">
             Create Reservation
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        employees: [
-          { id: 1, name: "Bulma Garcia" },
-          { id: 2, name: "Pepper Stark" },
-          { id: 3, name: "Martini Silva" },
-          { id: 4, name: "Sansa Stark" },
-        ],
-        plates: [
-          { 
-            id: 1, 
-            name: "Grilled Fish",
-            price: "12.99",
-          },
-          { 
-            id: 2, 
-            name: "Grilled Steak",
-            price: "15.99",
-          },
-          { 
-            id: 3, 
-            name: "Shrimp Stew",
-            price: "13.99",
-          }
-        ],
-        reservation: {
-          employeeId: "",
-          date: "",
-          dish: ""
-        }
-      };
-    },
-    computed: {
-      availableDates() {
-        const dates = [];
-        const now = new Date();
-        const currentHour = now.getHours();
-        
-        // If it's before 10 AM, include today
-        let startDate = new Date();
-        if (currentHour >= 10) {
-          startDate.setDate(startDate.getDate() + 1);
-        }
-        
-        // Add 7 days
-        for (let i = 0; i < 7; i++) {
-          const date = new Date(startDate);
-          date.setDate(startDate.getDate() + i);
-          dates.push(date.toISOString().split('T')[0]);
-        }
-        
-        return dates;
-      }
-    },
-    methods: {
-      formatDate(dateStr) {
-        return new Date(dateStr).toLocaleDateString('en-US');
-      },
-      handleSubmit() {
-        // Here you would make an API call to save the reservation
-        console.log("Reservation created:", this.reservation);
-        this.$router.push('/reservation/list');
-      }
-    }
-  };
-  </script>
-  
-  <style scoped>
-  .reservation-form {
-    max-width: 500px;
-    margin: 20px auto;
-    padding: 20px;
-    background:#f6f5f5;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  .form-group select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .action-button {
-    width: 100%;
-    padding: 10px;
-    background: #000;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-top: 20px;
-  }
-  
-  .action-button:hover {
-    background: #333;
-  }
-  
-  @media (max-width: 768px) {
-    .reservation-form {
-      margin: 10px;
-      padding: 15px;
-    }
-  }
-  </style>
+  </div>
+</template>
+
+<style scoped>
+.main-content {
+  max-width: 600px;
+  margin: 60px auto;
+  background: #f6f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancel-button,
+.create-button {
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #000;
+  color: white;
+  border: none;
+}
+
+.cancel-button:hover,
+.create-button:hover {
+  background: #333;
+}
+</style>

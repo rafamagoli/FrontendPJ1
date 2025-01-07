@@ -59,63 +59,27 @@
 </template>
 
 <script>
+import DepartmentService from "@/core/services/DepartmentService";
+import UserService from "@/core/services/UserService";
+
 export default {
     data() {
         return {
             department: null,
+            employees: [],
             searchQuery: '',
-            // Mock data para simular API
-            departmentsData: {
-                1: {
-                    id: 1,
-                    name: 'Human Resources',
-                    employees: [
-                        { id: 1, name: "Ana Garcia", active: true },
-                        { id: 2, name: "Felisberto Silva", active: true },
-                        { id: 3, name: "Rafaela Oliveira", active: true },
-                        { id: 4, name: "João Silva", active: false },
-                    ]
-                },
-                2: {
-                    id: 2,
-                    name: 'Canteen',
-                    employees: [
-                        { id: 5, name: "Maria Santos", active: true },
-                        { id: 6, name: "Pedro Costa", active: true },
-                        { id: 7, name: "Clara Lima", active: false },
-                    ]
-                },
-                3: {
-                    id: 3,
-                    name: 'Technology',
-                    employees: [
-                        { id: 8, name: "Lucas Silva", active: true },
-                        { id: 9, name: "Bruno Costa", active: true },
-                        { id: 10, name: "Ana Paula", active: false },
-                    ]
-                },
-                4: {
-                    id: 4,
-                    name: 'Finance',
-                    employees: [
-                        { id: 11, name: "Carlos Santos", active: true },
-                        { id: 12, name: "Mariana Lima", active: true },
-                        { id: 13, name: "José Silva", active: false },
-                    ]
-                }
-            }
-        }
+        };
     },
     computed: {
         filteredActiveEmployees() {
-            if (!this.department) return [];
-            return this.department.employees.filter(emp => 
+            if (!this.employees) return [];
+            return this.employees.filter(emp =>
                 emp.active && emp.name.toLowerCase().includes(this.searchQuery.toLowerCase())
             );
         },
         inactiveEmployees() {
-            if (!this.department) return [];
-            return this.department.employees.filter(emp => !emp.active);
+            if (!this.employees) return [];
+            return this.employees.filter(emp => !emp.active);
         }
     },
     methods: {
@@ -126,20 +90,27 @@ export default {
             this.$router.push('/department/add');
         },
         goToEditDepartment() {
-            this.$router.push('/department/edit');
+            this.$router.push(`/department/edit/${this.department.id}`);
         },
-        fetchDepartmentDetails() {
-            const departmentId = this.$route.params.id;
-            this.department = this.departmentsData[departmentId];
-            
-            if (!this.department) {
-                console.error('Department not found');
+        async fetchDepartmentDetails() {
+            try {
+                const departmentId = this.$route.params.id;
+
+                const departmentResponse = await DepartmentService.getDepartmentById(departmentId);
+                this.department = departmentResponse.data;
+
+                const employeesResponse = await UserService.getUsersByDepartment(this.department.name);
+                this.employees = employeesResponse.data;
+
+            } catch (error) {
+                console.error('Error fetching department details:', error);
+                alert('Unable to fetch department details. Redirecting to list.');
                 this.$router.push('/department/list');
             }
         }
     },
-    created() {
-        this.fetchDepartmentDetails();
+    async created() {
+        await this.fetchDepartmentDetails();
     },
     watch: {
         '$route.params.id': {
@@ -148,7 +119,7 @@ export default {
             }
         }
     }
-}
+};
 </script>
 
 <style scoped>

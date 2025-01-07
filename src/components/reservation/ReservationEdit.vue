@@ -68,89 +68,84 @@
   </template>
   
   <script>
+  import ReservationService from "@/core/services/ReservationService";
+  import PlateService from "@/core/services/PlateService";
+  
   export default {
     data() {
       return {
-        employees: [
-          { id: 1, name: "Bulma Garcia" },
-          { id: 2, name: "Pepper Stark" },
-          { id: 3, name: "Martini Silva" },
-          { id: 4, name: "Sansa Stark" },
-        ],
-        plates: [
-          { 
-            id: 1, 
-            name: "Grilled Fish",
-            price: "12.99",
-          },
-          { 
-            id: 2, 
-            name: "Grilled Steak",
-            price: "15.99",
-          },
-          { 
-            id: 3, 
-            name: "Shrimp Stew",
-            price: "13.99",
+        reservation: {
+          date: "",
+          plate: "", // Plate name
+        },
+        availablePlates: [], // Dynamically fetched plates
+        error: null,
+      };
+    },
+    async created() {
+      const reservationId = this.$route.params.id; // Get the reservation ID from route params
+  
+      if (reservationId) {
+        await this.fetchReservation(reservationId); // Fetch the reservation details
+      } else {
+        console.error("No reservation ID found. Redirecting...");
+        this.$router.push("/reservation/list");
+      }
+  
+      await this.fetchAvailablePlates(); // Fetch available plates
+    },
+    methods: {
+      async fetchReservation(reservationId) {
+        try {
+          const response = await ReservationService.getReservationById(reservationId);
+          this.reservation = {
+            date: response.data.data.reservation.date,
+            plate: response.data.data.reservation.dish,
+          };
+        } catch (error) {
+          console.error("Failed to fetch reservation details:", error.response?.data || error.message);
+          this.error = "Failed to fetch reservation details.";
+          this.$router.push("/reservation/list");
+        }
+      },
+      async fetchAvailablePlates() {
+        try {
+          const response = await PlateService.getAllPlates();
+          this.availablePlates = response.data.data.plates.map((plate) => ({
+            id: plate._id,
+            name: plate.name,
+          }));
+        } catch (error) {
+          console.error("Failed to fetch plates:", error.response?.data || error.message);
+          this.error = "Failed to fetch plates.";
+        }
+      },
+      async handleSubmit() {
+        try {
+          if (!this.reservation.date || !this.reservation.plate) {
+            alert("Date and plate are required!");
+            return;
           }
-        ],
-      reservation: {
-        employeeId: "",
-        date: "",
-        dish: ""
-      }
-    };
-  },
-  computed: {
-    availableDates() {
-      const dates = [];
-      const now = new Date();
-      const currentHour = now.getHours();
-      
-      // If it's before 10 AM, include today
-      let startDate = new Date();
-      if (currentHour >= 10) {
-        startDate.setDate(startDate.getDate() + 1);
-      }
-      
-      // Add 7 days
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(startDate);
-        date.setDate(startDate.getDate() + i);
-        dates.push(date.toISOString().split('T')[0]);
-      }
-      
-      return dates;
-    }
-  },
-  created() {
-    // Here you would typically fetch the reservation data based on the ID
-    // For now, we'll use mock data
-    const reservationId = this.$route.params.id;
-    // Simulating fetching reservation data
-    this.reservation = {
-      employeeId: 1,
-      date: "2024-12-15",
-      dish: "Grilled Fish"
-    };
-  },
-  methods: {
-    formatDate(dateStr) {
-      return new Date(dateStr).toLocaleDateString('en-US');
+  
+          const updatedReservation = {
+            date: this.reservation.date,
+            dish: this.reservation.plate,
+          };
+  
+          await ReservationService.updateReservation(this.$route.params.id, updatedReservation);
+          alert("Reservation updated successfully!");
+          this.$router.push("/reservation/list");
+        } catch (error) {
+          console.error("Failed to update reservation:", error.response?.data || error.message);
+          alert("Failed to update reservation. Please try again.");
+        }
+      },
+      cancel() {
+        this.$router.push("/reservation/list");
+      },
     },
-    handleEdit() {
-      // Here you would make an API call to update the reservation
-      console.log("Reservation updated:", this.reservation);
-      this.$router.push('/reservation/list');
-    },
-    handleDelete() {
-      // Here you would make an API call to delete the reservation
-      console.log("Reservation deleted");
-      this.$router.push('/reservation/list');
-    }
-  }
-};
-</script>
+  };
+  </script>  
 
 <style scoped>
 .edit-form {

@@ -1,259 +1,163 @@
 <template>
     <div id="department-edit">
-        <div class="main-content">
-            <h1 id="page-title">Edit Department</h1>
-
-            <div class="form-container">
-                <div class="form-content">
-                    <!-- Department Selection -->
-                    <div class="form-group">
-                        <label for="departmentSelect">Department</label>
-                        <select 
-                            id="departmentSelect" 
-                            v-model="department.name"
-                            @click="fetchDepartments"
-                        >
-                            <option value="" disabled selected>Select department</option>
-                            <option 
-                                v-for="dept in departments" 
-                                :key="dept.id" 
-                                :value="dept.id"
-                            >
-                                {{ dept.name }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Manager -->
-                    <div class="form-group">
-                        <label for="manager">Manager</label>
-                        <select 
-                            id="manager" 
-                            v-model="department.manager"
-                            @click="fetchManagers"
-                        >
-                            <option value="" disabled selected>Select manager</option>
-                            <option 
-                                v-for="manager in managers" 
-                                :key="manager.id" 
-                                :value="manager.id"
-                            >
-                                {{ manager.name }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Employees -->
-                    <div class="form-group">
-                        <label for="employees">Employees</label>
-                        <select 
-                            id="employees" 
-                            v-model="department.selectedEmployees"
-                            @click="fetchEmployees"
-                        >
-                            <option value="" disabled selected>Select employees</option>
-                            <option 
-                                v-for="employee in employees" 
-                                :key="employee.id" 
-                                :value="employee.id"
-                            >
-                                {{ employee.name }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Associated Discount -->
-                    <div class="form-group">
-                        <label for="discount">Associated Discount</label>
-                        <input 
-                            type="text" 
-                            id="discount" 
-                            v-model="formattedDiscount"
-                            @input="formatDiscount"
-                            maxlength="7"
-                            required
-                        />
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="button-container">
-                        <button @click="updateDepartment" class="update-btn">
-                            Update
-                        </button>
-                    </div>
-                </div>
-            </div>
+      <div class="main-content">
+        <h1>Edit Department</h1>
+  
+        <!-- Form Container -->
+        <div class="form-container" v-if="!loading">
+          <!-- Department Name -->
+          <div class="form-group">
+            <label for="department-name">Department Name</label>
+            <input
+              type="text"
+              id="department-name"
+              v-model="department.name"
+              placeholder="Enter department name"
+              required
+            />
+          </div>
+  
+          <!-- Canteen Discount -->
+          <div class="form-group">
+            <label for="canteen-discount">Canteen Discount (%)</label>
+            <input
+              type="number"
+              id="canteen-discount"
+              v-model.number="department.canteenDiscount"
+              placeholder="Enter canteen discount"
+              min="0"
+              max="100"
+              required
+            />
+          </div>
+  
+          <!-- Submit Button -->
+          <div class="button-container">
+            <button @click="updateDepartment" class="btn-update">Update</button>
+          </div>
         </div>
+  
+        <!-- Loading State -->
+        <div v-else>
+          <p>Loading department details...</p>
+        </div>
+      </div>
     </div>
-</template>
-
-<script>
-export default {
+  </template>
+  
+  <script>
+  import DepartmentService from "@/core/services/DepartmentService";
+  
+  export default {
     data() {
-        return {
-            department: {
-                name: '',
-                manager: '',
-                selectedEmployees: '',
-                discount: 0.00
-            },
-            departments: [], // Will be populated from API
-            managers: [], // Will be populated from API
-            employees: [], // Will be populated from API
-            formattedDiscount: '0,00%'
-        }
+      return {
+        department: {
+          name: "",
+          canteenDiscount: 0,
+        },
+        loading: true,
+      };
     },
     methods: {
-        formatDiscount(event) {
-            let value = event.target.value.replace(/[^0-9]/g, '');
-            
-            if (value === '') {
-                this.formattedDiscount = '0,00%';
-                this.department.discount = 0;
-                return;
-            }
-
-            // Convert to number with 2 decimal places
-            const numericValue = parseFloat(value) / 100;
-            
-            // Update the formatted display
-            this.formattedDiscount = numericValue.toFixed(2).replace('.', ',') + '%';
-            
-            // Update the actual value
-            this.department.discount = numericValue;
-        },
-        async fetchDepartments() {
-            try {
-                // Mock data - replace with actual API call
-                this.departments = [
-                    { id: 1, name: "Human Resources" },
-                    { id: 2, name: "Technology" },
-                    { id: 3, name: "Finance" },
-                    { id: 4, name: "Marketing" }
-                ];
-            } catch (error) {
-                console.error('Error fetching departments:', error);
-            }
-        },
-        async fetchManagers() {
-            try {
-                // Mock data - replace with actual API call
-                this.managers = [
-                    { id: 1, name: "Ana Garcia" },
-                    { id: 2, name: "John Smith" },
-                    { id: 3, name: "Maria Silva" }
-                ];
-            } catch (error) {
-                console.error('Error fetching managers:', error);
-            }
-        },
-        async fetchEmployees() {
-            try {
-                // Mock data - replace with actual API call
-                this.employees = [
-                    { id: 1, name: "Ana Garcia" },
-                    { id: 2, name: "Rafaela Magalhães" },
-                    { id: 3, name: "Roberto Silva" }
-                ];
-            } catch (error) {
-                console.error('Error fetching employees:', error);
-            }
-        },
-        async updateDepartment() {
-            try {
-                console.log('Department to update:', this.department);
-                // Implement your API call here
-                // Example:
-                // const response = await fetch('your-api-endpoint/departments/' + this.department.id, {
-                //     method: 'PUT',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify(this.department)
-                // });
-                
-                // if (response.ok) {
-                //     this.$router.push('/departments');
-                // }
-            } catch (error) {
-                console.error('Error updating department:', error);
-            }
+      async fetchDepartmentDetails() {
+        try {
+          const departmentName = this.$route.params.name.trim();
+          console.log("Fetching department details for:", departmentName);
+  
+          const response = await DepartmentService.getDepartmentByName(departmentName);
+          console.log("API Response:", response.data);
+  
+          this.department = response.data;
+          this.loading = false;
+        } catch (error) {
+          console.error("Error fetching department details:", error);
+          alert("Unable to fetch department details. Redirecting to list.");
+          this.$router.push("/department/list");
         }
-    }
+      },
+  
+      async updateDepartment() {
+        try {
+          if (!this.department.name || this.department.canteenDiscount === null) {
+            alert("Please fill out all fields.");
+            return;
+          }
+  
+          await DepartmentService.updateDepartment(this.department.name.trim(), {
+            name: this.department.name,
+            canteenDiscount: this.department.canteenDiscount,
+          });
+  
+          alert("Department updated successfully!");
+          this.$router.push("/department/list");
+        } catch (error) {
+          console.error("Error updating department:", error);
+          alert("Error updating department: " + (error.response?.data?.message || error.message));
+        }
+      },
+    },
+    async created() {
+      await this.fetchDepartmentDetails();
+    },
+  };
+  </script>
+  
+  <style scoped>
+.main-content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-</script>
 
-<style scoped>
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
 .form-container {
-    background-color: #f6f5f5;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 800px;
-    margin: 0 auto;
-    margin-top: 50px;
-}
-
-.form-content {
-    padding: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-/* Estilo base compartilhado */
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-/* Estilo específico apenas para os selects */
-.form-group select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 15px center;
-    background-size: 1em;
-    padding-right: 45px;
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .button-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-.update-btn {
-    background-color: #000;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    min-width: 100px;
+.btn-update {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.update-btn:hover {
-    background-color: #333;
+.btn-update:hover {
+  background-color: #0056b3;
 }
 
-@media (max-width: 768px) {
-    .form-container {
-        margin: 0 20px;
-    }
+p {
+  text-align: center;
+  font-size: 1rem;
 }
 </style>

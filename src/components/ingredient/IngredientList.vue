@@ -1,18 +1,27 @@
 <script>
+import IngredientService from "@/core/services/IngredientService";
+
 export default {
   data() {
     return {
-      ingredients: [
-        { id: 1, name: "Rice", allergen: null },
-        { id: 2, name: "Grilled Fish", allergen: "Fish" },
-        { id: 3, name: "Stewed Meat", allergen: null },
-        { id: 4, name: "Onion", allergen: null },
-        { id: 5, name: "Garlic", allergen: null },
-        { id: 6, name: "Tomato", allergen: null },
-        { id: 7, name: "Salt", allergen: null },
-        { id: 8, name: "Potato", allergen: null },
-      ],
+      ingredients: [], // Dynamically fetched ingredients
     };
+  },
+  async created() {
+    try {
+      const response = await IngredientService.getAllIngredients();
+
+      // Access the ingredients array nested inside data
+      this.ingredients = response.data.data.ingredients.map((ingredient) => ({
+        id: ingredient._id, // Use _id as the unique identifier
+        name: ingredient.name, // Use name from the backend
+      }));
+
+      console.log("Fetched ingredients:", this.ingredients);
+    } catch (error) {
+      console.error("Error fetching ingredients:", error.response?.data || error.message);
+      alert("Failed to load ingredients. Please try again.");
+    }
   },
   methods: {
     editIngredient(ingredient) {

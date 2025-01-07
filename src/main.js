@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import { createRouter, createWebHistory } from "vue-router";
+import UserService from "@/core/services/UserService";
 import UserDashboard from "./components/user/UserDashboard.vue";
 import UserLogin from "./components/user/UserLogin.vue";
 import UserRegister from "./components/user/UserRegister.vue";
@@ -24,6 +25,11 @@ import PlateEdit from "./components/plate/PlateEdit.vue";
 import ReservationAdd from "./components/reservation/ReservationAdd.vue";
 import ReservationEdit from "./components/reservation/ReservationEdit.vue";
 import ReservationList from "./components/reservation/ReservationList.vue";
+
+const token = localStorage.getItem("authToken");
+if (token) {
+  UserService.setAuthToken(token);
+}
 
 const router = createRouter({
   history: createWebHistory(),
@@ -84,10 +90,10 @@ const router = createRouter({
         },
         {
           name: "department-edit",
-          path: "department/edit",
+          path: "department/edit/:name",
           component: DepartmentEdit,
           meta: { allowedRoles: ["admin", "manager"] },
-        },
+        },   
         {
           name: "department-detail",
           path: "/department/:id",

@@ -1,38 +1,34 @@
 <script>
 import EmployeeAddFormInput from '../../components/employee/EmployeeAddFormInput.vue';
+import TaskService from '@/core/services/TaskService';
+import UserService from '@/core/services/UserService';
+
 export default {
   components: {
     EmployeeAddFormInput,
   },
   data() {
     return {
-      /* Estrutura padrão */
-      userName: "Bulma Garcia",
-
-      /* Estrutura da página Add Task */
       task: {
-        employee: "", // Employee destinado à tarefa
-        description: "", // Descrição da tarefa
-        limitDate: "", // Data limite
+        employee: "",
+        description: "",
+        limitDate: "",
       },
-      employees: [
-        "Bulma Garcia",
-        "Pepper Stark",
-        "Martini Silva",
-        "Sansa Stark",
-        "Roberto Silva",
-        "Rafaela Oliveira",
-        "Ana Garcia",
-        "Caio Lacerda",
-        "Lucas Oliveira",
-        "Tony Stark",
-        "Pepper Potts",
-        ,
-      ], // Lista de employees para a caixa de seleção
+      employees: [],
     };
   },
   methods: {
-    handleSubmit() {
+    async fetchEmployees() {
+      try {
+        const response = await UserService.getAllUsers();
+        console.log("Fetched employees:", response.data);
+        this.employees = response.data.map((user) => user.name);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+        alert("Unable to fetch employees. Please try again later.");
+      }
+    },
+    async handleSubmit() {
       if (
         !this.task.employee ||
         !this.task.description ||
@@ -41,8 +37,20 @@ export default {
         alert("All fields are required!");
         return;
       }
-      console.log("Task created:", this.task);
-      this.$router.push("/task/list"); // Redirecionar para a lista de tarefas
+      try {
+        const taskData = {
+          employee: this.task.employee,
+          description: this.task.description,
+          limitDate: this.task.limitDate,
+        };
+        await TaskService.createTask(taskData);
+        console.log("Task created:", taskData);
+        alert("Task created successfully!");
+        this.$router.push("/task/list");
+      } catch (error) {
+        console.error("Error creating task:", error);
+        alert("Unable to create task. Please try again later.");
+      }
     },
     cancel() {
       this.$router.push("/task/list");
@@ -56,8 +64,12 @@ export default {
       sidebar.classList.toggle("open");
     },
   },
+  async created() {
+    await this.fetchEmployees();
+  },
 };
 </script>
+
 
 <template>
   <div id="addTask-page">

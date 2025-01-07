@@ -73,74 +73,39 @@
 </template>
 
 <script>
+import TaskService from "@/core/services/TaskService";
+import UserService from "@/core/services/UserService";
+
 export default {
   data() {
     return {
       task: {
-        id: null,
+        id: this.$route.params.id || null,
         title: "",
         employee: "",
         description: "",
         limitDate: "",
         completed: false,
       },
-      employees: [
-        "Bulma Garcia",
-        "Pepper Stark",
-        "Martini Silva",
-        "Sansa Stark",
-        "Roberto Silva",
-        "Rafaela Oliveira",
-        "Ana Garcia",
-        "Caio Lacerda",
-        "Lucas Oliveira",
-        "Tony Stark",
-        "Pepper Potts",
-      ],
+      employees: [],
     };
   },
-  created() {
-    const taskId = this.$route.params.id; // Obtem o ID da rota
-    if (taskId) {
-      this.fetchTaskData(taskId); // Busca os dados da tarefa
-    } else {
-      console.error("No task ID found. Redirecting...");
-      this.$router.push("/task/list");
-    }
+  async created() {
+    await this.fetchEmployees();
   },
   methods: {
-    fetchTaskData(taskId) {
-      // Simulação de fetch com base no ID (substituir com uma API real)
-      const mockTasks = [
-        {
-          id: "1",
-          title: "Prepare meeting agenda",
-          employee: "Bulma Garcia",
-          description: "Discuss quarterly goals.",
-          limitDate: "2024-01-15",
-          completed: false,
-        },
-        {
-          id: "2",
-          title: "Fix website bugs",
-          employee: "Pepper Stark",
-          description: "Resolve UI issues on the home page.",
-          limitDate: "2024-01-20",
-          completed: true,
-        },
-        
-      ];
-
-      const task = mockTasks.find((t) => t.id === taskId.toString());
-
-      if (task) {
-        this.task = { ...task };
-      } else {
-        console.error("Task not found. Redirecting...");
-        this.$router.push("/task/list");
+    async fetchEmployees() {
+      try {
+        const response = await UserService.getAllUsers();
+        console.log("Fetched employees:", response.data);
+        this.employees = response.data.map((user) => user.name);
+      } catch (error) {
+        console.error("Error fetching employees:", error.response?.data || error.message);
+        alert("Unable to fetch employees. Please try again later.");
       }
     },
-    handleSubmit() {
+
+    async handleSubmit() {
       if (
         !this.task.employee ||
         !this.task.title ||
@@ -150,15 +115,31 @@ export default {
         alert("All fields are required!");
         return;
       }
-      console.log("Task updated:", this.task);
-      this.$router.push("/task/list");
+      try {
+        const updatedTask = {
+          title: this.task.title,
+          employee: this.task.employee,
+          description: this.task.description,
+          limitDate: this.task.limitDate,
+          completed: this.task.completed,
+        };
+        console.log("Submitting updated task:", updatedTask); 
+        await TaskService.updateTask(this.task.id, updatedTask);
+        alert("Task updated successfully!");
+        this.$router.push("/task/list");
+      } catch (error) {
+        console.error("Error updating task:", error.response?.data || error.message);
+        alert("Unable to update task. Please try again later.");
+      }
     },
+
     cancel() {
       this.$router.push("/task/list");
     },
   },
 };
 </script>
+
 
 <style scoped>
 /* Form styles */

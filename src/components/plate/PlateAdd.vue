@@ -1,47 +1,65 @@
 <script>
 import PlateFormInput from './PlateFormInput.vue';
+import IngredientService from "@/core/services/IngredientService"; // Service to fetch ingredients
+import PlateService from "@/core/services/PlateService"; // Service to handle plate creation
 
 export default {
   components: {
-    PlateFormInput
+    PlateFormInput,
   },
   data() {
     return {
       plate: {
         name: "",
         price: "",
-        description: "",
-        ingredients: []
+        type: "", // Dropdown for Meat, Fish, Vegetarian
+        ingredients: [], // Stores ingredient names instead of IDs
       },
-      availableIngredients: [
-      { id: 1, name: "Rice"},
-        { id: 2, name: "Grilled Fish" },
-        { id: 3, name: "Steak Meat" },
-        { id: 4, name: "Onion"},
-        { id: 5, name: "Garlic"},
-        { id: 6, name: "Tomato"},
-        { id: 7, name: "Salt"},
-        { id: 8, name: "Potato"},
-        { id: 9, name: "Mushrooms"},
-        { id: 10, name: "Pasta"},
-        { id: 11, name: "Tomato Sauce"},
-        { id: 12, name: "Curry Sauce"},
-        { id: 13, name: "Chicken"},
-        { id: 14, name: "Vegetables"},
-        { id: 15, name: "Pepper"}
-      ]
+      availableIngredients: [], // Dynamically fetched ingredients
+      plateTypes: ["Meat", "Fish", "Vegetarian"], // Dropdown options for type
     };
   },
+  async created() {
+    try {
+      const response = await IngredientService.getAllIngredients();
+      this.availableIngredients = response.data.data.ingredients.map((ingredient) => ({
+        id: ingredient._id, // Use _id for internal tracking
+        name: ingredient.name, // Use name for display and backend compatibility
+      }));
+    } catch (error) {
+      console.error("Error fetching ingredients:", error.response?.data || error.message);
+      alert("Failed to load ingredients. Please try again.");
+    }
+  },
   methods: {
-    handleSubmit() {
-      console.log("Plate created:", this.plate);
-      this.$router.push("/plate/list");
+    async handleSubmit() {
+      try {
+        if (!this.plate.name || !this.plate.price || !this.plate.type) {
+          alert("Name, price, and type are required!");
+          return;
+        }
+
+        // Prepare plate data for API
+        const plateData = {
+          name: this.plate.name,
+          price: parseFloat(this.plate.price),
+          type: this.plate.type,
+          ingredients: this.plate.ingredients.map((ingredient) => ingredient.name), // Send ingredient names
+        };
+
+        await PlateService.createPlate(plateData);
+        alert("Plate created successfully!");
+        this.$router.push("/plate/list");
+      } catch (error) {
+        console.error("Error creating plate:", error.response?.data || error.message);
+        alert("Failed to create plate. Please try again.");
+      }
     },
     cancel() {
       this.$router.push("/plate/list");
     },
     toggleIngredient(ingredient) {
-      const index = this.plate.ingredients.findIndex(i => i.id === ingredient.id);
+      const index = this.plate.ingredients.findIndex((i) => i.name === ingredient.name);
       if (index === -1) {
         this.plate.ingredients.push(ingredient);
       } else {
@@ -49,11 +67,12 @@ export default {
       }
     },
     isSelected(ingredient) {
-      return this.plate.ingredients.some(i => i.id === ingredient.id);
-    }
-  }
+      return this.plate.ingredients.some((i) => i.name === ingredient.name);
+    },
+  },
 };
 </script>
+
 
 <template>
   <div id="add-plate-page">
@@ -63,36 +82,36 @@ export default {
       <section class="add-plate-form">
         <form @submit.prevent="handleSubmit">
           <!-- Plate Name -->
-          <PlateFormInput 
-            name="Plate Name" 
-            identifier="name" 
+          <PlateFormInput
+            name="Plate Name"
+            identifier="name"
             v-model="plate.name"
           />
 
           <!-- Price -->
-          <PlateFormInput 
-            name="Price" 
-            identifier="price" 
+          <PlateFormInput
+            name="Price"
+            identifier="price"
             type="number"
             v-model="plate.price"
           />
 
-          <!-- Description -->
+          <!-- Plate Type -->
           <div class="form-group">
-            <label for="description">Description</label>
-            <textarea 
-              id="description" 
-              v-model="plate.description"
-              required
-              rows="4"
-            ></textarea>
+            <label for="type">Type</label>
+            <select id="type" v-model="plate.type" required>
+              <option value="" disabled>Select Plate Type</option>
+              <option v-for="type in plateTypes" :key="type" :value="type">
+                {{ type }}
+              </option>
+            </select>
           </div>
 
           <!-- Ingredients Selection -->
           <div class="form-group">
             <label>Ingredients</label>
             <div class="ingredients-grid">
-              <div 
+              <div
                 v-for="ingredient in availableIngredients"
                 :key="ingredient.id"
                 class="ingredient-item"

@@ -1,48 +1,102 @@
+<script>
+import TaskService from "@/core/services/TaskService";
+
+export default {
+  data() {
+    return {
+      searchQuery: "",
+      tasks: [],
+    };
+  },
+  computed: {
+    filteredTasks() {
+      return this.tasks.filter((task) =>
+        task.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
+    activeTasks() {
+      return this.tasks.filter((task) => !task.completed);
+    },
+    completedTasks() {
+      return this.tasks.filter((task) => task.completed);
+    },
+  },
+  methods: {
+    async fetchTasks() {
+      try {
+        console.log("Fetching tasks...");
+        const response = await TaskService.getAllTasks();
+        console.log("API Response:", response.data);
+
+        this.tasks = response.data.map((task) => ({
+          id: task._id,
+          name: task.taskName || "Unnamed Task",
+          completed: !!task.isCompleted,
+        }));
+
+        console.log("Mapped tasks:", this.tasks);
+      } catch (error) {
+        console.error("Error fetching tasks:", error.response?.data || error.message);
+        alert("Failed to load tasks. Please try again.");
+      }
+    },
+    goToAddTask() {
+      this.$router.push("/task/add");
+    },
+    handleTaskClick(task) {
+      this.$router.push(`/task/edit/${task.id}`);
+    },
+  },
+  async created() {
+    console.log("Task List component created.");
+    await this.fetchTasks();
+  },
+};
+</script>
+
 <template>
   <div id="tasks-page">
     <div class="main-content">
-      <p></p>
       <h1 id="page-title">Tasks</h1>
 
-      <!-- Tasks Management Section -->
+      <!-- Task Management Section -->
       <section class="cards">
-        <!-- All Tasks Card with Search and Checkbox -->
+        <!-- Active Tasks -->
         <div class="card tasks-card">
-          <h2>All Tasks</h2>
+          <h2>Active Tasks</h2>
           <div class="search-bar">
             <input
               type="text"
               v-model="searchQuery"
-              placeholder="Search tasks by title..."
+              placeholder="Search tasks by name..."
               class="search-input"
             />
           </div>
           <div class="task-list">
             <ul>
-              <li v-for="task in filteredTasks" :key="task.id">
-                <!-- Checkbox -->
-                <input
-                  type="checkbox"
-                  :id="'task-' + task.id"
-                  @change="markAsCompleted(task)"
-                  class="task-checkbox"
-                  :checked="task.completed"
-                />
-                <!-- Task Title -->
-                <span class="task-title" @click="goToEditTask(task)">
-                  {{ task.title }}
-                </span>
+              <li
+                v-for="task in filteredTasks"
+                :key="task.id"
+                @click="handleTaskClick(task)"
+                class="task-item"
+              >
+                {{ task.name }}
               </li>
             </ul>
           </div>
         </div>
 
-        <!-- Completed Tasks Card -->
+        <!-- Completed Tasks -->
         <div class="card completed-tasks-card">
           <h2>Completed Tasks</h2>
           <ul>
-            <li v-for="task in completedTasks" :key="task.id">
-              <div class="task-list">{{ task.title }}</div>
+            <li
+              v-for="task in completedTasks"
+              :key="task.id"
+              @click="handleTaskClick(task)"
+              class="task-item"
+            >
+              {{ task.name }}
             </li>
           </ul>
         </div>
@@ -58,51 +112,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      searchQuery: "",
-      // Atualizado para incluir departmentId
-      tasks: [
-        { id: 1, title: "Prepare meeting agenda", completed: false },
-        { id: 2, title: "Fix website bugs", completed: false },
-        { id: 3, title: "Update project documentation", completed: false },
-        { id: 4, title: "Design mockup for new feature", completed: false },
-        { id: 5, title: "Call the supplier", completed: false },
-        { id: 6, title: "Organize team-building event", completed: true },
-        { id: 7, title: "Submit annual report", completed: true },
-      ],
-    };
-  },
-  computed: {
-    filteredTasks() {
-      return this.tasks.filter(
-        (task) =>
-          !task.completed &&
-          task.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    },
-    completedTasks() {
-      return this.tasks.filter((task) => task.completed);
-    },
-  },
-  methods: {
-    markAsCompleted(task) {
-      task.completed = !task.completed;
-    },
-    goToAddTask() {
-      this.$router.push("/task/add");
-    },
-    goToEditTask(task) {
-      this.$router.push({
-        name: "task-edit",
-        params: { id: task.id }, // Passa apenas o ID via params
-      });
-    },
-  },
-};
-</script>
 
 <style scoped>
 #page-title {
@@ -137,29 +146,19 @@ export default {
   margin: 0;
 }
 
-.task-list li {
+.task-item {
+  padding: 6px 0;
   border-bottom: 1px solid #eee;
-  padding: 5px;
-  justify-content: space-between; /* Space between checkbox and title */
-  flex-direction: column;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.task-item:hover {
+  background-color: #f5f5f5;
 }
 
 .task-list li:last-child {
   border-bottom: none;
-}
-
-.task-list input[type="checkbox"] {
-  cursor: pointer;
-}
-
-.task-title {
-  flex: 1; /* Ensures the title takes the remaining space */
-  cursor: pointer;
-  color: #000000;
-}
-
-.task-title:hover {
-  text-decoration: underline;
 }
 
 .completed-tasks-card ul {
@@ -170,6 +169,12 @@ export default {
 .completed-tasks-card li {
   padding: 5px 0;
   border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.completed-tasks-card li:hover {
+  background-color: #f5f5f5;
 }
 
 .completed-tasks-card li:last-child {

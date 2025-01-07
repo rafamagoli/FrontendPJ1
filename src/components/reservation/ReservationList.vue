@@ -48,26 +48,20 @@
 </template>
 
 <script>
-import UserCalendar from "@/components/user/UserCalendar.vue";
+import ReservationService from "@/core/services/ReservationService";
 
 export default {
-  components: {
-    UserCalendar,
-  },
   data() {
     return {
-      activeReservations: [
-        { id: 1, dish: "Grilled Fish", date: "2024-12-10" },
-        { id: 2, dish: "Grilled Steak", date: "2024-12-15" },
-        { id: 3, dish: "Shrimp Stew", date: "2024-12-19" },
-      ],
+      reservations: [], // Stores reservations fetched from the backend
       searchQuery: "",
-      sortBy: "date",
+      sortBy: "date", // Default sorting by date
+      error: null,
     };
   },
   computed: {
     sortedReservations() {
-      const filtered = this.activeReservations.filter((res) =>
+      const filtered = this.reservations.filter((res) =>
         res.dish.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
 
@@ -79,7 +73,23 @@ export default {
       });
     },
   },
+  async created() {
+    await this.fetchReservations(); // Fetch reservations when the component is created
+  },
   methods: {
+    async fetchReservations() {
+      try {
+        const response = await ReservationService.getAllReservations();
+        this.reservations = response.data.data.reservations.map((reservation) => ({
+          id: reservation._id,
+          dish: reservation.dish,
+          date: reservation.date,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch reservations:", error.response?.data || error.message);
+        this.error = "Failed to load reservations. Please try again.";
+      }
+    },
     formatDate(date) {
       return new Date(date).toLocaleDateString("en-US");
     },

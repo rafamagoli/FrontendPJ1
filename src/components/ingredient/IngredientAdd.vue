@@ -1,37 +1,46 @@
 <script>
-import IngredientFormInput from './IngredientFormInput.vue';
+import IngredientFormInput from "./IngredientFormInput.vue";
+import IngredientService from "@/core/services/IngredientService";
 
 export default {
   components: {
-    IngredientFormInput
+    IngredientFormInput,
   },
   data() {
     return {
       ingredient: {
         name: "",
-        allergen: ""
+        allergen: "",
       },
-      allergenOptions: [
-        "None",
-        "Gluten",
-        "Milk",
-        "Egg",
-        "Fish",
-        "Shellfish",
-        "Nuts",
-        "Soy"
-      ]
+      allergenOptions: ["Yes", "No"],
     };
   },
   methods: {
-    handleSubmit() {
-      console.log("Ingredient created:", this.ingredient);
-      this.$router.push("/ingredient/list");
+    async handleSubmit() {
+      try {
+        if (!this.ingredient.name.trim()) {
+          alert("Ingredient name is required!");
+          return;
+        }
+
+        const ingredientData = {
+          name: this.ingredient.name.trim(),
+          allergen: this.ingredient.allergen || "No",
+        };
+
+        await IngredientService.createIngredient(ingredientData);
+
+        alert("Ingredient created successfully!");
+        this.$router.push("/ingredient/list");
+      } catch (error) {
+        console.error("Error creating ingredient:", error.response?.data || error.message);
+        alert("Failed to create ingredient. Please try again.");
+      }
     },
     cancel() {
       this.$router.push("/ingredient/list");
-    }
-  }
+    },
+  },
 };
 </script>
 
