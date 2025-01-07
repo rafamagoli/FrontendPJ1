@@ -33,7 +33,7 @@
 
           <!-- nif field -->
           <div class="mb-3">
-            <label for="nif" class="form-label">nif</label>
+            <label for="nif" class="form-label">NIF</label>
             <input
               id="nif"
               v-model="nif"
