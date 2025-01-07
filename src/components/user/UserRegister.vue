@@ -39,11 +39,10 @@
               v-model="nif"
               type="text"
               class="form-control"
-              placeholder="Enter your full nif"
+              placeholder="Enter your full NIF"
               required
             />
           </div>
-
 
           <!-- Password -->
           <div class="mb-3">
@@ -89,7 +88,7 @@
 </template>
 
 <script>
-import UserService from '@/core/services/UserService';
+import UserService from "@/core/services/UserService";
 
 export default {
   data() {
@@ -109,14 +108,27 @@ export default {
       }
 
       try {
-        let result = await UserService.registeAdmin(
-          this.username, this.password, this.name,
-          this.nif,
-          "Admin"
-        )
-        alert(result.message)
+        const response = await UserService.createAdmin({
+          username: this.username,
+          password: this.password,
+          name: this.name,
+          nif: this.nif,
+          role: "Admin",
+        });
+
+        if (response.status === 201) {
+          alert(response.data.message || "Registration successful!");
+          this.$router.push("/user/login");
+        } else {
+          alert("Failed to register. Please try again.");
+        }
       } catch (error) {
-        console.log(error)
+        const errorMessage =
+          error.response?.data?.error ||
+          error.response?.data?.message ||
+          "An unexpected error occurred.";
+        alert(errorMessage);
+        console.error("Error during registration:", error);
       }
     },
   },
@@ -124,8 +136,7 @@ export default {
 </script>
 
 <style scoped>
-
-.center{
+.center {
   text-align: center;
 }
 /* Background styling */
