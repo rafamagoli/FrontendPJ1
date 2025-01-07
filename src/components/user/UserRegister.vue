@@ -81,7 +81,7 @@
 
         <!-- Back to Login link -->
         <p class="text-center center mt-3">
-          <router-link to="/" class="login-link center">Back to Login</router-link>
+          <router-link to="/user/login" class="login-link center">Back to Login</router-link>
         </p>
       </div>
     </div>
