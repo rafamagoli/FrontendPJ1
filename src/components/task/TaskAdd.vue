@@ -57,7 +57,7 @@ export default {
     },
     logout() {
       console.log("You have been logged out!");
-      this.$router.push("/login");
+      this.$router.push("/user/login");
     },
     toggleSidebar() {
       const sidebar = document.querySelector(".sidebar");

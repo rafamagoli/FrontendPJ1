@@ -1,6 +1,7 @@
 <template>
     <div id="department-edit">
       <div class="main-content">
+        
         <h1>Edit Department</h1>
   
         <!-- Form Container -->
