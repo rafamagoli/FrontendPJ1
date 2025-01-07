@@ -58,10 +58,11 @@
             </ul>
           </li>
         </div>
+
         <div class="section-sidebar">
           CANTEEN
           <!-- Ingredients menu -->
-          <li class="nav-item">
+          <li class="nav-item" v-if="isCanteenManager">
             <button class="nav-link" @click="toggleSubmenu('ingredients')">
               Ingredients <span class="arrow">▼</span>
             </button>
@@ -74,6 +75,7 @@
               </li>
             </ul>
           </li>
+
           <!-- Plates menu -->
           <li class="nav-item">
             <button class="nav-link" @click="toggleSubmenu('plates')">
@@ -88,6 +90,7 @@
               </li>
             </ul>
           </li>
+
           <!-- Reservation menu -->
           <li class="nav-item">
             <button class="nav-link" @click="toggleSubmenu('reservation')">
@@ -109,11 +112,20 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 const activeMenu = ref(null);
+
+// Usuário e roles
+const userRole = ref('manager'); // Exemplo: pode ser 'admin', 'manager', 'employee'
+const userDepartment = ref('canteen'); // Exemplo: 'canteen', 'HR', etc.
+
+// Computed property para verificar se é "canteenManager"
+const isCanteenManager = computed(() => {
+  return userRole.value === 'manager' && userDepartment.value === 'canteen';
+});
 
 function toggleSubmenu(menu) {
   activeMenu.value = activeMenu.value === menu ? null : menu;

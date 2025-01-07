@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios';
-
+import UserService from '@/core/services/UserService'
 export default {
   data() {
     return {
@@ -11,26 +11,16 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        const response = await axios.post('http://localhost:8080/api/users/login', {
-          username: this.username,
-          password: this.password,
-        });
-
-        const token = response.data.token;
-        localStorage.setItem('authToken', token);
-
+        await UserService.login(this.username,this.password);
         this.$router.push('/user/dashboard');
       } catch (error) {
         console.error('Login error:', error);
-
         alert('Login failed: ' + (error.response?.data?.error || 'An unexpected error occurred'));
       }
     },
   },
 };
 </script>
-
-
 <template>
   <div class="login-page">
     <!-- Login Card -->

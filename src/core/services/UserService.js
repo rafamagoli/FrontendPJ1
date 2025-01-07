@@ -12,87 +12,60 @@ const UserService = {
   },
 
   createUser: (userData) =>
-    axios.post(`${API_URL}/register-user`, userData, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+    axios.post(`${API_URL}/register-user`, userData),
 
   createAdmin: (adminData) =>
     axios.post(`${API_URL}/create-admin`, adminData),
 
-  login: (username, password) =>
-    axios.post(`${API_URL}/login`, { username, password }),
+  login: async function (username, password) {
+    let response = await axios.post(`${API_URL}/login`, { username, password });
+    
+    const token = response.data.token;
+    localStorage.setItem('username', username);
+    localStorage.setItem('authToken', token);
+    
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  
+    let user = await this.getUserByUsername(username)
+    
+    localStorage.setItem('currentUser', JSON.stringify(user)[0]);
+  },
+  
+  getCurrentUser: ()=> JSON.parse(localStorage.getItem('currentUser')),
 
   logout: () =>
-    axios.post(`${API_URL}/logout`, {}, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+    axios.post(`${API_URL}/logout`, {}),
 
+    
   getAllUsers: () =>
-    axios.get(`${API_URL}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+    axios.get(`${API_URL}`),
 
-  getUserByUsername: (username) =>
-    axios.get(`${API_URL}/username/${username}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+  getUserByUsername: async function (username) {
+    return await axios.get(`${API_URL}/username/${username}`,).then(response => response.data)
+  },
 
   getUserByNIF: (nif) =>
-    axios.get(`${API_URL}/by-nif/${nif}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+    axios.get(`${API_URL}/by-nif/${nif}`),
 
   getUsersByDepartment: (departmentName) =>
-    axios.get(`${API_URL}/by-department/${departmentName}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+    axios.get(`${API_URL}/by-department/${departmentName}`),
 
   updateUserByUsername: (username, updatedData) =>
-    axios.put(`${API_URL}/username/${username}`, updatedData, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+    axios.put(`${API_URL}/username/${username}`, updatedData),
 
   inactivateUserByUsername: (username) =>
-    axios.put(`${API_URL}/inactivate/${username}`, {}, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+    axios.put(`${API_URL}/inactivate/${username}`, {}),
 
   updateBalanceByNIF: (nif, balanceData) =>
-    axios.put(`${API_URL}/balance/${nif}`, balanceData, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+    axios.put(`${API_URL}/balance/${nif}`, balanceData),
 
   getBalanceByNIF: (nif) =>
-    axios.get(`${API_URL}/balance/${nif}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+    axios.get(`${API_URL}/balance/${nif}`),
 
   changePassword: (username, passwordData) =>
-    axios.post(`${API_URL}/${username}/change-password`, passwordData, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    }),
+    axios.post(`${API_URL}/${username}/change-password`, passwordData),
 };
 
 export default UserService;
+
+

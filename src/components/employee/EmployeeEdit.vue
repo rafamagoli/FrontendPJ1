@@ -27,11 +27,11 @@ export default {
 
     try {
       const employeeResponse = await UserService.getUserByUsername(username);
-      console.log("Employee Data from API:", employeeResponse.data);
+      console.log("Employee Data from API:", employeeResponse);
 
       this.employee = {
-        ...employeeResponse.data,
-        confirmPassword: employeeResponse.data.password || "",
+        ...employeeResponse,
+        confirmPassword: employeeResponse.password || "",
       };
 
       const departmentsResponse = await DepartmentService.getAllDepartments();
