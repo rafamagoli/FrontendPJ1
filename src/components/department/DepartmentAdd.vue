@@ -6,7 +6,7 @@
             <div class="form-container">
                 <div class="form-content">
                     <!-- Department Name -->
-                    <div class="form-group">
+                    <div class="form-group" v-if="userRole === 'admin'">
                         <label for="departmentName">Department Name</label>
                         <input 
                             type="text" 
@@ -18,7 +18,10 @@
                     </div>
 
                     <!-- Manager -->
-                    <div class="form-group">
+                    <div 
+                        class="form-group" 
+                        v-if="userRole === 'admin'"
+                    >
                         <label for="manager">Manager</label>
                         <select 
                             id="manager" 
@@ -37,7 +40,10 @@
                     </div>
 
                     <!-- Associated Discount -->
-                    <div class="form-group">
+                    <div 
+                        class="form-group" 
+                        v-if="userRole === 'admin'"
+                    >
                         <label for="discount">Canteen Discount (%)</label>
                         <input 
                             type="text" 
@@ -49,8 +55,22 @@
                         />
                     </div>
 
-                    <!-- Submit Button -->
-                    <div class="button-container">
+                    <!-- Informações visíveis para Managers e Employees -->
+                    <div v-if="userRole === 'manager' || userRole === 'employee'">
+                        <h3>Your Department</h3>
+                        <p><strong>Department Name:</strong> {{ userDepartment.name }}</p>
+                        <p><strong>Canteen Discount:</strong> {{ userDepartment.canteenDiscount }}%</p>
+                    </div>
+
+                    <!-- Informações adicionais apenas para Employees -->
+                    <div v-if="userRole === 'employee'">
+                        <h3>Employee Information</h3>
+                        <p><strong>Employee Name:</strong> {{ employeeInfo.name }}</p>
+                        <p><strong>Role:</strong> {{ employeeInfo.role }}</p>
+                    </div>
+
+                    <!-- Submit Button (apenas admin pode criar departamentos) -->
+                    <div class="button-container" v-if="userRole === 'admin'">
                         <button @click="createDepartment" class="create-btn">
                             Create
                         </button>
@@ -65,13 +85,31 @@
 export default {
     data() {
         return {
+            userRole: '', // admin, manager, employee
             department: {
                 name: '',
                 managerUsername: '',
                 canteenDiscount: 0
             },
             managers: [], 
-            formattedDiscount: '0,00%'
+            formattedDiscount: '0,00%',
+            userDepartment: {}, // Nome do departamento do usuário
+            employeeInfo: {} // Informações do empregado
+        }
+    },
+    async created() {
+        try {
+            const userResponse = await fetch('http://localhost:8080/api/users/me');
+            if (userResponse.ok) {
+                const userData = await userResponse.json();
+                this.userRole = userData.role;
+                this.userDepartment = userData.department;
+                this.employeeInfo = userData;
+            } else {
+                console.error('Failed to fetch user data');
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
         }
     },
     methods: {

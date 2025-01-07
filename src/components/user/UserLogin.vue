@@ -1,17 +1,51 @@
 <script>
+import { jwtDecode } from 'jwt-decode';
+
 export default {
   data() {
     return {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
+      errorMessage: '',
+      alertClass: '',
     };
   },
   methods: {
-    handleLogin() {
-      console.log("Username:", this.username);
-      console.log("Password:", this.password);
-      this.$router.push("/user/dashboard");
+    async login() {
+      try {
+        const response = await fetch('https://localhost:8080/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: this.username,
+            password: this.password,
+          }),
+        });
 
+        if (!response.ok) {
+          const error = await response.json();
+          this.setErrorMessage(error.error || 'Failed to login', 'error');
+        } else {
+          const data = await response.json();
+
+          if (data.userToken) {
+            localStorage.setItem('userToken', data.userToken);
+            localStorage.setItem('decodedUser', JSON.stringify(jwtDecode(data.userToken)));
+            this.$router.push('/user/dashboard');
+          } else {
+            this.setErrorMessage('Failed to login', 'error');
+          }
+        }
+      } catch (error) {
+        this.setErrorMessage(error.message || 'Failed to login', 'error');
+      }
+    },
+    setErrorMessage(msg, type) {
+      this.errorMessage = msg;
+      this.alertClass = type === 'success' ? 'alert alert-success' : 'alert alert-danger';
+      setTimeout(() => (this.errorMessage = ''), 5000);
     },
   },
 };
@@ -25,7 +59,13 @@ export default {
         <h2 class="card-title center text-center mb-4">
           <strong>Login</strong>
         </h2>
-        <form @submit.prevent="handleLogin">
+
+        <!-- Alerta para mensagens de erro ou sucesso -->
+        <div v-if="errorMessage" :class="alertClass" class="text-center mb-3">
+          {{ errorMessage }}
+        </div>
+
+        <form @submit.prevent="login">
           <!-- Username field -->
           <div class="mb-3">
             <label for="username" class="form-label">USERNAME</label>
@@ -54,9 +94,10 @@ export default {
 
           <!-- Login button -->
           <div class="center">
-            <button type="submit" class="btn btn-primary w-100" @click="handleLogin">Login</button>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
           </div>
         </form>
+
         <!-- Register link -->
         <p class="center text-center mt-3">
           <router-link to="/user/register" class="register-link center"
@@ -72,6 +113,7 @@ export default {
 .center {
   text-align: center;
 }
+
 /* Fundo da página */
 .login-page {
   background-image: url("/main_background.webp");
@@ -168,5 +210,25 @@ export default {
 
 .register-link:hover {
   text-decoration: underline;
+}
+
+/* Estilos para a mensagem de erro */
+.alert {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
 }
 </style>
