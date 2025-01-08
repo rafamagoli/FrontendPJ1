@@ -1,7 +1,7 @@
 <template>
   <aside class="sidebar">
     <img src="/abr_logo.png" alt="Logo" class="sidebar-logo" />
-    <h3 id="username" class="text-center text-white mb-4"> Olá, {{ currentUser.name }}
+    <h3 id="name-sidebar" class="text-center text-white mb-4"> Olá, {{ currentUser.name }}
     </h3>
 
     <nav>
@@ -81,7 +81,7 @@
                   View Employees
                 </button>
               </li>
-              <li>
+              <li v-if="currentUser.isEmployee">
                 <button class="nav-link" @click="handleEmployeeClick">
                   Edit my Profile
                 </button>
@@ -191,7 +191,7 @@ function navigateTo(routeName) {
 </script>
 
 <style>
-#username {
+#name-sidebar {
   padding: 30px;
 }
 
