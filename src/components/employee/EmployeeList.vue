@@ -93,7 +93,7 @@ export default {
         </div>
 
         <!-- Add New Employee Button -->
-        <div class="add-employee-button" v-if = "currentUser.isAdmin">
+        <div class="add-employee-button" v-if="currentUser.isAdmin">
           <button @click="goToAddEmployee" class="create-employee-btn">
             Create New Employee
           </button>
