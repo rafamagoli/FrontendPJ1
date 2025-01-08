@@ -54,7 +54,7 @@ export default {
 </script>
 
 <template>
-  <div id="add-reservation-page">
+  <div id="add-reservation-page" class="page-background">
 
     <h1 class="page-title">Create New Reservation</h1>
 

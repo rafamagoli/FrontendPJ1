@@ -1,5 +1,5 @@
 <template>
-  <div id="dashboard">
+  <div id="dashboard" class="page-background">
     <div class="main-content">
       <!-- Cards Section -->
       <section class="cards">

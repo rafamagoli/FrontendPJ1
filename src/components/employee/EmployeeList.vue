@@ -47,7 +47,7 @@ export default {
 </script>
 
 <template>
-  <div id="employees-page">
+  <div id="employees-page" class="page-background">
     <div class="main-content">
       <h1 id="page-title">Employees</h1>
       <!-- Employee Management Section -->

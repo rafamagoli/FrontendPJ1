@@ -64,7 +64,7 @@ export default {
 </script>
 
 <template>
-  <div id="tasks-page">
+  <div id="tasks-page" class="page-background">
     <div class="main-content">
       <h1 id="page-title">Tasks</h1>
 

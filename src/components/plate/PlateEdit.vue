@@ -111,7 +111,7 @@ export default {
 </script>
 
 <template>
-  <div id="edit-plate-page">
+  <div id="edit-plate-page" class="page-background">
     <div class="main-content">
       <h1>Edit Plate</h1>
 

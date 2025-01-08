@@ -1,5 +1,5 @@
 <template>
-    <div class="main-content">
+    <div class="main-content page-background">
       <h1 id="page-title">Edit Reservation</h1>
   
       <div class="edit-form">

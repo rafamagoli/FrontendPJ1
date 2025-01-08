@@ -85,7 +85,7 @@ export default {
 </script>
 
 <template>
-  <div id="edit-ingredient-page">
+  <div id="edit-ingredient-page" class="page-background">
     <div class="main-content">
         <h1>Edit Ingredient</h1>
 

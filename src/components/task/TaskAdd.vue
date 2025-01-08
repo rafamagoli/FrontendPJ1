@@ -97,7 +97,7 @@ export default {
 </script>
 
 <template>
-  <div id="addTask-page">
+  <div id="addTask-page" class="page-background">
     <div class="main-content">
       <!-- Add Task Form -->
       <section class="add-task-form">

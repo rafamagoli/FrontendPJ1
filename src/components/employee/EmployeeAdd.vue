@@ -88,7 +88,7 @@ export default {
 </script>
 
 <template>
-  <div id="addEmployee-page">
+  <div id="addEmployee-page" class="page-background">
     <div class="main-content">
       <!-- Add Employee Form -->
       <section class="add-employee-form">

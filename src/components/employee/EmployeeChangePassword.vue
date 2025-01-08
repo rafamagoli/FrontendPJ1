@@ -70,7 +70,7 @@ export default {
 </script>
 
 <template>
-  <div id="changePassword-page">
+  <div id="changePassword-page" class="page-background">
     <div class="main-content">
       <!-- Change Password Form -->
       <section class="change-password-form">

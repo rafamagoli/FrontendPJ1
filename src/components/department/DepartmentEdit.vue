@@ -1,5 +1,5 @@
 <template>
-  <div id="department-edit">
+  <div id="department-edit" class="page-background">
     <div class="main-content">
       <section class="edit-department-form">
         <h2>Edit Department</h2>

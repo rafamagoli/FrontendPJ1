@@ -1,5 +1,5 @@
 <template>
-  <div id="task-edit">
+  <div id="task-edit" class="page-background">
     <div class="main-content">
       <section class="add-task-form">
         <h2>Update Task</h2>

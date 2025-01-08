@@ -1,5 +1,5 @@
 <template>
-    <div id="department-details-page">
+    <div id="department-details-page" class="page-background">
         <div class="main-content">
             <h1 id="page-title">{{ department ? department.name + ' Department' : 'Loading...' }}</h1>
 

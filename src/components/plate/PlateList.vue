@@ -37,7 +37,7 @@ export default {
 
 
 <template>
-  <div id="plates-page">
+  <div id="plates-page" class="page-background">
     <div class="main-content">
       <h1 id="page-title">Plates</h1>
 

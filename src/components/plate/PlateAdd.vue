@@ -75,7 +75,7 @@ export default {
 
 
 <template>
-  <div id="add-plate-page">
+  <div id="add-plate-page" class="page-background">
     <div class="main-content">
       <h1>New Plate</h1>
 

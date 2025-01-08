@@ -12,7 +12,7 @@ let model = defineModel();
 </script>
 
 <template>
-  <div class="form-group">
+  <div class="form-group" >
     <label :for="identifier">{{ name }}</label>
     <input :type="type" :id="identifier" required v-model="model"/>
   </div>

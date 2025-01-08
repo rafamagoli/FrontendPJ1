@@ -45,7 +45,7 @@ export default {
 </script>
 
 <template>
-  <div id="add-ingredient-page">
+  <div id="add-ingredient-page" class="page-background">
     <div class="main-content">
       <h1>New Ingredient</h1>
 

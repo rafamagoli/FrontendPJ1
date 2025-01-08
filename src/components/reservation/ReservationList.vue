@@ -1,49 +1,53 @@
 <template>
-  <div class="main-content">
-    <h1 id="page-title">My Active Reservations</h1>
+  <div id="active-reservations-page" class="page-background">
+    <div class="main-content">
+      <h1 id="page-title">My Active Reservations</h1>
 
-    <section class="cards reservation-container">
-      <!-- Active Reservations Card -->
-      <div class="card reservation-section">
-        <div class="controls">
-          <div class="search-control">
-            <input
-              type="search"
-              v-model="searchQuery"
-              placeholder="Search reservations..."
-              class="search-input"
-            />
+      <section class="cards reservation-container">
+        <!-- Active Reservations Card -->
+        <div class="card reservation-section">
+          <div class="controls">
+            <div class="search-control">
+              <input
+                type="search"
+                v-model="searchQuery"
+                placeholder="Search reservations..."
+                class="search-input"
+              />
+            </div>
+          </div>
+
+          <div class="reservation-list">
+            <div
+              v-for="reservation in sortedReservations"
+              :key="reservation.id"
+              class="reservation-item"
+              @click="editReservation(reservation.id)"
+            >
+              <span>{{ reservation.dish }}</span>
+              <span class="reservation-date">{{
+                formatDate(reservation.date)
+              }}</span>
+            </div>
           </div>
         </div>
 
-        <div class="reservation-list">
-          <div
-            v-for="reservation in sortedReservations"
-            :key="reservation.id"
-            class="reservation-item"
-            @click="editReservation(reservation.id)"
-          >
-            <span>{{ reservation.dish }}</span>
-            <span class="reservation-date">{{ formatDate(reservation.date) }}</span>
+        <!-- Calendar Card -->
+        <div class="card calendar-section">
+          <h2>Reservation Calendar</h2>
+          <div class="calendar-wrapper">
+            <UserCalendar :reservations="activeReservations" />
           </div>
         </div>
-      </div>
 
-      <!-- Calendar Card -->
-      <div class="card calendar-section">
-        <h2>Reservation Calendar</h2>
-        <div class="calendar-wrapper">
-          <UserCalendar :reservations="activeReservations" />
+        <!-- Create New Reservation Button -->
+        <div class="button-container">
+          <button @click="createNewReservation" class="action-button">
+            Create New Reservation
+          </button>
         </div>
-      </div>
-
-      <!-- Create New Reservation Button -->
-      <div class="button-container">
-        <button @click="createNewReservation" class="action-button">
-          Create New Reservation
-        </button>
-      </div>
-    </section>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -80,13 +84,18 @@ export default {
     async fetchReservations() {
       try {
         const response = await ReservationService.getAllReservations();
-        this.reservations = response.data.data.reservations.map((reservation) => ({
-          id: reservation._id,
-          dish: reservation.dish,
-          date: reservation.date,
-        }));
+        this.reservations = response.data.data.reservations.map(
+          (reservation) => ({
+            id: reservation._id,
+            dish: reservation.dish,
+            date: reservation.date,
+          })
+        );
       } catch (error) {
-        console.error("Failed to fetch reservations:", error.response?.data || error.message);
+        console.error(
+          "Failed to fetch reservations:",
+          error.response?.data || error.message
+        );
         this.error = "Failed to load reservations. Please try again.";
       }
     },
