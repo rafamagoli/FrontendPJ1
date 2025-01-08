@@ -76,9 +76,8 @@ export default {
 <template>
   <div id="add-plate-page" class="page-background">
     <div class="main-content">
-      <h1>New Plate</h1>
-
       <section class="add-plate-form">
+        <h2>New Plate</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Plate Name -->
           <PlateFormInput
@@ -138,23 +137,39 @@ export default {
 </template>
 
 <style scoped>
+/* Add Plate Form Styling */
 .add-plate-form {
   max-width: 600px;
-  margin: 60px auto;
-  background: #f6f5f5;
+  margin: 20px auto;
+  background: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.form-group textarea {
+.add-plate-form h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group select {
   width: 100%;
   padding: 8px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
-  resize: vertical;
 }
 
 .ingredients-grid {
@@ -207,7 +222,12 @@ export default {
   background: #333;
 }
 
+/* Responsiveness */
 @media (max-width: 768px) {
+  .add-plate-form {
+    padding: 15px;
+  }
+
   .form-actions {
     flex-direction: column;
     gap: 10px;

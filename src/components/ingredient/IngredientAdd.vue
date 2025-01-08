@@ -47,9 +47,9 @@ export default {
 <template>
   <div id="add-ingredient-page" class="page-background">
     <div class="main-content">
-      <h1>New Ingredient</h1>
-
+      <!-- Add Ingredient Form -->
       <section class="add-ingredient-form">
+        <h2>New Ingredient</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Ingredient Name -->
           <IngredientFormInput 
@@ -87,10 +87,11 @@ export default {
 </template>
 
 <style scoped>
+/* Add Ingredient Form Styling */
 .add-ingredient-form {
   max-width: 600px;
-  margin: 60px auto;
-  background: #f6f5f5;
+  margin: 20px auto;
+  background: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -104,6 +105,12 @@ export default {
 
 .form-group {
   margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 .form-group select {
@@ -138,7 +145,12 @@ export default {
   background: #333;
 }
 
+/* Responsiveness */
 @media (max-width: 768px) {
+  .add-ingredient-form {
+    padding: 15px;
+  }
+
   .form-actions {
     flex-direction: column;
     gap: 10px;

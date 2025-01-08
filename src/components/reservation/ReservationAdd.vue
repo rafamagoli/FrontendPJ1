@@ -55,63 +55,62 @@ export default {
 
 <template>
   <div id="add-reservation-page" class="page-background">
-
-    <h1 class="page-title">Create New Reservation</h1>
-
     <div class="main-content">
-      <form @submit.prevent="handleSubmit">
-        <!-- Date Input -->
-        <div class="form-group">
-          <label for="date">Reservation Date</label>
-          <input
-            type="date"
-            id="date"
-            v-model="reservation.date"
-            required
-          />
-        </div>
+      <section class="add-reservation-form">
+        <h2>Create New Reservation</h2>
+        <form @submit.prevent="handleSubmit">
+          <!-- Date Input -->
+          <div class="form-group">
+            <label for="date">Reservation Date</label>
+            <input
+              type="date"
+              id="date"
+              v-model="reservation.date"
+              required
+            />
+          </div>
 
-        <!-- Plate Dropdown -->
-        <div class="form-group">
-          <label for="plate">Select Plate</label>
-          <select id="plate" v-model="reservation.plateName" required>
-            <option value="" disabled>Select a plate</option>
-            <option v-for="plate in plates" :key="plate.name" :value="plate.name">
-              {{ plate.name }}
-            </option>
-          </select>
-        </div>
+          <!-- Plate Dropdown -->
+          <div class="form-group">
+            <label for="plate">Select Plate</label>
+            <select id="plate" v-model="reservation.plateName" required>
+              <option value="" disabled>Select a plate</option>
+              <option v-for="plate in plates" :key="plate.name" :value="plate.name">
+                {{ plate.name }}
+              </option>
+            </select>
+          </div>
 
-        <!-- Action Buttons -->
-        <div class="form-actions">
-          <button type="button" class="cancel-button" @click="cancel">
-            Cancel
-          </button>
-          <button type="submit" class="create-button">
-            Create Reservation
-          </button>
-        </div>
-      </form>
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <button type="button" class="cancel-button" @click="cancel">
+              Cancel
+            </button>
+            <button type="submit" class="create-button">
+              Create Reservation
+            </button>
+          </div>
+        </form>
+      </section>
     </div>
   </div>
 </template>
 
 <style scoped>
-
-.page-title {
-  margin-top: 20px;
-  margin-left: 270px;
-}
-
-
-.main-content {
+/* Add Reservation Form Styling */
+.add-reservation-form {
   max-width: 600px;
-  margin: 60px auto;
-  margin-left: 550px; ;
-  background: #f6f5f5;
+  margin: 20px auto;
+  background: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.add-reservation-form h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 .form-group {
@@ -131,6 +130,7 @@ export default {
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .form-actions {
@@ -141,17 +141,35 @@ export default {
 
 .cancel-button,
 .create-button {
+  width: 48%;
   padding: 10px;
-  border-radius: 4px;
   font-size: 1rem;
-  cursor: pointer;
-  background: #000;
-  color: white;
   border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  background: #000000;
+  color: white;
 }
 
 .cancel-button:hover,
 .create-button:hover {
   background: #333;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .add-reservation-form {
+    padding: 15px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cancel-button,
+  .create-button {
+    width: 100%;
+  }
 }
 </style>

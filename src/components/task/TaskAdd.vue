@@ -157,7 +157,7 @@ export default {
 .add-task-form {
   max-width: 600px;
   margin: 20px auto;
-  background: #f5f5f5; /* Fundo levemente cinza */
+  background: white; /* Fundo levemente cinza */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
