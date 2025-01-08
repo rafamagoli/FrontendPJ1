@@ -109,9 +109,8 @@ export default {
 <template>
   <div id="edit-plate-page" class="page-background">
     <div class="main-content">
-      <h1>Edit Plate</h1>
-
       <section class="edit-plate-form">
+        <h2>Edit Plate</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Plate Name -->
           <PlateFormInput
@@ -173,16 +172,35 @@ export default {
 <style scoped>
 .edit-plate-form {
   max-width: 600px;
-  margin: 60px auto;
-  background: #f6f5f5;
-  padding: 20px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.edit-plate-form h2 {
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.form-group input,
 .form-group select {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -191,7 +209,7 @@ export default {
 
 .ingredients-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 10px;
   margin-top: 10px;
 }
@@ -203,7 +221,7 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .ingredient-item:hover {
@@ -219,19 +237,20 @@ export default {
 .form-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .cancel-button,
 .create-button {
   width: 48%;
-  padding: 10px;
+  padding: 12px;
   font-size: 1rem;
   border: none;
   cursor: pointer;
   border-radius: 10px;
-  background: #000000;
+  background: #000;
   color: white;
+  transition: background-color 0.3s ease;
 }
 
 .cancel-button:hover,
@@ -242,7 +261,7 @@ export default {
 @media (max-width: 768px) {
   .form-actions {
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
   }
 
   .cancel-button,
