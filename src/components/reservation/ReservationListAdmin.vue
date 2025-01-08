@@ -4,14 +4,13 @@
       <h1 id="page-title">All Reservations</h1>
 
       <section class="cards reservation-container">
-        <!-- All Reservations Card -->
-        <div class="card reservation-section">
+        <div class="reservation-section">
           <div class="controls">
             <div class="search-control">
               <input
                 type="search"
                 v-model="searchQuery"
-                placeholder="Search reservations..."
+                placeholder="Search by employee name..."
                 class="search-input"
               />
             </div>
@@ -24,10 +23,9 @@
               class="reservation-item"
               @click="editReservation(reservation.id)"
             >
-              <span>{{ reservation.dish }}</span>
-              <span class="reservation-date">{{
-                formatDate(reservation.date)
-              }}</span>
+              <p><strong>Plate:</strong> {{ reservation.plate }}</p>
+              <p><strong>Name:</strong> {{ reservation.name }}</p>
+              <p><strong>Date:</strong> {{ formatDate(reservation.date) }}</p>
             </div>
           </div>
         </div>
@@ -38,6 +36,7 @@
 
 <script>
 import ReservationService from "@/core/services/ReservationService";
+import UserService from "@/core/services/UserService";
 
 export default {
   data() {
@@ -50,7 +49,7 @@ export default {
   computed: {
     sortedReservations() {
       const filtered = this.reservations.filter((res) =>
-        res.dish.toLowerCase().includes(this.searchQuery.toLowerCase())
+        res.name.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
       return filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
     },
@@ -62,23 +61,27 @@ export default {
     async fetchReservations() {
       try {
         const response = await ReservationService.getAllReservations();
-        this.reservations = response.data.data.reservations.map(
-          (reservation) => ({
-            id: reservation._id,
-            dish: reservation.plate,
-            date: reservation.date,
-          })
-        );
+        const reservations = response.data.data.reservations;
+
+        for (let reservation of reservations) {
+          const user = await UserService.getUserByNIF(reservation.employeeNIF);
+          reservation.name = user.data.name;
+        }
+
+        this.reservations = reservations.map((reservation) => ({
+          id: reservation._id,
+          plate: reservation.plate,
+          name: reservation.name,
+          date: reservation.date,
+        }));
       } catch (error) {
-        console.error(
-          "Failed to fetch reservations:",
-          error.response?.data || error.message
-        );
+        console.error("Failed to fetch reservations:", error.response?.data || error.message);
         this.error = "Failed to load reservations. Please try again.";
       }
     },
-    formatDate(date) {
-      return new Date(date).toLocaleDateString("en-US");
+    formatDate(dateStr) {
+      const options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
+      return new Date(dateStr).toLocaleDateString(undefined, options);
     },
     createNewReservation() {
       this.$router.push("/reservation/add");
@@ -91,16 +94,16 @@ export default {
 </script>
 
 <style scoped>
+/* Style for the reservation list container */
 .reservation-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 20px;
   margin: 20px auto;
-  max-width: 1200px;
+  max-width: 800px;
 }
 
 .reservation-section {
-  grid-column: 1;
   padding: 20px;
   background: #f6f5f5;
   border-radius: 8px;
@@ -109,7 +112,7 @@ export default {
 
 .controls {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-bottom: 20px;
 }
 
@@ -117,62 +120,54 @@ export default {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 200px;
+  width: 100%;
+  max-width: 300px;
 }
 
-.reservation-item {
-  padding: 15px;
-  border: 1px solid #eee;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  background: white;
-}
-
-.reservation-item:hover {
-  background-color: #f5f5f5;
-}
-
-.button-container {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: center;
+.reservation-list {
   margin-top: 20px;
 }
 
-.action-button {
-  width: 200px;
-  padding: 10px;
-  background: #000;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1rem;
+.weekly-tasks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.action-button:hover {
-  background: #333;
+.reservation-item {
+  display: block; /* Changed to block to stack elements vertically */
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.reservation-title {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 5px; /* Add space between plate and name */
+}
+
+.reservation-name,
+.reservation-date {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 5px; /* Add space between name and date */
 }
 
 @media (max-width: 768px) {
   .reservation-container {
-    grid-template-columns: 1fr;
-  }
-
-  .reservation-section {
-    grid-column: 1;
+    padding: 10px;
   }
 
   .controls {
-    flex-direction: column;
-    gap: 10px;
+    justify-content: center;
   }
 
-  .search-input {
-    width: 100%;
+  .reservation-item {
+    align-items: flex-start;
   }
 }
 </style>
