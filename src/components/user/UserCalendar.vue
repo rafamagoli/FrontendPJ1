@@ -24,12 +24,12 @@ export default {
   components: { FullCalendar },
   data() {
     return {
-      selectedReservation: null, // Reservation selected for viewing
+      selectedReservation: null,
       calendarOptions: {
         plugins: [dayGridPlugin],
         initialView: "dayGridMonth",
         height: "auto",
-        events: [], // Events will be populated dynamically
+        events: [],
         headerToolbar: {
           left: "",
           center: "title",
@@ -40,12 +40,11 @@ export default {
     };
   },
   async mounted() {
-    await this.loadReservations(); // Fetch reservations when the component mounts
+    await this.loadReservations();
   },
   methods: {
     async loadReservations() {
       try {
-        // Get the logged-in user's NIF
         const user = JSON.parse(localStorage.getItem("currentUser"));
         const nif = user?.nif;
 
@@ -54,9 +53,8 @@ export default {
           return;
         }
 
-        // Fetch reservations for the user's NIF
         const response = await ReservationService.getReservationsByNif(nif);
-        console.log("API Response:", response.data); // Debug the API response
+        console.log("API Response:", response.data);
 
         const reservations = response.data.data.reservations;
 
@@ -65,25 +63,23 @@ export default {
           return;
         }
 
-        // Map reservations to FullCalendar events
         this.calendarOptions.events = reservations.map((reservation) => ({
-          title: reservation.plate || "No Plate Specified", // Dish (plate) name
-          start: reservation.date, // Reservation date
-          allDay: true, // Treat event as all-day to remove time display
+          title: reservation.plate || "No Plate Specified",
+          start: reservation.date,
+          allDay: true,
           extendedProps: {
-            employeeNIF: reservation.employeeNIF, // Employee's NIF
-            plate: reservation.plate, // Plate name
-            date: reservation.date, // Reservation date
+            employeeNIF: reservation.employeeNIF,
+            plate: reservation.plate,
+            date: reservation.date,
           },
         }));
 
-        console.log("Mapped Events:", this.calendarOptions.events); // Debug the mapped events
+        console.log("Mapped Events:", this.calendarOptions.events);
       } catch (error) {
         console.error("Error loading reservations:", error);
       }
     },
     handleEventClick(info) {
-      // Show reservation details in the modal
       this.selectedReservation = {
         plate: info.event.extendedProps.plate,
         date: info.event.extendedProps.date,
@@ -91,7 +87,7 @@ export default {
       };
     },
     closeModal() {
-      this.selectedReservation = null; // Close the modal
+      this.selectedReservation = null;
     },
     formatDate(date) {
       return new Date(date).toLocaleDateString("en-US", {

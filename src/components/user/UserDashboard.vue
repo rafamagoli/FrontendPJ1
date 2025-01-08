@@ -44,13 +44,14 @@
 import UserCalendar from "./UserCalendar.vue";
 import TaskService from "@/core/services/TaskService";
 import ReservationService from "@/core/services/ReservationService";
+import UserService from "@/core/services/UserService";
 
 export default {
   components: { UserCalendar },
   data() {
     return {
-      tasks: [], // Tasks dynamically loaded
-      reservations: [], // Reservations dynamically loaded
+      tasks: [],
+      reservations: [],
     };
   },
   async mounted() {
@@ -61,8 +62,24 @@ export default {
     async loadTasks() {
       try {
         const response = await TaskService.getTasksDueNextWeek();
-        console.log("Tasks API Response:", response.data); // Debug the API response
-        this.tasks = response.data.data.tasks; // Correctly assign tasks array
+        const allTasks = response.data.data.tasks;
+
+        const currentUser = UserService.getCurrentUser();
+        console.log("Current User:", currentUser);
+
+        if (currentUser.isAdmin) {
+          this.tasks = allTasks;
+        } else if (currentUser.isManager) {
+          this.tasks = allTasks.filter(
+            (task) => task.department === currentUser.department
+          );
+        } else if (currentUser.isEmployee) {
+          this.tasks = allTasks.filter(
+            (task) => task.assignedTo === currentUser.username
+          );
+        }
+
+        console.log("Filtered Tasks:", this.tasks);
       } catch (error) {
         console.error("Error loading tasks:", error);
       }
@@ -70,7 +87,7 @@ export default {
     async loadReservations() {
       try {
         const response = await ReservationService.getReservations();
-        this.reservations = response.data; // Adjust based on API structure
+        this.reservations = response.data;
       } catch (error) {
         console.error("Error loading reservations:", error);
       }
