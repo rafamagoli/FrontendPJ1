@@ -140,28 +140,6 @@ export default {
             v-model="employee.username"
           />
 
-          <!-- Balance -->
-          <EmployeeAddFormInput
-            identifier="balance"
-            name="Balance"
-            v-model="employee.balance"
-          />
-
-          <!-- Password -->
-          <EmployeeAddFormInput
-            identifier="password"
-            name="Password"
-            v-model="employee.password"
-            type="password"
-          />
-
-          <!-- Confirm Password -->
-          <EmployeeAddFormInput
-            identifier="confirm-password"
-            name="Confirm Password"
-            v-model="employee.confirmPassword"
-            type="password"
-          />
 
           <!-- NIF -->
           <EmployeeAddFormInput
@@ -186,7 +164,7 @@ export default {
             <button type="button" class="cancel-button" @click="cancel">
               Cancel
             </button>
-            <button type="submit" class="update-button">Update</button>
+            <button type="submit" class="update-button">Edit</button>
             <button type="button" class="inactive-button" @click="markAsInactive">
               Inactive Employee
             </button>

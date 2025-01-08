@@ -101,7 +101,7 @@ export default {
     <div class="main-content">
       <!-- Add Task Form -->
       <section class="add-task-form">
-        <h2>Add New Task</h2>
+        <h2>Create New Task</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Task Name -->
           <EmployeeAddFormInput

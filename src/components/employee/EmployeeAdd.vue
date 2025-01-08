@@ -92,7 +92,7 @@ export default {
     <div class="main-content">
       <!-- Add Employee Form -->
       <section class="add-employee-form">
-        <h2>Add New Employee</h2>
+        <h2>Create New Employee</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Name -->
           <EmployeeAddFormInput name="Name" identifier="name" v-model="employee.name" />
@@ -110,9 +110,6 @@ export default {
 
           <!-- Username -->
           <EmployeeAddFormInput identifier="username" name="Username" v-model="employee.username" />
-
-          <!-- Balance -->
-          <EmployeeAddFormInput identifier="balance" name="Balance" v-model="employee.balance" />
 
           <!-- Password -->
           <EmployeeAddFormInput

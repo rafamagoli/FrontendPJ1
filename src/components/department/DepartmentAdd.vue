@@ -3,7 +3,7 @@
     <div class="main-content">
       <!-- Add Department Form -->
       <section class="add-department-form">
-        <h2>New Department</h2>
+        <h2>Create New Department</h2>
         <form @submit.prevent="createDepartment">
           <!-- Department Name -->
           <div class="form-group">

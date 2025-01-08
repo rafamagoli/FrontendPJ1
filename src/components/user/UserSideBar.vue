@@ -70,7 +70,7 @@
             <ul class="submenu" :class="{ active: activeMenu === 'employees' }">
               <li v-if="currentUser.isAdmin">
                 <button class="nav-link" @click="navigateTo('employee-add')">
-                  Add Employee
+                  Create Employee
                 </button>
               </li>
               <li v-if="currentUser.isManager || currentUser.isAdmin">

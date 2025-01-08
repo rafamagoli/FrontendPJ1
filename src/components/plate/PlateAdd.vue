@@ -77,7 +77,7 @@ export default {
   <div id="add-plate-page" class="page-background">
     <div class="main-content">
       <section class="add-plate-form">
-        <h2>New Plate</h2>
+        <h2>Create New Plate</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Plate Name -->
           <PlateFormInput

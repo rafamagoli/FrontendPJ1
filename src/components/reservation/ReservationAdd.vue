@@ -87,7 +87,7 @@ export default {
               Cancel
             </button>
             <button type="submit" class="create-button">
-              Create Reservation
+              Create
             </button>
           </div>
         </form>
