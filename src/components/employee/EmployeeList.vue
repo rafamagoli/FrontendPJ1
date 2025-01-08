@@ -1,11 +1,14 @@
 <script>
 import UserService from "@/core/services/UserService";
 
+let currentUser = UserService.getCurrentUser();
+
 export default {
   data() {
     return {
       searchQuery: "",
       employees: [],
+      currentUser: currentUser,
     };
   },
   computed: {
@@ -90,7 +93,7 @@ export default {
         </div>
 
         <!-- Add New Employee Button -->
-        <div class="add-employee-button">
+        <div class="add-employee-button" v-if = "currentUser.isAdmin">
           <button @click="goToAddEmployee" class="create-employee-btn">
             Create New Employee
           </button>

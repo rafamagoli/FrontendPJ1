@@ -8,6 +8,7 @@ import UserRegister from "./components/user/UserRegister.vue";
 import EmployeeList from "./components/employee/EmployeeList.vue";
 import EmployeeAdd from "./components/employee/EmployeeAdd.vue";
 import EmployeeEdit from "./components/employee/EmployeeEdit.vue";
+import EmployeeChangePassword from "./components/employee/EmployeeChangePassword.vue";
 import DepartmentList from "./components/department/DepartmentList.vue";
 import DepartmentAdd from "./components/department/DepartmentAdd.vue";
 import DefaultPageLayout from "./core/components/DefaultPageLayout.vue";
@@ -25,6 +26,7 @@ import PlateEdit from "./components/plate/PlateEdit.vue";
 import ReservationAdd from "./components/reservation/ReservationAdd.vue";
 import ReservationEdit from "./components/reservation/ReservationEdit.vue";
 import ReservationList from "./components/reservation/ReservationList.vue";
+import ReservationListAdmin from "./components/reservation/ReservationListAdmin.vue";
 import axios from 'axios';
 
 const token = localStorage.getItem("authToken");
@@ -76,6 +78,12 @@ const router = createRouter({
           path: "employee/edit/:username",
           component: EmployeeEdit,
           meta: { allowedRoles: ["admin", "HRmanager"] },
+        },
+        {
+          name: "employee-change-password",
+          path: "employee/changepassword/:username",
+          component: EmployeeChangePassword,
+          meta: { allowedRoles: ["employee"] },
         },
         {
           name: "department-list",
@@ -172,6 +180,12 @@ const router = createRouter({
           path: "reservation/edit/:id",
           component: ReservationEdit,
           meta: { allowedRoles: ["admin", "manager", "employee"] },
+        },
+        {
+          name: "reservation-all-list",
+          path: "reservation/all",
+          component: ReservationListAdmin,
+          meta: { allowedRoles: ["admin"] },
         },
       ],
     },

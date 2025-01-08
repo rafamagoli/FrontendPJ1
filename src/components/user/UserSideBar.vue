@@ -39,7 +39,7 @@
           <li
             class="nav-item"
             v-if="
-              !currentUser.isEmployee
+              currentUser.isAdmin
             "
           >
             <button class="nav-link" @click="toggleSubmenu('departments')">
@@ -68,19 +68,19 @@
               Employees <span class="arrow">▼</span>
             </button>
             <ul class="submenu" :class="{ active: activeMenu === 'employees' }">
-              <li v-if="currentUser.isHRManager || currentUser.isAdmin">
+              <li v-if="currentUser.isAdmin">
                 <button class="nav-link" @click="navigateTo('employee-add')">
                   Add Employee
                 </button>
               </li>
-              <li v-if="currentUser.isHRManager || currentUser.isAdmin">
+              <li v-if="currentUser.isManager || currentUser.isAdmin">
                 <button class="nav-link" @click="navigateTo('employee-list')">
                   View Employees
                 </button>
               </li>
               <li v-if="currentUser.isEmployee">
                 <button class="nav-link" @click="handleEmployeeClick">
-                  Edit my Profile
+                  Change Password
                 </button>
               </li>
             </ul>
@@ -152,6 +152,14 @@
                   View Reservation
                 </button>
               </li>
+              <li v-if="currentUser.isAdmin">
+                <button
+                  class="nav-link"
+                  @click="navigateTo('reservation-all-list')"
+                >
+                  View All Reservations
+                </button>
+              </li>
             </ul>
           </li>
         </div>
@@ -173,7 +181,7 @@ let currentUser = UserService.getCurrentUser();
 // Lógica para editar o perfil do usuário atual
 function handleEmployeeClick() {
   const username = currentUser.username;
-  router.push(`/employee/edit/${username}`);
+  router.push(`/employee/changepassword/${username}`);
 }
 
 // Função para alternar o submenu ativo
