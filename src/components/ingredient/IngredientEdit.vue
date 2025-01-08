@@ -181,13 +181,14 @@ export default {
 
 .form-actions {
   display: flex;
-  justify-content: space-between; /* Espaço entre os botões */
-  gap: 15px; /* Adiciona espaçamento fixo entre os botões */
-  margin-top: 30px; /* Mantém o espaçamento superior */
+  justify-content: space-between; /* Space between buttons */
+  gap: 15px; /* Fixed space between buttons */
+  margin-top: 30px; /* Keep top margin */
 }
 
 .delete-button,
-.update-button {
+.update-button,
+.cancel-button { /* Add cancel button */
   flex: 1;
   padding: 12px;
   font-size: 1rem;
@@ -200,7 +201,8 @@ export default {
 }
 
 .delete-button:hover,
-.update-button:hover {
+.update-button:hover,
+.cancel-button:hover { /* Add hover effect for all buttons */
   background: #333;
 }
 
@@ -210,7 +212,8 @@ export default {
   }
 
   .delete-button,
-  .update-button {
+  .update-button,
+  .cancel-button {
     width: 100%;
   }
 }
