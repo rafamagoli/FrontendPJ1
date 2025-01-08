@@ -1,14 +1,18 @@
 <script>
 import PlateService from "@/core/services/PlateService";
+import UserService from "@/core/services/UserService";
+
+let currentUser = UserService.getCurrentUser();
 
 export default {
   data() {
     return {
       plates: [], // Plates fetched from the backend
+      currentUser: currentUser, // Inicializado como null para evitar erros de renderização
     };
   },
   async created() {
-    await this.fetchPlates(); // Fetch plates when the component is created
+    await this.fetchPlates(); // Fetch plates
   },
   methods: {
     async fetchPlates() {
@@ -21,14 +25,14 @@ export default {
       }
     },
     editPlate(plate) {
-      // Redirect to the edit page using plate ID
-      this.$router.push({ name: "plate-edit", params: { id: plate._id } });
+      this.$router.push({ name: "plate-edit", params: { name: plate.name } });
     },
     createPlate() {
-      this.$router.push("/plate/add"); // Redirect to the add plate page
+      this.$router.push("/plate/add");
     },
   },
 };
+
 </script>
 
 
@@ -41,12 +45,7 @@ export default {
         <!-- Left Column -->
         <div class="card plates-card">
           <div class="plate-grid">
-            <div
-              v-for="plate in plates.slice(0, 2)"
-              :key="plate.id"
-              class="plate-box"
-              @click="editPlate(plate)"
-            >
+            <div v-for="plate in plates.slice(0, 2)" :key="plate.id" class="plate-box" @click="currentUser.isCanteenManager ? editPlate(plate) : null">
               <div class="plate-name">{{ plate.name }}</div>
               <div class="plate-price">${{ plate.price }}</div>
               <div class="plate-ingredients">
@@ -59,12 +58,7 @@ export default {
         <!-- Right Column -->
         <div class="card plates-card">
           <div class="plate-grid">
-            <div
-              v-for="plate in plates.slice(2, 4)"
-              :key="plate.id"
-              class="plate-box"
-              @click="editPlate(plate)"
-            >
+            <div v-for="plate in plates.slice(2, 4)" :key="plate.id" class="plate-box" @click="currentUser.isCanteenManager ? editPlate(plate) : null">
               <div class="plate-name">{{ plate.name }}</div>
               <div class="plate-price">${{ plate.price }}</div>
               <div class="plate-ingredients">
@@ -77,7 +71,7 @@ export default {
 
       <!-- Action Buttons -->
       <div class="button-container">
-        <button @click="createPlate" class="action-button">
+        <button v-if="currentUser.isCanteenManager" @click="createPlate" class="action-button">
           Create New Plate
         </button>
       </div>

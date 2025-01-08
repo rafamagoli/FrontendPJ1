@@ -82,7 +82,7 @@
               Plates <span class="arrow">▼</span>
             </button>
             <ul class="submenu" :class="{ active: activeMenu === 'plates' }">
-              <li>
+              <li v-if="currentUser.isCanteenManager">
                 <button class="nav-link" @click="navigateTo('plate-add')">Create Plate</button>
               </li>
               <li>

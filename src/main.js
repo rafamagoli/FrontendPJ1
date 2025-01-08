@@ -151,7 +151,7 @@ const router = createRouter({
         },
         {
           name: "plate-edit",
-          path: "plate/edit/:id",
+          path: "plate/edit/:name",
           component: PlateEdit,
           meta: { allowedRoles: ["admin", "manager"] },
         },

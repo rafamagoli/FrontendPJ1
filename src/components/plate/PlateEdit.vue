@@ -22,11 +22,11 @@ export default {
     };
   },
   async created() {
-    const plateId = this.$route.params.id; // Retrieve plate ID from route params
+    const plateName = this.$route.params.name; // Retrieve plate ID from route params
 
     // Fetch plate details
-    if (plateId) {
-      await this.fetchPlateData(plateId);
+    if (plateName) {
+      await this.fetchPlateData(plateName);
     } else {
       console.error("No plate ID found. Redirecting...");
       this.$router.push("/plate/list");
@@ -36,10 +36,10 @@ export default {
     await this.fetchIngredients();
   },
   methods: {
-    async fetchPlateData(plateId) {
+    async fetchPlateData(plateName) {
       try {
-        const response = await PlateService.getPlateByName(plateId); // Fetch plate by ID
-        const { data } = response;
+        const response = await PlateService.getPlateByName(plateName); // Fetch plate by ID
+        const data = response.data.data.plate;
 
         // Populate plate data
         this.plate = {

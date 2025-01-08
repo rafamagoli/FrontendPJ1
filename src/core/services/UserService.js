@@ -29,14 +29,16 @@ const UserService = {
     // TODO: remove try catch once API is fixed
     try {
       let user = await this.getUserByUsername(username);
-      localStorage.setItem('currentUser', JSON.stringify(user[0]));
+      localStorage.setItem('currentUser', JSON.stringify(user||{}));
     } catch (error) {
       localStorage.setItem('currentUser', JSON.stringify({}));
     }
   },
   
   getCurrentUser: function(){
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'))
+    let currentUserData = localStorage.getItem('currentUser');
+    let currentUser = JSON.parse(currentUserData || "{}");
+    
 
     currentUser.isCanteenManager = currentUser.role === 'Manager' && currentUser.department === 'canteen';
     currentUser.isAdmin = currentUser.role === 'Admin';
