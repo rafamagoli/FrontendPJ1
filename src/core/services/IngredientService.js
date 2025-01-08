@@ -10,6 +10,13 @@ const IngredientService = {
       },
     }),
 
+  getIngredientByName: (name) => // Fetch by ingredient name instead of id
+    axios.get(`${API_URL}/${name}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    }),
+
   createIngredient: (ingredientData) =>
     axios.post(`${API_URL}`, ingredientData, {
       headers: {
@@ -18,7 +25,7 @@ const IngredientService = {
       },
     }),
 
-  updateIngredient: (name, updatedData) =>
+  updateIngredient: (name, updatedData) => // Use name for update
     axios.put(`${API_URL}/${name}`, updatedData, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -26,7 +33,7 @@ const IngredientService = {
       },
     }),
 
-  deleteIngredient: (name) =>
+  deleteIngredient: (name) => // Use name for deletion
     axios.delete(`${API_URL}/${name}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,

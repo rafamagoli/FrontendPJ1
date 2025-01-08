@@ -1,37 +1,39 @@
 <script>
-import IngredientFormInput from "./IngredientFormInput.vue";
-import UserCancelButton from "@/components/user/UserCancelButton.vue";
 import IngredientService from "@/core/services/IngredientService";
+import UserCancelButton from "@/components/user/UserCancelButton.vue";
 
 export default {
   components: {
-    IngredientFormInput,
     UserCancelButton,
   },
   data() {
     return {
       ingredient: {
-        id: null,
         name: "",
-        allergen: "",
+        allergen: "",  // Leaving allergen field empty for the user to fill manually
       },
-      allergenOptions: ["Yes", "No"],
+      allergenOptions: ["Yes", "No"], // Provide Yes/No for allergen
     };
   },
   async created() {
-    const ingredientId = this.$route.params.id;
+    const ingredientName = this.$route.params.name; // Get the ingredient name from the URL
+
+    if (!ingredientName) {
+      console.error("Ingredient name is missing.");
+      alert("Ingredient name is missing in the URL.");
+      this.$router.push("/ingredient/list");
+      return; // Stop further execution if the ingredient name is missing
+    }
 
     try {
-      const response = await IngredientService.getAllIngredients();
-      const ingredient = response.data.find(
-        (item) => item.id === ingredientId || item._id === ingredientId
-      );
-
-      if (ingredient) {
+      // Fetch the ingredient details using the name
+      const response = await IngredientService.getIngredientByName(ingredientName);
+      
+      if (response.data.status === 'success') {
+        const ingredient = response.data.data.ingredient;
         this.ingredient = {
-          id: ingredient.id || ingredient._id,
-          name: ingredient.name,
-          allergen: ingredient.allergen || "No",
+          name: ingredient.name,  // Set the ingredient name to be editable
+          allergen: ingredient.allergen ? "Yes" : "No", // Set allergen state (Yes/No)
         };
       } else {
         console.error("Ingredient not found. Redirecting...");
@@ -53,10 +55,12 @@ export default {
 
         const updatedData = {
           name: this.ingredient.name.trim(),
-          allergen: this.ingredient.allergen || "No",
+          allergen: this.ingredient.allergen === "Yes", // Convert Yes/No to Boolean (true/false)
         };
 
-        await IngredientService.updateIngredient(this.ingredient.id, updatedData);
+        // Use the name from the URL in the PUT request instead of the updated name
+        const ingredientName = this.$route.params.name;
+        await IngredientService.updateIngredient(ingredientName, updatedData); // Correct URL format
 
         alert("Ingredient updated successfully!");
         this.$router.push("/ingredient/list");
@@ -68,7 +72,7 @@ export default {
     async deleteIngredient() {
       if (confirm("Are you sure you want to delete this ingredient?")) {
         try {
-          await IngredientService.deleteIngredient(this.ingredient.id);
+          await IngredientService.deleteIngredient(this.ingredient.name);
           alert("Ingredient deleted successfully!");
           this.$router.push("/ingredient/list");
         } catch (error) {
@@ -87,51 +91,51 @@ export default {
 <template>
   <div id="edit-ingredient-page" class="page-background">
     <div class="main-content">
-        <h1>Edit Ingredient</h1>
-
+      <h1>Edit Ingredient</h1>
+      
       <section class="edit-ingredient-form">
         <form @submit.prevent="handleSubmit">
-          <!-- Ingredient Name - Now read-only -->
+          <!-- Ingredient Name - Editable now -->
           <div class="form-group">
             <label for="name">Ingredient Name</label>
             <input 
-              type="text" 
-              id="name" 
-              v-model="ingredient.name"
-              readonly
-              class="readonly-input"
+            type="text" 
+            id="name" 
+            v-model="ingredient.name"
+            class="readonly-input"
             />
           </div>
-
+          
           <!-- Allergen -->
           <div class="form-group">
             <label for="allergen">Allergen</label>
             <select id="allergen" v-model="ingredient.allergen" required>
               <option value="" disabled>Select</option>
               <option v-for="option in allergenOptions" 
-                      :key="option" 
-                      :value="option">
-                {{ option }}
-              </option>
-            </select>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="form-actions">
-            <UserCancelButton :cancel="cancel" />            
-
-            <button type="button" class="delete-button" @click="deleteIngredient">
-              Delete
-            </button>
-            <button type="submit" class="update-button">
-              Update
-            </button>
-          </div>
-        </form>
-      </section>
-    </div>
+              :key="option" 
+              :value="option">
+              {{ option }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <UserCancelButton :cancel="cancel" />            
+          
+          <button type="button" class="delete-button" @click="deleteIngredient">
+            Delete
+          </button>
+          <button type="submit" class="update-button">
+            Update
+          </button>
+        </div>
+      </form>
+    </section>
   </div>
+</div>
 </template>
+
 
 <style scoped>
 .edit-ingredient-form {
@@ -162,18 +166,6 @@ export default {
   box-sizing: border-box;
 }
 
-/* Style for read-only input */
-.readonly-input {
-  width: 100%;
-  padding: 8px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  background-color: #f5f5f5;
-  color: #666;
-  cursor: not-allowed;
-}
 
 .form-actions {
   display: flex;
@@ -206,7 +198,7 @@ export default {
     flex-direction: column;
     gap: 10px;
   }
-
+  
   .delete-button,
   .update-button {
     width: 100%;

@@ -13,8 +13,7 @@ export default {
 
       // Access the ingredients array nested inside data
       this.ingredients = response.data.data.ingredients.map((ingredient) => ({
-        id: ingredient._id, // Use _id as the unique identifier
-        name: ingredient.name, // Use name from the backend
+        name: ingredient.name,  // Use name as the identifier
       }));
 
       console.log("Fetched ingredients:", this.ingredients);
@@ -27,7 +26,7 @@ export default {
     editIngredient(ingredient) {
       this.$router.push({
         name: "ingredient-edit",
-        params: { id: ingredient.id },
+        params: { name: ingredient.name },  // Use name for the route parameter
       });
     },
     createIngredient() {
