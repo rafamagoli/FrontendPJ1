@@ -39,7 +39,7 @@
           <li
             class="nav-item"
             v-if="
-              !currentUser.isEmployee
+              currentUser.isAdmin
             "
           >
             <button class="nav-link" @click="toggleSubmenu('departments')">
@@ -68,12 +68,12 @@
               Employees <span class="arrow">▼</span>
             </button>
             <ul class="submenu" :class="{ active: activeMenu === 'employees' }">
-              <li v-if="currentUser.isHRManager || currentUser.isAdmin">
+              <li v-if="currentUser.isAdmin">
                 <button class="nav-link" @click="navigateTo('employee-add')">
                   Add Employee
                 </button>
               </li>
-              <li v-if="currentUser.isHRManager || currentUser.isAdmin">
+              <li v-if="currentUser.isManager || currentUser.isAdmin">
                 <button class="nav-link" @click="navigateTo('employee-list')">
                   View Employees
                 </button>
