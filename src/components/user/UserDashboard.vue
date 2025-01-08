@@ -6,8 +6,8 @@
         <!-- Tasks Card -->
         <div class="card tasks-card">
           <h2>Tasks Overview</h2>
-          <div class="sub-box" @click="TaskList">View All</div>
-          <div class="sub-box" @click="TaskAdd">Add a New Task</div>
+          <div class="sub-box" v-if="!currentUser.isEmployee" @click="TaskList">View All</div>
+          <div class="sub-box" v-if="!currentUser.isEmployee" @click="TaskAdd">Add a New Task</div>
           <!-- Weekly Tasks Overview -->
           <div class="weekly-tasks">
             <h4>Tasks Due Next Week</h4>
@@ -22,7 +22,7 @@
         </div>
 
         <!-- Employees Card -->
-        <div class="card employees-card">
+        <div class="card employees-card" v-if="!currentUser.isEmployee">
           <h2>Employee Overview</h2>
           <div class="sub-box" @click="EmployeeList">View All</div>
           <div class="sub-box" @click="EmployeeAdd">Add a New Employee</div>
@@ -46,12 +46,15 @@ import TaskService from "@/core/services/TaskService";
 import ReservationService from "@/core/services/ReservationService";
 import UserService from "@/core/services/UserService";
 
+let currentUser = UserService.getCurrentUser();
+
 export default {
   components: { UserCalendar },
   data() {
     return {
       tasks: [],
       reservations: [],
+      currentUser: currentUser,
     };
   },
   async mounted() {
@@ -113,6 +116,9 @@ export default {
 </script>
 
 <style scoped>
+.weekly-tasks h4 {
+  padding: 15px 0; /* Ajuste o valor conforme necessário */
+}
 /* Weekly Tasks List */
 .weekly-tasks ul {
   list-style: none;
