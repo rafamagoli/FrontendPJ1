@@ -89,101 +89,114 @@ export default {
 <template>
   <div id="edit-ingredient-page" class="page-background">
     <div class="main-content">
-      <h1>Edit Ingredient</h1>
-      
       <section class="edit-ingredient-form">
+        <h2>Edit Ingredient</h2>
+
         <form @submit.prevent="handleSubmit">
-          <!-- Ingredient Name - Editable now -->
+          <!-- Ingredient Name -->
           <div class="form-group">
             <label for="name">Ingredient Name</label>
             <input 
-            type="text" 
-            id="name" 
-            v-model="ingredient.name"
-            class="readonly-input"
+              type="text" 
+              id="name" 
+              v-model="ingredient.name" 
+              class="readonly-input" 
             />
           </div>
-          
+
           <!-- Allergen -->
           <div class="form-group">
             <label for="allergen">Allergen</label>
             <select id="allergen" v-model="ingredient.allergen" required>
               <option value="" disabled>Select</option>
-              <option v-for="option in allergenOptions" 
-              :key="option" 
-              :value="option">
-              {{ option }}
-            </option>
-          </select>
-        </div>
-        
-        <!-- Action Buttons -->
-        <div class="form-actions">
-          <UserCancelButton :cancel="cancel" />            
-          
-          <button type="button" class="delete-button" @click="deleteIngredient">
-            Delete
-          </button>
-          <button type="submit" class="update-button">
-            Update
-          </button>
-        </div>
-      </form>
-    </section>
+              <option 
+                v-for="option in allergenOptions" 
+                :key="option" 
+                :value="option">
+                {{ option }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <UserCancelButton :cancel="cancel" />
+
+            <button 
+              type="button" 
+              class="delete-button" 
+              @click="deleteIngredient">
+              Delete
+            </button>
+            <button 
+              type="submit" 
+              class="update-button">
+              Update
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
   </div>
-</div>
 </template>
 
 
 <style scoped>
 .edit-ingredient-form {
   max-width: 600px;
-  margin: 60px auto;
-  background: #f6f5f5;
-  padding: 20px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .edit-ingredient-form h2 {
   margin-bottom: 20px;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   text-align: center;
+  font-weight: bold;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.form-group input,
 .form-group select {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
 }
 
-
 .form-actions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-.form-actions > * {
-  margin: 0; /* Remove the space between cancel and delete btn */
+  justify-content: space-between; /* Espaço entre os botões */
+  gap: 15px; /* Adiciona espaçamento fixo entre os botões */
+  margin-top: 30px; /* Mantém o espaçamento superior */
 }
 
 .delete-button,
 .update-button {
-  width: 48%;
-  padding: 10px;
+  flex: 1;
+  padding: 12px;
   font-size: 1rem;
   border: none;
   cursor: pointer;
   border-radius: 10px;
-  background: #000000;
+  background: #000;
   color: white;
+  transition: background-color 0.3s ease;
 }
 
 .delete-button:hover,
@@ -194,9 +207,8 @@ export default {
 @media (max-width: 768px) {
   .form-actions {
     flex-direction: column;
-    gap: 10px;
   }
-  
+
   .delete-button,
   .update-button {
     width: 100%;
