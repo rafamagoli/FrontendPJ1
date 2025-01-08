@@ -1,44 +1,44 @@
 <template>
-  <div class="main-content">
-    <h1 id="page-title">Edit Reservation</h1>
+  <div id="edit-reservation-page" class="page-background">
+    <div class="main-content">
+      <section class="edit-reservation-form">
+        <h2>Edit Reservation</h2>
+        <form @submit.prevent="handleSubmit">
+          <div class="form-group">
+            <label for="date">Reservation Date</label>
+            <input
+              type="date"
+              id="date"
+              v-model="reservation.date"
+              required
+            />
+          </div>
 
-    <div class="edit-form">
-      <form @submit.prevent="handleSubmit">
-        <!-- Dish Dropdown -->
-        <div class="form-group">
-          <label for="dish">Dish</label>
-          <select id="dish" v-model="reservation.dish" required>
-            <option value="">Select a dish</option>
-            <option v-for="plate in availablePlates" :key="plate.id" :value="plate.name">
-              {{ plate.name }} - ${{ plate.price }}
-            </option>
-          </select>
-        </div>
+          <!-- Plate Dropdown -->
+          <div class="form-group">
+            <label for="plate">Select Plate</label>
+            <select id="plate" v-model="reservation.plateName" required>
+              <option value="" disabled>Select a plate</option>
+              <option v-for="plate in availablePlates" :key="plate.name" :value="plate.name">
+                {{ plate.name }}
+              </option>
+            </select>
+          </div>
 
-        <!-- Date Picker Input -->
-        <div class="form-group">
-          <label for="date">Date</label>
-          <input
-            type="date"
-            id="date"
-            v-model="reservation.date"
-            required
-          />
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="button-group">
-          <button type="button" @click="cancel" class="cancel-button">
-            Cancel
-          </button>
-          <button type="button" @click="handleDelete" class="delete-button">
-            Delete
-          </button>
-          <button type="submit" class="edit-button">
-            Update Reservation
-          </button>
-        </div>
-      </form>
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <button type="button" class="cancel-button" @click="cancel">
+              Cancel
+            </button>
+            <button type="button" class="delete-button" @click="handleDelete">
+              Delete
+            </button>
+            <button type="submit" class="edit-button">
+              Update Reservation
+            </button>
+          </div>
+        </form>
+      </section>
     </div>
   </div>
 </template>
@@ -51,33 +51,33 @@ export default {
   data() {
     return {
       reservation: {
-        date: "",  // Reservation date (editable now)
-        dish: "",  // Dish name (editable)
+        date: "", 
+        plateName: "", 
       },
-      availablePlates: [],  // Plates available to select from
-      error: null,  // Error message (if any)
+      availablePlates: [],
+      error: null, 
     };
   },
   async created() {
-    const reservationId = this.$route.params.id; // Get the reservation ID from the route params
+    const reservationId = this.$route.params.id; 
 
     if (reservationId) {
-      await this.fetchReservation(reservationId); // Fetch the reservation details
+      await this.fetchReservation(reservationId);
     } else {
       console.error("No reservation ID found. Redirecting...");
       this.$router.push("/reservation/list");
     }
 
-    await this.fetchAvailablePlates(); // Fetch available plates for the dropdown
+    await this.fetchAvailablePlates();
   },
   methods: {
-    // Fetch reservation details using the reservation ID
+
     async fetchReservation(reservationId) {
       try {
         const response = await ReservationService.getReservationById(reservationId);
         this.reservation = {
-          date: new Date(response.data.data.reservation.date).toISOString().split('T')[0], // Date format YYYY-MM-DD
-          dish: response.data.data.reservation.plate,  // Set the selected dish
+          date: new Date(response.data.data.reservation.date).toISOString().split('T')[0], 
+          plateName: response.data.data.reservation.plate, 
         };
       } catch (error) {
         console.error("Failed to fetch reservation details:", error.response?.data || error.message);
@@ -86,7 +86,6 @@ export default {
       }
     },
 
-    // Fetch all available plates for the dish dropdown
     async fetchAvailablePlates() {
       try {
         const response = await PlateService.getAllPlates();
@@ -101,17 +100,16 @@ export default {
       }
     },
 
-    // Update the reservation with the new dish and date
     async handleSubmit() {
       try {
-        if (!this.reservation.dish || !this.reservation.date) {
+        if (!this.reservation.plateName || !this.reservation.date) {
           alert("Dish and date are required!");
           return;
         }
 
         const updatedReservation = {
-          plateName: this.reservation.dish, // Only updating the dish (plateName)
-          date: this.reservation.date,      // Sending date in the correct format (YYYY-MM-DD)
+          plateName: this.reservation.plateName,
+          date: this.reservation.date,    
         };
 
         await ReservationService.updateReservation(this.$route.params.id, updatedReservation);
@@ -123,7 +121,6 @@ export default {
       }
     },
 
-    // Delete the reservation
     async handleDelete() {
       if (confirm("Are you sure you want to delete this reservation?")) {
         try {
@@ -137,7 +134,6 @@ export default {
       }
     },
 
-    // Cancel and navigate back to the reservation list
     cancel() {
       this.$router.push("/reservation/list");
     },
@@ -146,17 +142,23 @@ export default {
 </script>
 
 <style scoped>
-.edit-form {
-  max-width: 500px;
+.edit-reservation-form {
+  max-width: 600px;
   margin: 20px auto;
   padding: 20px;
-  background: #f6f5f5;
+  background: white;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.edit-reservation-form h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
@@ -169,11 +171,13 @@ export default {
 .form-group input {
   width: 100%;
   padding: 8px;
+  font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
-.button-group {
+.form-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
@@ -189,33 +193,22 @@ export default {
   cursor: pointer;
   color: white;
   font-size: 1rem;
-}
-
-.cancel-button {
-  background: #f44336;
-}
-
-.delete-button {
-  background: #000;
-}
-
-.edit-button {
-  background: #4CAF50;
+  background: #000;  /* All buttons black */
 }
 
 .cancel-button:hover,
 .delete-button:hover,
 .edit-button:hover {
-  background: #333;
+  background: #333; /* Darker shade on hover */
 }
 
 @media (max-width: 768px) {
-  .edit-form {
+  .edit-reservation-form {
     margin: 10px;
     padding: 15px;
   }
 
-  .button-group {
+  .form-actions {
     flex-direction: column;
     gap: 10px;
   }
