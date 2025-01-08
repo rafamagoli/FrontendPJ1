@@ -1,41 +1,3 @@
-<script>
-import PlateService from "@/core/services/PlateService";
-import UserService from "@/core/services/UserService";
-
-let currentUser = UserService.getCurrentUser();
-
-export default {
-  data() {
-    return {
-      plates: [], // Plates fetched from the backend
-      currentUser: currentUser, // Inicializado como null para evitar erros de renderização
-    };
-  },
-  async created() {
-    await this.fetchPlates(); // Fetch plates
-  },
-  methods: {
-    async fetchPlates() {
-      try {
-        const response = await PlateService.getAllPlates();
-        this.plates = response.data.data.plates; // Assign plates from response
-      } catch (error) {
-        console.error("Error fetching plates:", error);
-        alert("Failed to load plates. Please try again later.");
-      }
-    },
-    editPlate(plate) {
-      this.$router.push({ name: "plate-edit", params: { name: plate.name } });
-    },
-    createPlate() {
-      this.$router.push("/plate/add");
-    },
-  },
-};
-
-</script>
-
-
 <template>
   <div id="plates-page" class="page-background">
     <div class="main-content">
@@ -45,7 +7,7 @@ export default {
         <!-- Left Column -->
         <div class="card plates-card">
           <div class="plate-grid">
-            <div v-for="plate in plates.slice(0, 2)" :key="plate.id" class="plate-box" @click="currentUser.isCanteenManager ? editPlate(plate) : null">
+            <div v-for="(plate, index) in leftPlates" :key="plate._id" class="plate-box" @click="currentUser.isCanteenManager ? editPlate(plate) : null">
               <div class="plate-name">{{ plate.name }}</div>
               <div class="plate-price">${{ plate.price }}</div>
               <div class="plate-ingredients">
@@ -58,7 +20,7 @@ export default {
         <!-- Right Column -->
         <div class="card plates-card">
           <div class="plate-grid">
-            <div v-for="plate in plates.slice(2, 4)" :key="plate.id" class="plate-box" @click="currentUser.isCanteenManager ? editPlate(plate) : null">
+            <div v-for="(plate, index) in rightPlates" :key="plate._id" class="plate-box" @click="currentUser.isCanteenManager ? editPlate(plate) : null">
               <div class="plate-name">{{ plate.name }}</div>
               <div class="plate-price">${{ plate.price }}</div>
               <div class="plate-ingredients">
@@ -78,6 +40,49 @@ export default {
     </div>
   </div>
 </template>
+
+<script>
+import PlateService from "@/core/services/PlateService";
+import UserService from "@/core/services/UserService";
+
+let currentUser = UserService.getCurrentUser();
+
+export default {
+  data() {
+    return {
+      plates: [],
+      currentUser: currentUser,
+      leftPlates: [],
+      rightPlates: [],
+    };
+  },
+  async created() {
+    await this.fetchPlates();
+  },
+  methods: {
+    async fetchPlates() {
+      try {
+        const response = await PlateService.getAllPlates();
+        this.plates = response.data.data.plates;
+
+        const midIndex = Math.ceil(this.plates.length / 2);
+        this.leftPlates = this.plates.slice(0, midIndex);
+        this.rightPlates = this.plates.slice(midIndex);
+
+      } catch (error) {
+        console.error("Error fetching plates:", error);
+        alert("Failed to load plates. Please try again later.");
+      }
+    },
+    editPlate(plate) {
+      this.$router.push({ name: "plate-edit", params: { name: plate.name } });
+    },
+    createPlate() {
+      this.$router.push("/plate/add");
+    },
+  },
+};
+</script>
 
 <style scoped>
 .plate-grid {

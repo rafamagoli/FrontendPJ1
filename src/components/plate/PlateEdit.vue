@@ -10,46 +10,38 @@ export default {
   data() {
     return {
       plate: {
-        id: null,
         name: "",
         type: "",
         price: "",
-        ingredients: [], // Will store ingredient names for easier backend integration
+        ingredients: [],
       },
-      typeOptions: ["Meat", "Fish", "Vegetarian"], // Dropdown options
-      availableIngredients: [], // Ingredients fetched from the backend
-      error: null, // Error message placeholder
+      typeOptions: ["Meat", "Fish", "Vegetarian"],
+      availableIngredients: [],
+      error: null,
     };
   },
   async created() {
-    const plateName = this.$route.params.name; // Retrieve plate ID from route params
-
-    // Fetch plate details
+    const plateName = this.$route.params.name;
     if (plateName) {
       await this.fetchPlateData(plateName);
     } else {
-      console.error("No plate ID found. Redirecting...");
+      console.error("No plate name found. Redirecting...");
       this.$router.push("/plate/list");
     }
 
-    // Fetch available ingredients
     await this.fetchIngredients();
   },
   methods: {
     async fetchPlateData(plateName) {
       try {
-        const response = await PlateService.getPlateByName(plateName); // Fetch plate by ID
+        const response = await PlateService.getPlateByName(plateName);
         const data = response.data.data.plate;
 
-        // Populate plate data
         this.plate = {
-          id: data._id,
           name: data.name,
           type: data.type,
           price: data.price,
-          ingredients: data.ingredients.map((ingredient) => ({
-            name: ingredient, // Use name for consistency
-          })),
+          ingredients: data.ingredients || [],
         };
       } catch (error) {
         console.error("Error fetching plate data:", error);
@@ -76,15 +68,18 @@ export default {
           return;
         }
 
-        // Prepare data for updating plate
+        const selectedIngredients = this.plate.ingredients
+          .filter((ingredient) => ingredient.name)
+          .map((ingredient) => ingredient.name);
+
         const updatedPlateData = {
           name: this.plate.name,
           type: this.plate.type,
           price: parseFloat(this.plate.price),
-          ingredients: this.plate.ingredients.map((ingredient) => ingredient.name), // Send ingredient names
+          ingredients: selectedIngredients,
         };
 
-        await PlateService.updatePlate(this.plate.id, updatedPlateData);
+        await PlateService.updatePlate(this.plate.name, updatedPlateData);
         alert("Plate updated successfully!");
         this.$router.push("/plate/list");
       } catch (error) {
@@ -109,6 +104,7 @@ export default {
   },
 };
 </script>
+
 
 <template>
   <div id="edit-plate-page" class="page-background">
