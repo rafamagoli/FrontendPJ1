@@ -1,13 +1,17 @@
 <template>
   <aside class="sidebar">
     <img src="/abr_logo.png" alt="Logo" class="sidebar-logo" />
-    <h3 id="username" class="text-center text-white mb-4">{{ currentUser.username }}</h3>
+    <h3 id="username" class="text-center text-white mb-4">
+      {{ currentUser.name }}
+    </h3>
 
     <nav>
       <ul>
         <!-- Dashboard menu -->
         <li class="nav-item">
-          <button class="nav-link" @click="navigateTo('user-dashboard')">Dashboard</button>
+          <button class="nav-link" @click="navigateTo('user-dashboard')">
+            Dashboard
+          </button>
         </li>
 
         <!-- Sidebar HUMAN RESOURCES Section -->
@@ -20,25 +24,44 @@
             </button>
             <ul class="submenu" :class="{ active: activeMenu === 'tasks' }">
               <li>
-                <button class="nav-link" @click="navigateTo('task-add')">Create Tasks</button>
+                <button class="nav-link" @click="navigateTo('task-add')">
+                  Create Tasks
+                </button>
               </li>
               <li>
-                <button class="nav-link" @click="navigateTo('task-list')">View Tasks</button>
+                <button class="nav-link" @click="navigateTo('task-list')">
+                  View Tasks
+                </button>
               </li>
             </ul>
           </li>
 
           <!-- Departments menu -->
-          <li class="nav-item" v-if="currentUser.isHRManager || currentUser.isAdmin || currentUser.isManager || currentUser.isCanteenManager">
+          <li
+            class="nav-item"
+            v-if="
+              currentUser.isHRManager ||
+              currentUser.isAdmin ||
+              currentUser.isManager ||
+              currentUser.isCanteenManager
+            "
+          >
             <button class="nav-link" @click="toggleSubmenu('departments')">
               Departments <span class="arrow">▼</span>
             </button>
-            <ul class="submenu" :class="{ active: activeMenu === 'departments' }">
+            <ul
+              class="submenu"
+              :class="{ active: activeMenu === 'departments' }"
+            >
               <li>
-                <button class="nav-link" @click="navigateTo('department-add')">Create Department</button>
+                <button class="nav-link" @click="navigateTo('department-add')">
+                  Create Department
+                </button>
               </li>
               <li>
-                <button class="nav-link" @click="navigateTo('department-list')">View Department</button>
+                <button class="nav-link" @click="navigateTo('department-list')">
+                  View Department
+                </button>
               </li>
             </ul>
           </li>
@@ -50,13 +73,19 @@
             </button>
             <ul class="submenu" :class="{ active: activeMenu === 'employees' }">
               <li v-if="currentUser.isHRManager || currentUser.isAdmin">
-                <button class="nav-link" @click="navigateTo('employee-add')">Add Employee</button>
+                <button class="nav-link" @click="navigateTo('employee-add')">
+                  Add Employee
+                </button>
               </li>
               <li v-if="currentUser.isHRManager || currentUser.isAdmin">
-                <button class="nav-link" @click="navigateTo('employee-list')">View Employees</button>
+                <button class="nav-link" @click="navigateTo('employee-list')">
+                  View Employees
+                </button>
               </li>
               <li>
-                <button class="nav-link" @click="handleEmployeeClick">Edit my Profile</button>
+                <button class="nav-link" @click="handleEmployeeClick">
+                  Edit my Profile
+                </button>
               </li>
             </ul>
           </li>
@@ -69,12 +98,19 @@
             <button class="nav-link" @click="toggleSubmenu('ingredients')">
               Ingredients <span class="arrow">▼</span>
             </button>
-            <ul class="submenu" :class="{ active: activeMenu === 'ingredients' }">
+            <ul
+              class="submenu"
+              :class="{ active: activeMenu === 'ingredients' }"
+            >
               <li>
-                <button class="nav-link" @click="navigateTo('ingredient-add')">Create Ingredient</button>
+                <button class="nav-link" @click="navigateTo('ingredient-add')">
+                  Create Ingredient
+                </button>
               </li>
               <li>
-                <button class="nav-link" @click="navigateTo('ingredient-list')">View Ingredients</button>
+                <button class="nav-link" @click="navigateTo('ingredient-list')">
+                  View Ingredients
+                </button>
               </li>
             </ul>
           </li>
@@ -86,10 +122,14 @@
             </button>
             <ul class="submenu" :class="{ active: activeMenu === 'plates' }">
               <li v-if="currentUser.isCanteenManager">
-                <button class="nav-link" @click="navigateTo('plate-add')">Create Plate</button>
+                <button class="nav-link" @click="navigateTo('plate-add')">
+                  Create Plate
+                </button>
               </li>
               <li>
-                <button class="nav-link" @click="navigateTo('plate-list')">View Plates</button>
+                <button class="nav-link" @click="navigateTo('plate-list')">
+                  View Plates
+                </button>
               </li>
             </ul>
           </li>
@@ -99,12 +139,22 @@
             <button class="nav-link" @click="toggleSubmenu('reservation')">
               Reservation <span class="arrow">▼</span>
             </button>
-            <ul class="submenu" :class="{ active: activeMenu === 'reservation' }">
+            <ul
+              class="submenu"
+              :class="{ active: activeMenu === 'reservation' }"
+            >
               <li>
-                <button class="nav-link" @click="navigateTo('reservation-add')">Create Reservation</button>
+                <button class="nav-link" @click="navigateTo('reservation-add')">
+                  Create Reservation
+                </button>
               </li>
               <li>
-                <button class="nav-link" @click="navigateTo('reservation-list')">View Reservation</button>
+                <button
+                  class="nav-link"
+                  @click="navigateTo('reservation-list')"
+                >
+                  View Reservation
+                </button>
               </li>
             </ul>
           </li>
@@ -142,6 +192,10 @@ function navigateTo(routeName) {
 </script>
 
 <style>
+#username {
+  padding: 40px;
+}
+
 .sidebar-logo {
   display: block;
   margin: 0 auto;
@@ -191,7 +245,6 @@ function navigateTo(routeName) {
   margin-top: 0.5rem;
   margin-bottom: 2px;
 }
-
 
 .submenu.active {
   display: block;
