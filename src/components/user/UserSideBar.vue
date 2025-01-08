@@ -152,6 +152,14 @@
                   View Reservation
                 </button>
               </li>
+              <li v-if="currentUser.isAdmin">
+                <button
+                  class="nav-link"
+                  @click="navigateTo('reservation-all-list')"
+                >
+                  View All Reservations
+                </button>
+              </li>
             </ul>
           </li>
         </div>

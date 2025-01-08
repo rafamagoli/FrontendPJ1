@@ -25,6 +25,7 @@ import PlateEdit from "./components/plate/PlateEdit.vue";
 import ReservationAdd from "./components/reservation/ReservationAdd.vue";
 import ReservationEdit from "./components/reservation/ReservationEdit.vue";
 import ReservationList from "./components/reservation/ReservationList.vue";
+import ReservationListAdmin from "./components/reservation/ReservationListAdmin.vue";
 import axios from 'axios';
 
 const token = localStorage.getItem("authToken");
@@ -172,6 +173,12 @@ const router = createRouter({
           path: "reservation/edit/:id",
           component: ReservationEdit,
           meta: { allowedRoles: ["admin", "manager", "employee"] },
+        },
+        {
+          name: "reservation-all-list",
+          path: "reservation/all",
+          component: ReservationListAdmin,
+          meta: { allowedRoles: ["admin"] },
         },
       ],
     },

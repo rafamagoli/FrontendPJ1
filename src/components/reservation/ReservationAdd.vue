@@ -55,9 +55,10 @@ export default {
 
 <template>
   <div id="add-reservation-page">
-    <div class="main-content">
-      <h1>Create New Reservation</h1>
 
+    <h1 class="page-title">Create New Reservation</h1>
+
+    <div class="main-content">
       <form @submit.prevent="handleSubmit">
         <!-- Date Input -->
         <div class="form-group">
@@ -96,9 +97,17 @@ export default {
 </template>
 
 <style scoped>
+
+.page-title {
+  margin-top: 20px;
+  margin-left: 270px;
+}
+
+
 .main-content {
   max-width: 600px;
   margin: 60px auto;
+  margin-left: 550px; ;
   background: #f6f5f5;
   padding: 20px;
   border-radius: 8px;
