@@ -203,7 +203,7 @@ function navigateTo(routeName) {
 .sidebar-logo {
   display: block;
   margin: 0 auto;
-  max-width: 100px;
+  max-width: 300px;
 }
 
 .text-center {
