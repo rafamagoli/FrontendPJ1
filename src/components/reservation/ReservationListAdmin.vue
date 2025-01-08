@@ -4,7 +4,7 @@
       <h1 id="page-title">All Reservations</h1>
 
       <section class="cards reservation-container">
-        <!-- Active Reservations Card -->
+        <!-- All Reservations Card -->
         <div class="card reservation-section">
           <div class="controls">
             <div class="search-control">
@@ -42,9 +42,8 @@ import ReservationService from "@/core/services/ReservationService";
 export default {
   data() {
     return {
-      reservations: [], // Stores reservations fetched from the backend
+      reservations: [],
       searchQuery: "",
-      sortBy: "date", // Default sorting by date
       error: null,
     };
   },
@@ -53,17 +52,11 @@ export default {
       const filtered = this.reservations.filter((res) =>
         res.dish.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
-
-      return filtered.sort((a, b) => {
-        if (this.sortBy === "date") {
-          return new Date(a.date) - new Date(b.date);
-        }
-        return 0;
-      });
+      return filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
     },
   },
   async created() {
-    await this.fetchReservations(); // Fetch reservations when the component is created
+    await this.fetchReservations();
   },
   methods: {
     async fetchReservations() {
@@ -72,7 +65,7 @@ export default {
         this.reservations = response.data.data.reservations.map(
           (reservation) => ({
             id: reservation._id,
-            dish: reservation.dish,
+            dish: reservation.plate,
             date: reservation.date,
           })
         );
@@ -112,18 +105,6 @@ export default {
   background: #f6f5f5;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.calendar-section {
-  grid-column: 2;
-  padding: 20px;
-  background: #f6f5f5;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.calendar-wrapper {
-  height: 400px;
 }
 
 .controls {
@@ -181,7 +162,6 @@ export default {
     grid-template-columns: 1fr;
   }
 
-  .calendar-section,
   .reservation-section {
     grid-column: 1;
   }

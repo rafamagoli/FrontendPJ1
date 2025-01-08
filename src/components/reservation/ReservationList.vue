@@ -1,3 +1,95 @@
+<script>
+import ReservationService from "@/core/services/ReservationService";
+import UserService from "@/core/services/UserService";
+import UserCalendar from "@/components/user/UserCalendar.vue";
+
+export default {
+  components: { UserCalendar },
+  data() {
+    return {
+      searchQuery: "",
+      reservations: [],
+      currentUser: null,
+      calendarOptions: {
+        events: [],
+        headerToolbar: {
+          left: "",
+          center: "title",
+          right: "prev,next",
+        },
+        eventClick: this.handleEventClick,
+      },
+    };
+  },
+  computed: {
+    filteredReservations() {
+      return this.reservations.filter((reservation) =>
+        reservation.plate.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
+  },
+  methods: {
+    async fetchReservations() {
+      try {
+        console.log("Fetching reservations...");
+        const user = UserService.getCurrentUser();
+        const nif = user?.nif;
+
+        if (!nif) {
+          console.error("No NIF found for the logged-in user.");
+          return;
+        }
+
+        const response = await ReservationService.getReservationsByNif(nif);
+        console.log("API Response:", response.data);
+
+        this.reservations = response.data.data.reservations.map((reservation) => ({
+          id: reservation._id,
+          plate: reservation.plate || "Unnamed Plate",
+          date: reservation.date,
+        }));
+
+        console.log("Mapped reservations:", this.reservations);
+
+        this.calendarOptions.events = this.reservations.map((reservation) => ({
+          title: reservation.plate,
+          start: reservation.date,
+          allDay: true,
+          extendedProps: {
+            plate: reservation.plate,
+            date: reservation.date,
+          },
+        }));
+      } catch (error) {
+        console.error("Error fetching reservations:", error.response?.data || error.message);
+        alert("Failed to load reservations. Please try again.");
+      }
+    },
+    goToEditReservation(id) {
+      this.$router.push(`/reservation/edit/${id}`);
+    },
+    createNewReservation() {
+      this.$router.push("/reservation/add");
+    },
+    handleEventClick(info) {
+      const selectedReservation = {
+        plate: info.event.extendedProps.plate, 
+        date: info.event.extendedProps.date,
+      };
+      console.log("Selected Reservation:", selectedReservation);
+    },
+    formatDate(dateStr) {
+      const options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
+      return new Date(dateStr).toLocaleDateString(undefined, options);
+    },
+  },
+  async created() {
+    console.log("Reservation List component created.");
+    await this.fetchReservations();
+  },
+};
+</script>
+
 <template>
   <div id="active-reservations-page" class="page-background">
     <div class="main-content">
@@ -19,15 +111,13 @@
 
           <div class="reservation-list">
             <div
-              v-for="reservation in sortedReservations"
+              v-for="reservation in filteredReservations"
               :key="reservation.id"
               class="reservation-item"
-              @click="editReservation(reservation.id)"
+              @click="goToEditReservation(reservation.id)"
             >
-              <span>{{ reservation.dish }}</span>
-              <span class="reservation-date">{{
-                formatDate(reservation.date)
-              }}</span>
+              <span>{{ reservation.plate }}</span> <!-- Updated 'dish' to 'plate' -->
+              <span class="reservation-date">{{ formatDate(reservation.date) }}</span>
             </div>
           </div>
         </div>
@@ -36,7 +126,7 @@
         <div class="card calendar-section">
           <h2>Reservation Calendar</h2>
           <div class="calendar-wrapper">
-            <UserCalendar :reservations="activeReservations" />
+            <UserCalendar :reservations="reservations" />
           </div>
         </div>
 
@@ -50,67 +140,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import ReservationService from "@/core/services/ReservationService";
-
-export default {
-  data() {
-    return {
-      reservations: [], // Stores reservations fetched from the backend
-      searchQuery: "",
-      sortBy: "date", // Default sorting by date
-      error: null,
-    };
-  },
-  computed: {
-    sortedReservations() {
-      const filtered = this.reservations.filter((res) =>
-        res.dish.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-
-      return filtered.sort((a, b) => {
-        if (this.sortBy === "date") {
-          return new Date(a.date) - new Date(b.date);
-        }
-        return 0;
-      });
-    },
-  },
-  async created() {
-    await this.fetchReservations(); // Fetch reservations when the component is created
-  },
-  methods: {
-    async fetchReservations() {
-      try {
-        const response = await ReservationService.getAllReservations();
-        this.reservations = response.data.data.reservations.map(
-          (reservation) => ({
-            id: reservation._id,
-            dish: reservation.dish,
-            date: reservation.date,
-          })
-        );
-      } catch (error) {
-        console.error(
-          "Failed to fetch reservations:",
-          error.response?.data || error.message
-        );
-        this.error = "Failed to load reservations. Please try again.";
-      }
-    },
-    formatDate(date) {
-      return new Date(date).toLocaleDateString("en-US");
-    },
-    createNewReservation() {
-      this.$router.push("/reservation/add");
-    },
-    editReservation(id) {
-      this.$router.push(`/reservation/edit/${id}`);
-    },
-  },
-};
-</script>
 
 <style scoped>
 .reservation-container {
@@ -152,6 +181,20 @@ export default {
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 200px;
+}
+
+.reservation-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  background: #fff;
+}
+
+.reservation-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .reservation-item {
