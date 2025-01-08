@@ -44,14 +44,40 @@ import UserService from "@/core/services/UserService";
 export default {
   data() {
     return {
-      balance: UserService.getCurrentUser()?.balance || 0,
+      balance: "Loading...",
       showBalanceBox: false,
       newBalance: "",
+      nif: null,
     };
   },
+  async mounted() {
+    try {
+      this.decodeUserDetailsFromToken();
+    } catch (error) {
+      console.error("Error during initialization:", error);
+      this.balance = "Error loading balance";
+    }
+  },
   methods: {
-    toggleBalanceBox() {
-      this.showBalanceBox = !this.showBalanceBox;
+    decodeUserDetailsFromToken() {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          this.nif = payload.nif;
+          this.balance = payload.balance;
+          console.log("Decoded NIF:", this.nif);
+          console.log("Decoded Balance:", this.balance);
+        } catch (error) {
+          console.error("Error decoding token:", error);
+          alert("Failed to decode user information. Please log in again.");
+          this.$router.push("/user/login");
+        }
+      } else {
+        console.error("Token not found");
+        alert("Authentication required. Please log in.");
+        this.$router.push("/user/login");
+      }
     },
     async updateBalance() {
       if (this.newBalance === "" || isNaN(this.newBalance) || this.newBalance < 0) {
@@ -60,8 +86,9 @@ export default {
       }
 
       try {
-        const nif = UserService.getCurrentUser()?.nif;
-        const response = await UserService.updateBalanceByNIF(nif, { newBalance: Number(this.newBalance) });
+        const response = await UserService.updateBalanceByNIF(this.nif, {
+          newBalance: Number(this.newBalance),
+        });
 
         this.balance = response.data.newBalance;
         alert(response.data.message || "Balance updated successfully!");
@@ -70,6 +97,10 @@ export default {
         console.error("Error updating balance:", error);
         alert(error.response?.data?.message || "An error occurred while updating the balance.");
       }
+    },
+    toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.classList.toggle("open");
     },
     logout() {
       try {
@@ -83,9 +114,8 @@ export default {
         alert("An error occurred while logging out.");
       }
     },
-    toggleSidebar() {
-      const sidebar = document.querySelector(".sidebar");
-      sidebar.classList.toggle("open");
+    toggleBalanceBox() {
+      this.showBalanceBox = !this.showBalanceBox;
     },
   },
 };

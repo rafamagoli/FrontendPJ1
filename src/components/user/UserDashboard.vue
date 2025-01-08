@@ -49,8 +49,8 @@ export default {
   components: { UserCalendar },
   data() {
     return {
-      tasks: [], 
-      reservations: [],
+      tasks: [], // Tasks dynamically loaded
+      reservations: [], // Reservations dynamically loaded
     };
   },
   async mounted() {
@@ -61,8 +61,8 @@ export default {
     async loadTasks() {
       try {
         const response = await TaskService.getTasksDueNextWeek();
-        console.log("Tasks API Response:", response.data);
-        this.tasks = response.data.data.tasks;
+        console.log("Tasks API Response:", response.data); // Debug the API response
+        this.tasks = response.data.data.tasks; // Correctly assign tasks array
       } catch (error) {
         console.error("Error loading tasks:", error);
       }
@@ -70,7 +70,7 @@ export default {
     async loadReservations() {
       try {
         const response = await ReservationService.getReservations();
-        this.reservations = response.data;
+        this.reservations = response.data; // Adjust based on API structure
       } catch (error) {
         console.error("Error loading reservations:", error);
       }
