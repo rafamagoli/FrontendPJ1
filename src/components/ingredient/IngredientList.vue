@@ -4,16 +4,15 @@ import IngredientService from "@/core/services/IngredientService";
 export default {
   data() {
     return {
-      ingredients: [], // Dynamically fetched ingredients
+      ingredients: [],
     };
   },
   async created() {
     try {
       const response = await IngredientService.getAllIngredients();
 
-      // Access the ingredients array nested inside data
       this.ingredients = response.data.data.ingredients.map((ingredient) => ({
-        name: ingredient.name,  // Use name as the identifier
+        name: ingredient.name, 
       }));
 
       console.log("Fetched ingredients:", this.ingredients);
@@ -26,7 +25,7 @@ export default {
     editIngredient(ingredient) {
       this.$router.push({
         name: "ingredient-edit",
-        params: { name: ingredient.name },  // Use name for the route parameter
+        params: { name: ingredient.name }, 
       });
     },
     createIngredient() {
@@ -49,7 +48,7 @@ export default {
         <div class="card ingredients-card">
           <div class="ingredient-grid">
             <div
-              v-for="(ingredient, index) in ingredients.slice(0, 4)"
+              v-for="(ingredient, index) in ingredients.slice(0, Math.ceil(ingredients.length / 2))"
               :key="index"
               class="ingredient-box"
               @click="editIngredient(ingredient)"
@@ -63,7 +62,7 @@ export default {
         <div class="card ingredients-card">
           <div class="ingredient-grid">
             <div
-              v-for="(ingredient, index) in ingredients.slice(4, 8)"
+              v-for="(ingredient, index) in ingredients.slice(Math.ceil(ingredients.length / 2))"
               :key="index"
               class="ingredient-box"
               @click="editIngredient(ingredient)"
@@ -109,6 +108,15 @@ export default {
   background-color: #f5f5f5;
 }
 
+.cards {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ingredients-card {
+  width: 48%;  /* Set each column width to 48% */
+}
+
 .button-container {
   display: flex;
   justify-content: space-between;
@@ -138,6 +146,14 @@ export default {
   }
 
   .action-button {
+    width: 100%;
+  }
+
+  .cards {
+    flex-direction: column;
+  }
+
+  .ingredients-card {
     width: 100%;
   }
 }

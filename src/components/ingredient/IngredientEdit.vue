@@ -10,30 +10,29 @@ export default {
     return {
       ingredient: {
         name: "",
-        allergen: "",  // Leaving allergen field empty for the user to fill manually
+        allergen: "",
       },
-      allergenOptions: ["Yes", "No"], // Provide Yes/No for allergen
+      allergenOptions: ["Yes", "No"],
     };
   },
   async created() {
-    const ingredientName = this.$route.params.name; // Get the ingredient name from the URL
+    const ingredientName = decodeURIComponent(this.$route.params.name);
 
     if (!ingredientName) {
       console.error("Ingredient name is missing.");
       alert("Ingredient name is missing in the URL.");
       this.$router.push("/ingredient/list");
-      return; // Stop further execution if the ingredient name is missing
+      return;
     }
 
     try {
-      // Fetch the ingredient details using the name
       const response = await IngredientService.getIngredientByName(ingredientName);
       
       if (response.data.status === 'success') {
         const ingredient = response.data.data.ingredient;
         this.ingredient = {
-          name: ingredient.name,  // Set the ingredient name to be editable
-          allergen: ingredient.allergen ? "Yes" : "No", // Set allergen state (Yes/No)
+          name: ingredient.name, 
+          allergen: ingredient.allergen ? "Yes" : "No",
         };
       } else {
         console.error("Ingredient not found. Redirecting...");
@@ -55,12 +54,11 @@ export default {
 
         const updatedData = {
           name: this.ingredient.name.trim(),
-          allergen: this.ingredient.allergen === "Yes", // Convert Yes/No to Boolean (true/false)
+          allergen: this.ingredient.allergen === "Yes",
         };
 
-        // Use the name from the URL in the PUT request instead of the updated name
-        const ingredientName = this.$route.params.name;
-        await IngredientService.updateIngredient(ingredientName, updatedData); // Correct URL format
+        const ingredientName = decodeURIComponent(this.$route.params.name);
+        await IngredientService.updateIngredient(ingredientName, updatedData);
 
         alert("Ingredient updated successfully!");
         this.$router.push("/ingredient/list");

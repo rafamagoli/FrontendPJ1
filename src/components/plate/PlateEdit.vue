@@ -21,7 +21,7 @@ export default {
     };
   },
   async created() {
-    const plateName = this.$route.params.name;
+    const plateName = decodeURIComponent(this.$route.params.name);
     if (plateName) {
       await this.fetchPlateData(plateName);
     } else {
@@ -79,7 +79,8 @@ export default {
           ingredients: selectedIngredients,
         };
 
-        await PlateService.updatePlate(this.plate.name, updatedPlateData);
+        const plateNameForRequest = decodeURIComponent(this.$route.params.name);
+        await PlateService.updatePlate(plateNameForRequest, updatedPlateData);
         alert("Plate updated successfully!");
         this.$router.push("/plate/list");
       } catch (error) {
@@ -104,7 +105,6 @@ export default {
   },
 };
 </script>
-
 
 <template>
   <div id="edit-plate-page" class="page-background">
