@@ -36,6 +36,9 @@
               Cancel
             </button>
             <button type="submit" class="update-button">Update</button>
+            <button type="button" class="delete-button" @click="deleteDepartment">
+              Delete Department
+            </button>
           </div>
         </form>
       </section>
@@ -62,6 +65,18 @@ export default {
     };
   },
   methods: {
+    async deleteDepartment() {
+    if (confirm("Are you sure you want to delete this department?")) {
+      try {
+        await DepartmentService.deleteDepartment(this.department.name.trim());
+        alert("Department deleted successfully!");
+        this.$router.push("/department/list");
+      } catch (error) {
+        console.error("Error deleting department:", error.response?.data || error.message);
+        alert("Error deleting department. Please try again.");
+      }
+    }
+  },
     async fetchDepartmentDetails() {
       try {
         const departmentName = this.$route.params.name.trim();
@@ -110,6 +125,16 @@ export default {
 </script>
 
 <style scoped>
+/* Responsividade */
+@media (max-width: 768px) {
+  .form-actions {
+    flex-direction: column; /* Botões em coluna no mobile */
+  }
+
+  .delete-button {
+    width: 100%; /* Ocupa largura total no mobile */
+  }
+}
 /* Form Container */
 .edit-department-form {
   max-width: 600px;
@@ -160,6 +185,7 @@ export default {
   gap: 10px;
 }
 
+.delete-button,
 .cancel-button,
 .update-button {
   flex: 1;
@@ -173,6 +199,7 @@ export default {
   border: none;
 }
 
+.delete-button:hover,
 .cancel-button:hover,
 .update-button:hover {
   background-color: #999999;
