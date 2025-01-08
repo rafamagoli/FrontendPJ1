@@ -40,6 +40,11 @@ export default {
         return;
       }
 
+      if (this.employee.role === 'Manager' && !this.isAdmin()) {
+        alert("You are not authorized to create a manager.");
+        return;
+      }
+
       try {
         const formattedBalance = parseFloat(this.employee.balance.replace(',', '.'));
 
@@ -69,6 +74,11 @@ export default {
     logout() {
       console.log("You have been logged out!");
       this.$router.push("/user/login");
+    },
+
+    isAdmin() {
+      const currentUser = UserService.getCurrentUser();
+      return currentUser && currentUser.isAdmin;
     },
   },
   async created() {

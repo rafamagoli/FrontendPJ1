@@ -46,55 +46,63 @@
 import DepartmentService from "@/core/services/DepartmentService";
 
 export default {
-data() {
-  return {
-    department: {
-      name: '',
-      canteenDiscount: 0,
-    },
-    formattedDiscount: '0,00%',
-  };
-},
-methods: {
-  formatDiscount(event) {
-    const value = event.target.value.replace(/[^0-9]/g, '');
-
-    if (value === '') {
-      this.formattedDiscount = '0,00%';
-      this.department.canteenDiscount = 0;
-      return;
-    }
-
-    const numericValue = parseFloat(value) / 100;
-    this.formattedDiscount = numericValue.toFixed(2).replace('.', ',') + '%';
-    this.department.canteenDiscount = numericValue;
+  data() {
+    return {
+      department: {
+        name: '',
+        canteenDiscount: 0,
+      },
+      formattedDiscount: '0%',
+    };
   },
-  async createDepartment() {
-    try {
-      if (!this.department.name.trim()) {
-        alert('Department name is required');
+  methods: {
+    formatDiscount(event) {
+      const value = event.target.value.replace(/[^0-9]/g, '');
+
+      if (value === '') {
+        this.formattedDiscount = '0%';
+        this.department.canteenDiscount = 0;
         return;
       }
 
-      const departmentData = {
-        name: this.department.name.trim(), 
-        canteenDiscount: this.department.canteenDiscount,
-      };
+      const numericValue = parseInt(value, 10);
+      this.formattedDiscount = `${numericValue}%`;
+      this.department.canteenDiscount = numericValue;
+    },
+    async createDepartment() {
+      try {
+        if (!this.department.name.trim()) {
+          alert('Department name is required');
+          return;
+        }
 
-      await DepartmentService.createDepartment(departmentData);
+        if (this.department.canteenDiscount < 0 || this.department.canteenDiscount > 100) {
+          alert('Canteen discount must be between 0 and 100');
+          return;
+        }
 
-      alert('Department created successfully!');
-      this.$router.push('/departments');
-    } catch (error) {
-      console.error('Error creating department:', error);
-      alert('Error creating department: ' + (error.response?.data?.message || error.message));
-    }
+        const departmentData = {
+          name: this.department.name.trim(),
+          canteenDiscount: this.department.canteenDiscount,
+        };
+
+        console.log("Payload being sent:", departmentData);
+
+        await DepartmentService.createDepartment(departmentData);
+
+        alert('Department created successfully!');
+        this.$router.push('/departments');
+      } catch (error) {
+        console.error('Error creating department:', error.response?.data || error.message);
+        alert('Error creating department: ' + (error.response?.data?.message || error.message));
+      }
+    },
   },
-},
 };
 </script>
 
 <style scoped>
+
 .form-container {
   background-color: #f6f5f5;
   padding: 20px;
