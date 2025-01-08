@@ -43,26 +43,29 @@ export default {
         const response = await ReservationService.getReservationsByNif(nif);
         console.log("API Response:", response.data);
 
-        this.reservations = response.data.data.reservations.map((reservation) => ({
-          id: reservation._id,
-          plate: reservation.plate || "Unnamed Plate",
-          date: reservation.date,
-        }));
-
-        console.log("Mapped reservations:", this.reservations);
-
-        this.calendarOptions.events = this.reservations.map((reservation) => ({
-          title: reservation.plate,
-          start: reservation.date,
-          allDay: true,
-          extendedProps: {
-            plate: reservation.plate,
+        if (response.data.data.reservations && response.data.data.reservations.length > 0) {
+          this.reservations = response.data.data.reservations.map((reservation) => ({
+            id: reservation._id,
+            plate: reservation.plate || "Unnamed Plate",
             date: reservation.date,
-          },
-        }));
+          }));
+
+          console.log("Mapped reservations:", this.reservations);
+
+          this.calendarOptions.events = this.reservations.map((reservation) => ({
+            title: reservation.plate,
+            start: reservation.date,
+            allDay: true,
+            extendedProps: {
+              plate: reservation.plate,
+              date: reservation.date,
+            },
+          }));
+        } else {
+          this.reservations = [];
+        }
       } catch (error) {
         console.error("Error fetching reservations:", error.response?.data || error.message);
-        alert("Failed to load reservations. Please try again.");
       }
     },
     goToEditReservation(id) {
