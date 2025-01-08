@@ -1,11 +1,14 @@
 <script>
 import TaskService from "@/core/services/TaskService";
+import UserService from "@/core/services/UserService";
+
 
 export default {
   data() {
     return {
       searchQuery: "",
       tasks: [],
+      currentUser: null, // Armazena o usuário atual
     };
   },
   computed: {
@@ -46,9 +49,15 @@ export default {
     handleTaskClick(task) {
       this.$router.push(`/task/edit/${task.id}`);
     },
+    loadCurrentUser() {
+      // Obtém o usuário atual do UserService
+      this.currentUser = UserService.getCurrentUser();
+      console.log("Current User:", this.currentUser); // Para debug
+    },
   },
   async created() {
     console.log("Task List component created.");
+    this.loadCurrentUser(); 
     await this.fetchTasks();
   },
 };
@@ -102,7 +111,7 @@ export default {
         </div>
 
         <!-- Add New Task Button -->
-        <div class="add-task-button">
+        <div v-if="!currentUser.isEmployee" class="add-task-button">
           <button @click="goToAddTask" class="create-task-btn">
             Create New Task
           </button>

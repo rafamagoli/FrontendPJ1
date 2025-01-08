@@ -1,7 +1,7 @@
 <template>
   <aside class="sidebar">
     <img src="/abr_logo.png" alt="Logo" class="sidebar-logo" />
-    <h3 id="name-sidebar" class="text-center text-white mb-4"> Olá, {{ currentUser.name }}
+    <h3 id="name-sidebar" class="text-center text-white mb-4"> Hello, {{ currentUser.name }}
     </h3>
 
     <nav>
@@ -23,7 +23,7 @@
             </button>
             <ul class="submenu" :class="{ active: activeMenu === 'tasks' }">
               <li>
-                <button class="nav-link" @click="navigateTo('task-add')">
+                <button class="nav-link" v-if="!currentUser.isEmployee" @click="navigateTo('task-add')">
                   Create Tasks
                 </button>
               </li>
@@ -39,10 +39,7 @@
           <li
             class="nav-item"
             v-if="
-              currentUser.isHRManager ||
-              currentUser.isAdmin ||
-              currentUser.isManager ||
-              currentUser.isCanteenManager
+              !currentUser.isEmployee
             "
           >
             <button class="nav-link" @click="toggleSubmenu('departments')">
