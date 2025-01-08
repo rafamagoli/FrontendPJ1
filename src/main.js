@@ -141,7 +141,7 @@ const router = createRouter({
         },
         {
           name: "ingredient-edit",
-          path: "ingredient/edit/:name",
+          path: "ingredient/edit/:id",
           component: IngredientEdit,
           meta: { allowedRoles: ["admin", "manager"] },
         },
@@ -185,7 +185,7 @@ const router = createRouter({
           name: "reservation-all-list",
           path: "reservation/all",
           component: ReservationListAdmin,
-          meta: { allowedRoles: ["admin"] },
+          meta: { allowedRoles: ["admin", "manager"] },
         },
       ],
     },
