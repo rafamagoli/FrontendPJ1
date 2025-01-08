@@ -41,7 +41,6 @@ export default {
           <div class="mb-3">
             <label for="username" class="form-label">USERNAME</label>
             <input
-              id="username"
               v-model="username"
               type="text"
               class="form-control"

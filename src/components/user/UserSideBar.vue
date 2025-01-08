@@ -1,8 +1,7 @@
 <template>
   <aside class="sidebar">
     <img src="/abr_logo.png" alt="Logo" class="sidebar-logo" />
-    <h3 id="username" class="text-center text-white mb-4">
-      {{ currentUser.name }}
+    <h3 id="username" class="text-center text-white mb-4"> Olá, {{ currentUser.name }}
     </h3>
 
     <nav>
@@ -193,7 +192,7 @@ function navigateTo(routeName) {
 
 <style>
 #username {
-  padding: 40px;
+  padding: 30px;
 }
 
 .sidebar-logo {
