@@ -1,44 +1,21 @@
 <script>
 import PlateService from "@/core/services/PlateService";
+import ReservationService from "@/core/services/ReservationService";
 
 export default {
   data() {
     return {
-      plates: [], // Plates fetched dynamically
+      plates: [],
       reservation: {
-        plateId: "", // Plate ID selected from dropdown
-        date: "", // Date entered by the user
+        plateName: "",
+        date: "",
       },
     };
   },
-  computed: {
-    availableDates() {
-      const dates = [];
-      const now = new Date();
-      const currentHour = now.getHours();
-
-      // Include today if it's before 10 AM
-      let startDate = new Date();
-      if (currentHour >= 10) {
-        startDate.setDate(startDate.getDate() + 1);
-      }
-
-      // Add the next 7 days
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(startDate);
-        date.setDate(startDate.getDate() + i);
-        dates.push(date.toISOString().split("T")[0]);
-      }
-
-      return dates;
-    },
-  },
   async created() {
     try {
-      // Fetch plates
       const plateResponse = await PlateService.getAllPlates();
       this.plates = plateResponse.data.data.plates.map((plate) => ({
-        id: plate._id,
         name: plate.name,
       }));
     } catch (error) {
@@ -49,21 +26,24 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        // Prepare the reservation data
         const reservationData = {
-          plateId: this.reservation.plateId,
           date: this.reservation.date,
+          plateName: this.reservation.plateName,
         };
 
-        // Log reservation data for debugging
         console.log("Reservation data to be sent:", reservationData);
 
-        // Add API call here to send the reservation data to the backend
-        alert("Reservation created successfully!");
+        const response = await ReservationService.createReservation(reservationData);
+        console.log("Reservation created successfully:", response.data);
+
+        alert(response.data.message || "Reservation created successfully!");
         this.$router.push("/reservation/list");
       } catch (error) {
         console.error("Error creating reservation:", error.response?.data || error.message);
-        alert("Failed to create reservation. Please try again.");
+        alert(
+          error.response?.data?.message ||
+            "Failed to create reservation. Please try again."
+        );
       }
     },
     cancel() {
@@ -93,9 +73,9 @@ export default {
         <!-- Plate Dropdown -->
         <div class="form-group">
           <label for="plate">Select Plate</label>
-          <select id="plate" v-model="reservation.plateId" required>
+          <select id="plate" v-model="reservation.plateName" required>
             <option value="" disabled>Select a plate</option>
-            <option v-for="plate in plates" :key="plate.id" :value="plate.id">
+            <option v-for="plate in plates" :key="plate.name" :value="plate.name">
               {{ plate.name }}
             </option>
           </select>
