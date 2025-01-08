@@ -1,7 +1,7 @@
 <script>
-import EmployeeAddFormInput from '../../components/employee/EmployeeAddFormInput.vue';
-import TaskService from '@/core/services/TaskService';
-import UserService from '@/core/services/UserService';
+import EmployeeAddFormInput from "../../components/employee/EmployeeAddFormInput.vue";
+import TaskService from "@/core/services/TaskService";
+import UserService from "@/core/services/UserService";
 
 export default {
   components: {
@@ -10,9 +10,10 @@ export default {
   data() {
     return {
       task: {
-        employee: "",
+        taskName: "",
         description: "",
         limitDate: "",
+        assignedTo: "",
       },
       employees: [],
     };
@@ -20,9 +21,25 @@ export default {
   methods: {
     async fetchEmployees() {
       try {
-        const response = await UserService.getAllUsers();
-        console.log("Fetched employees:", response.data);
-        this.employees = response.data.map((user) => user.name);
+        const allUsersResponse = await UserService.getAllUsers();
+        const allUsers = allUsersResponse.data;
+        const currentUser = UserService.getCurrentUser();
+
+        let filteredUsers = [];
+
+        if (currentUser.isAdmin) {
+          filteredUsers = allUsers.filter(
+            (user) => user.role !== "Admin" || user.username === currentUser.username
+          );
+        } else if (currentUser.isManager) {
+          filteredUsers = allUsers.filter(
+            (user) => user.department === currentUser.department && user.role === "Employee"
+          );
+        }
+
+        this.employees = filteredUsers.sort((a, b) => a.username.localeCompare(b.username));
+
+        console.log("Filtered and Sorted Employees:", this.employees);
       } catch (error) {
         console.error("Error fetching employees:", error);
         alert("Unable to fetch employees. Please try again later.");
@@ -30,26 +47,35 @@ export default {
     },
     async handleSubmit() {
       if (
-        !this.task.employee ||
+        !this.task.taskName ||
         !this.task.description ||
-        !this.task.limitDate
+        !this.task.limitDate ||
+        !this.task.assignedTo
       ) {
         alert("All fields are required!");
         return;
       }
+
       try {
         const taskData = {
-          employee: this.task.employee,
+          taskName: this.task.taskName,
           description: this.task.description,
-          limitDate: this.task.limitDate,
+          limit_date: this.task.limitDate,
+          assignedTo: this.task.assignedTo,
+          isCompleted: false,
         };
+
         await TaskService.createTask(taskData);
         console.log("Task created:", taskData);
+
         alert("Task created successfully!");
         this.$router.push("/task/list");
       } catch (error) {
         console.error("Error creating task:", error);
-        alert("Unable to create task. Please try again later.");
+        alert(
+          "Unable to create task. Please try again later: " +
+            (error.response?.data?.message || error.message)
+        );
       }
     },
     cancel() {
@@ -70,25 +96,28 @@ export default {
 };
 </script>
 
-
 <template>
   <div id="addTask-page">
     <div class="main-content">
-      <!-- Formulário de Adicionar Tarefa -->
+      <!-- Add Task Form -->
       <section class="add-task-form">
         <h2>Add New Task</h2>
         <form @submit.prevent="handleSubmit">
+          <!-- Task Name -->
+          <EmployeeAddFormInput
+            identifier="taskName"
+            name="Task Name"
+            v-model="task.taskName"
+            type="text"
+          />
+
           <!-- Employee Selector -->
           <div class="form-group">
             <label for="employee">Assigned to</label>
-            <select id="employee" v-model="task.employee" required>
+            <select id="employee" v-model="task.assignedTo" required>
               <option value="" disabled>Select an employee</option>
-              <option
-                v-for="employee in employees"
-                :key="employee"
-                :value="employee"
-              >
-                {{ employee }}
+              <option v-for="employee in employees" :key="employee.username" :value="employee.username">
+                {{ employee.username }}
               </option>
             </select>
           </div>
@@ -114,9 +143,7 @@ export default {
 
           <!-- Action Buttons -->
           <div class="form-actions">
-            <button type="button" class="cancel-button" @click="cancel">
-              Cancel
-            </button>
+            <button type="button" class="cancel-button" @click="cancel">Cancel</button>
             <button type="submit" class="create-button">Create</button>
           </div>
         </form>

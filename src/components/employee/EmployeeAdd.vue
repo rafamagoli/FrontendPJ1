@@ -9,8 +9,6 @@ export default {
   },
   data() {
     return {
-      userName: "Bulma Garcia",
-
       employee: {
         name: "",
         department: "",
@@ -46,16 +44,15 @@ export default {
         const formattedBalance = parseFloat(this.employee.balance.replace(',', '.'));
 
         const newEmployee = {
-          name: this.employee.name,
-          department: this.employee.department,
           username: this.employee.username,
-          balance: formattedBalance,
           password: this.employee.password,
+          name: this.employee.name,
           nif: this.employee.nif,
+          departmentName: this.employee.department,
           role: this.employee.role,
         };
 
-        await EmployeeService.createEmployee(newEmployee);
+        await UserService.createUser(newEmployee);
 
         alert("Employee created successfully!");
         this.$router.push("/employee/list");
@@ -95,7 +92,7 @@ export default {
             <label for="department">Department</label>
             <select id="department" v-model="employee.department" required>
               <option value="" disabled>Select department</option>
-              <option v-for="dept in departments" :key="dept.id" :value="dept.id">
+              <option v-for="dept in departments" :key="dept.id" :value="dept.name">
                 {{ dept.name }}
               </option>
             </select>
