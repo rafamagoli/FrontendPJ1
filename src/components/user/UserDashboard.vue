@@ -46,15 +46,13 @@ import TaskService from "@/core/services/TaskService";
 import ReservationService from "@/core/services/ReservationService";
 import UserService from "@/core/services/UserService";
 
-let currentUser = UserService.getCurrentUser();
-
 export default {
   components: { UserCalendar },
   data() {
     return {
       tasks: [],
       reservations: [],
-      currentUser: currentUser,
+      currentUser: UserService.getCurrentUser(),
     };
   },
   async mounted() {
@@ -67,16 +65,18 @@ export default {
         const response = await TaskService.getTasksDueNextWeek();
         const allTasks = response.data.data.tasks;
 
-        const currentUser = UserService.getCurrentUser();
+        const currentUser = this.currentUser
         console.log("Current User:", currentUser);
 
         if (currentUser.isAdmin) {
           this.tasks = allTasks;
-        } else if (currentUser.isManager) {
+        }
+        if (currentUser.isManager) {
           this.tasks = allTasks.filter(
             (task) => task.department === currentUser.department
           );
-        } else if (currentUser.isEmployee) {
+        }
+        if (currentUser.isEmployee) {
           this.tasks = allTasks.filter(
             (task) => task.assignedTo === currentUser.username
           );

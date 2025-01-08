@@ -126,6 +126,7 @@ export default {
 </script>
 
 <template>
+  
   <div id="edit-plate-page" class="page-background">
     <div class="main-content">
       <section class="edit-plate-form">

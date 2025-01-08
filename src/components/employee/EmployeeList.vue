@@ -1,14 +1,12 @@
 <script>
 import UserService from "@/core/services/UserService";
 
-let currentUser = UserService.getCurrentUser();
-
 export default {
   data() {
     return {
       searchQuery: "",
       employees: [],
-      currentUser: currentUser,
+      currentUser: UserService.getCurrentUser(),
     };
   },
   computed: {

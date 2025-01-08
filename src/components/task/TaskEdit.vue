@@ -6,16 +6,14 @@
         <form @submit.prevent="handleSubmit">
           <!-- Employee Selector -->
           <div class="form-group">
-            <label for="employee">Assigned to</label>
-            <select id="employee" v-model="task.employee" required>
+            <label for="employee">Assigned to {{ task.employee }}</label>
+            <select id="employee" v-model="task.employee" required :disabled="currentUser.isEmployee">
               <option value="" disabled>Select an employee</option>
               <option
                 v-for="employee in employees"
                 :key="employee"
                 :value="employee"
-              >
-                {{ employee }}
-              </option>
+              >{{ employee }}</option>
             </select>
           </div>
 
@@ -79,6 +77,7 @@ import UserService from "@/core/services/UserService";
 export default {
   data() {
     return {
+      currentUser: UserService.getCurrentUser(),
       task: {
         id: this.$route.params.id || null,
         title: "",
@@ -92,6 +91,20 @@ export default {
   },
   async created() {
     await this.fetchEmployees();
+
+    try {
+
+      let task = await TaskService.getTaskById(this.task.id);
+      this.task.title = task.taskName;
+      this.task.employee = task.assignedTo;
+      this.task.description = task.description;
+      this.task.limitDate = task.limit_date?.split("T")[0];
+      this.task.completed = task.is_compleated;
+      console.log("Mapped tasks:", task);
+    } catch (error) {
+      console.error("Error fetching tasks:", error.response?.data || error.message);
+    }
+
   },
   methods: {
     async fetchEmployees() {
@@ -101,10 +114,8 @@ export default {
         this.employees = response.data.map((user) => user.name);
       } catch (error) {
         console.error("Error fetching employees:", error.response?.data || error.message);
-        alert("Unable to fetch employees. Please try again later.");
       }
     },
-
     async handleSubmit() {
       if (
         !this.task.employee ||

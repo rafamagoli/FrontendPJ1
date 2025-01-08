@@ -51,9 +51,10 @@ const UserService = {
     return currentUser;
   },
 
-  logout: () =>
-    axios.post(`${API_URL}/logout`, {}),
-
+  logout: function() {
+    axios.post(`${API_URL}/logout`, {})
+    localStorage.clear()
+  },
   getAllUsers: () =>
     axios.get(`${API_URL}`),
 

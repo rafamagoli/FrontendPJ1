@@ -8,7 +8,7 @@ export default {
     return {
       searchQuery: "",
       tasks: [],
-      currentUser: null, // Armazena o usuário atual
+      currentUser: UserService.getCurrentUser(), // Armazena o usuário atual
     };
   },
   computed: {
@@ -25,24 +25,6 @@ export default {
     },
   },
   methods: {
-    async fetchTasks() {
-      try {
-        console.log("Fetching tasks...");
-        const response = await TaskService.getAllTasks();
-        console.log("API Response:", response.data);
-
-        this.tasks = response.data.map((task) => ({
-          id: task._id,
-          name: task.taskName || "Unnamed Task",
-          completed: !!task.isCompleted,
-        }));
-
-        console.log("Mapped tasks:", this.tasks);
-      } catch (error) {
-        console.error("Error fetching tasks:", error.response?.data || error.message);
-        alert("Failed to load tasks. Please try again.");
-      }
-    },
     goToAddTask() {
       this.$router.push("/task/add");
     },
@@ -51,14 +33,16 @@ export default {
     },
     loadCurrentUser() {
       // Obtém o usuário atual do UserService
-      this.currentUser = UserService.getCurrentUser();
       console.log("Current User:", this.currentUser); // Para debug
     },
   },
-  async created() {
-    console.log("Task List component created.");
-    this.loadCurrentUser(); 
-    await this.fetchTasks();
+  async mounted() {
+    try {
+      this.tasks = await TaskService.getAllTasks();
+      console.log("Mapped tasks:", this.tasks);
+    } catch (error) {
+      console.error("Error fetching tasks:", error.response?.data || error.message);
+    }
   },
 };
 </script>
@@ -94,7 +78,6 @@ export default {
             </ul>
           </div>
         </div>
-
         <!-- Completed Tasks -->
         <div class="card completed-tasks-card">
           <h2>Completed Tasks</h2>

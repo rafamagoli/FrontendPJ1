@@ -105,9 +105,6 @@ export default {
     logout() {
       try {
         UserService.logout();
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem("username");
         this.$router.push("/user/login");
       } catch (error) {
         console.error("Error during logout:", error);

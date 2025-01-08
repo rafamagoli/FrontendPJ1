@@ -45,13 +45,11 @@
 import PlateService from "@/core/services/PlateService";
 import UserService from "@/core/services/UserService";
 
-let currentUser = UserService.getCurrentUser();
-
 export default {
   data() {
     return {
       plates: [],
-      currentUser: currentUser,
+      currentUser: UserService.getCurrentUser(),
       leftPlates: [],
       rightPlates: [],
     };
