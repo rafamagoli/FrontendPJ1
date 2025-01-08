@@ -79,7 +79,7 @@
                 </button>
               </li>
               <li v-if="currentUser.isEmployee">
-                <button class="nav-link" @click="handleEmployeeClick">
+                <button class="nav-link" @click="navigateTo('employee-change-password')">
                   Change Password
                 </button>
               </li>

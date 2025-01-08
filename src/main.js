@@ -81,9 +81,9 @@ const router = createRouter({
         },
         {
           name: "employee-change-password",
-          path: "employee/changepassword/:username",
+          path: "employee/changepassword",
           component: EmployeeChangePassword,
-          meta: { allowedRoles: ["employee"] },
+          /*meta: { allowedRoles: ["employee"] },*/
         },
         {
           name: "department-list",

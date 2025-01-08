@@ -18,7 +18,7 @@ export default {
     };
   },
   async created() {
-    const username = this.$route.params.username;
+    const username = localStorage.getItem('username');//this.$route.params.username;
 
     try {
       // Busca os dados do funcionário pelo username
