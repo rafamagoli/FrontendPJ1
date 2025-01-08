@@ -8,6 +8,7 @@ import UserRegister from "./components/user/UserRegister.vue";
 import EmployeeList from "./components/employee/EmployeeList.vue";
 import EmployeeAdd from "./components/employee/EmployeeAdd.vue";
 import EmployeeEdit from "./components/employee/EmployeeEdit.vue";
+import EmployeeChangePassword from "./components/employee/EmployeeChangePassword.vue";
 import DepartmentList from "./components/department/DepartmentList.vue";
 import DepartmentAdd from "./components/department/DepartmentAdd.vue";
 import DefaultPageLayout from "./core/components/DefaultPageLayout.vue";
@@ -76,6 +77,12 @@ const router = createRouter({
           path: "employee/edit/:username",
           component: EmployeeEdit,
           meta: { allowedRoles: ["admin", "HRmanager"] },
+        },
+        {
+          name: "employee-change-password",
+          path: "employee/changepassword/:username",
+          component: EmployeeChangePassword,
+          meta: { allowedRoles: ["employee"] },
         },
         {
           name: "department-list",
