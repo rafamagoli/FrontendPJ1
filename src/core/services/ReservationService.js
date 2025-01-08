@@ -25,6 +25,13 @@ const ReservationService = {
       },
     }),
 
+  getReservationsByNif: (nif) =>
+    axios.get(`${API_URL}/nif/${nif}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+      },
+    }),
+
   updateReservation: (id, updatedData) =>
     axios.put(`${API_URL}/${id}`, updatedData, {
       headers: {

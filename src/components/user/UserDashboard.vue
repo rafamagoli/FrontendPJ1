@@ -3,31 +3,32 @@
     <div class="main-content">
       <!-- Cards Section -->
       <section class="cards">
-        <!-- Tasks card -->
+        <!-- Tasks Card -->
         <div class="card tasks-card">
           <h2>Tasks Overview</h2>
           <div class="sub-box" @click="TaskList">View All</div>
           <div class="sub-box" @click="TaskAdd">Add a New Task</div>
           <!-- Weekly Tasks Overview -->
           <div class="weekly-tasks">
-            <h4>This Week's Tasks</h4>
+            <h4>Tasks Due Next Week</h4>
             <ul>
-              <li v-for="task in weeklyTasks" :key="task.id">
-                <span class="task-title">{{ task.title }}</span>
-                <span class="task-date">Limit date: {{ formatDate(task.limitDate) }}</span>
+              <li v-for="task in tasks" :key="task._id" class="task-item">
+                <div class="task-title">{{ task.taskName }}</div>
+                <div class="task-assigned">Assigned to: {{ task.assignedTo }}</div>
+                <div class="task-date">Limit date: {{ formatDate(task.limit_date) }}</div>
               </li>
             </ul>
           </div>
         </div>
 
-        <!-- Employees card -->
+        <!-- Employees Card -->
         <div class="card employees-card">
           <h2>Employee Overview</h2>
           <div class="sub-box" @click="EmployeeList">View All</div>
           <div class="sub-box" @click="EmployeeAdd">Add a New Employee</div>
         </div>
 
-        <!-- Calendar card -->
+        <!-- Calendar Card -->
         <div class="card">
           <h2>Reservations</h2>
           <div class="calendar-card">
@@ -41,57 +42,42 @@
 
 <script>
 import UserCalendar from "./UserCalendar.vue";
+import TaskService from "@/core/services/TaskService";
+import ReservationService from "@/core/services/ReservationService";
 
 export default {
   components: { UserCalendar },
   data() {
     return {
-      userName: "Bulma Garcia",
-      tasks: [
-        { id: 1, title: "Prepare meeting agenda", limitDate: "2024-12-18", completed: false },
-        { id: 2, title: "Fix website bugs", limitDate: "2024-12-19", completed: false },
-        { id: 3, title: "Submit project report", limitDate: "2024-12-20", completed: true },
-        { id: 4, title: "Organize team event", limitDate: "2024-12-22", completed: false },
-        { id: 5, title: "Finalize budget", limitDate: "2024-12-23", completed: false },
-      ],
-      reservations: [
-        { id: 1, dish: "Grilled Fish", date: "2024-12-10" },
-        { id: 2, dish: "Grilled Steak", date: "2024-12-15" },
-        { id: 3, dish: "Shrimp Stew", date: "2024-12-19" },
-      ],
+      tasks: [], 
+      reservations: [],
     };
   },
-  computed: {
-    weeklyTasks() {
-      const today = new Date();
-      const startOfWeek = this.getStartOfWeek(today);
-      const endOfWeek = this.getEndOfWeek(today);
-
-      return this.tasks.filter((task) => {
-        const dueDate = new Date(task.limitDate);
-        return dueDate >= startOfWeek && dueDate <= endOfWeek;
-      });
-    },
+  async mounted() {
+    await this.loadTasks();
+    await this.loadReservations();
   },
   methods: {
+    async loadTasks() {
+      try {
+        const response = await TaskService.getTasksDueNextWeek();
+        console.log("Tasks API Response:", response.data);
+        this.tasks = response.data.data.tasks;
+      } catch (error) {
+        console.error("Error loading tasks:", error);
+      }
+    },
+    async loadReservations() {
+      try {
+        const response = await ReservationService.getReservations();
+        this.reservations = response.data;
+      } catch (error) {
+        console.error("Error loading reservations:", error);
+      }
+    },
     formatDate(dateStr) {
       const options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
       return new Date(dateStr).toLocaleDateString(undefined, options);
-    },
-    getStartOfWeek(date) {
-      const newDate = new Date(date); // Clone the date
-      const day = newDate.getDay();
-      const diff = newDate.getDate() - day + (day === 0 ? -6 : 1); // Adjust for Monday start
-      newDate.setDate(diff);
-      newDate.setHours(0, 0, 0, 0);
-      return newDate;
-    },
-    getEndOfWeek(date) {
-      const startOfWeek = this.getStartOfWeek(date);
-      const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6);
-      endOfWeek.setHours(23, 59, 59, 999);
-      return endOfWeek;
     },
     TaskList() {
       this.$router.push("/task/list");
@@ -111,44 +97,29 @@ export default {
 
 <style scoped>
 /* Weekly Tasks List */
-.weekly-tasks {
-  margin-top: 20px;
-}
-
-.weekly-tasks h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
 .weekly-tasks ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.weekly-tasks li {
-  background-color: white;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  justify-content: space-between;
-}
-
-.weekly-tasks li:last-child {
-  border-bottom: none;
+.task-item {
+  margin-bottom: 15px; /* Add space between tasks */
+  padding: 10px; /* Add padding for a cleaner layout */
+  background-color: #f9f9f9; /* Light background for readability */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  color: #333; /* Uniform text color */
 }
 
 .task-title {
+  font-weight: bold;
+  margin-bottom: 5px; /* Add space between title and other lines */
 }
 
+.task-assigned,
 .task-date {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.tasks-card h2,
-.employees-card h2,
-.card h2 {
-  margin-bottom: 10px;
+  font-size: 0.95rem; /* Slightly smaller font for details */
+  margin-bottom: 3px;
 }
 </style>

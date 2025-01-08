@@ -123,11 +123,11 @@ export default {
           alert("Failed to register. Please try again.");
         }
       } catch (error) {
-        const errorMessage =
-          error.response?.data?.error ||
-          error.response?.data?.message ||
-          "An unexpected error occurred.";
-        alert(errorMessage);
+        const errorResponse = error.response?.data || { error: "An unexpected error occurred." };
+
+        const formattedError = JSON.stringify(errorResponse, null, 2);
+
+        alert(`Registration failed:\n${formattedError}`);
         console.error("Error during registration:", error);
       }
     },

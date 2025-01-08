@@ -2,13 +2,13 @@
   <div class="calendar-card" :class="{ 'modal-open': selectedReservation }">
     <FullCalendar :options="calendarOptions" />
 
-    <!-- Modal para exibir detalhes da reserva -->
+    <!-- Modal to show reservation details -->
     <div v-if="selectedReservation" class="modal">
       <div class="modal-content">
         <h3>Reservation Details</h3>
-        <p><strong>Dish:</strong> {{ selectedReservation.dish }}</p>
+        <p><strong>Plate:</strong> {{ selectedReservation.plate }}</p>
         <p><strong>Date:</strong> {{ formatDate(selectedReservation.date) }}</p>
-        <p><strong>Employee:</strong> {{ selectedReservation.employee }}</p>
+        <p><strong>NIF:</strong> {{ selectedReservation.employeeNIF }}</p>
         <button @click="closeModal">Close</button>
       </div>
     </div>
@@ -18,54 +18,80 @@
 <script>
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import ReservationService from "@/core/services/ReservationService";
 
 export default {
   components: { FullCalendar },
-  props: {
-    reservations: {
-      type: Array,
-      required: true,
-    },
-  },
   data() {
     return {
-      selectedReservation: null, // Reserva selecionada para exibição
+      selectedReservation: null, // Reservation selected for viewing
       calendarOptions: {
         plugins: [dayGridPlugin],
         initialView: "dayGridMonth",
         height: "auto",
-        events: this.reservations.map((reservation) => ({
-          title: reservation.dish,
-          start: reservation.date,
-          extendedProps: {
-            employee: reservation.employee,
-            dish: reservation.dish,
-            date: reservation.date,
-          },
-        })),
+        events: [], // Events will be populated dynamically
         headerToolbar: {
           left: "",
           center: "title",
           right: "prev,next",
         },
-        eventClick: this.handleEventClick, // Manipulador de clique no evento
+        eventClick: this.handleEventClick,
       },
     };
   },
+  async mounted() {
+    await this.loadReservations(); // Fetch reservations when the component mounts
+  },
   methods: {
+    async loadReservations() {
+      try {
+        // Get the logged-in user's NIF
+        const user = JSON.parse(localStorage.getItem("currentUser"));
+        const nif = user?.nif;
+
+        if (!nif) {
+          console.error("No NIF found for the logged-in user.");
+          return;
+        }
+
+        // Fetch reservations for the user's NIF
+        const response = await ReservationService.getReservationsByNif(nif);
+        console.log("API Response:", response.data); // Debug the API response
+
+        const reservations = response.data.data.reservations;
+
+        if (!reservations || reservations.length === 0) {
+          console.warn("No reservations found for this user.");
+          return;
+        }
+
+        // Map reservations to FullCalendar events
+        this.calendarOptions.events = reservations.map((reservation) => ({
+          title: reservation.plate || "No Plate Specified", // Dish (plate) name
+          start: reservation.date, // Reservation date
+          allDay: true, // Treat event as all-day to remove time display
+          extendedProps: {
+            employeeNIF: reservation.employeeNIF, // Employee's NIF
+            plate: reservation.plate, // Plate name
+            date: reservation.date, // Reservation date
+          },
+        }));
+
+        console.log("Mapped Events:", this.calendarOptions.events); // Debug the mapped events
+      } catch (error) {
+        console.error("Error loading reservations:", error);
+      }
+    },
     handleEventClick(info) {
-      // Busca os dados do evento clicado
-      info.jsEvent.stopPropagation(); // Impede a propagação do clique
+      // Show reservation details in the modal
       this.selectedReservation = {
-        dish: info.event.extendedProps.dish,
+        plate: info.event.extendedProps.plate,
         date: info.event.extendedProps.date,
-        employee: info.event.extendedProps.employee,
+        employeeNIF: info.event.extendedProps.employeeNIF,
       };
-      document.body.style.overflow = "hidden"; // Desativa scroll no fundo
     },
     closeModal() {
-      this.selectedReservation = null; // Fecha o modal
-      document.body.style.overflow = ""; // Reativa scroll no fundo
+      this.selectedReservation = null; // Close the modal
     },
     formatDate(date) {
       return new Date(date).toLocaleDateString("en-US", {
@@ -76,24 +102,9 @@ export default {
       });
     },
   },
-  watch: {
-    reservations: {
-      immediate: true,
-      handler(newReservations) {
-        this.calendarOptions.events = newReservations.map((reservation) => ({
-          title: reservation.dish,
-          start: reservation.date,
-          extendedProps: {
-            employee: reservation.employee,
-            dish: reservation.dish,
-            date: reservation.date,
-          },
-        }));
-      },
-    },
-  },
 };
 </script>
+
 
 <style scoped>
 .calendar-card {
@@ -107,7 +118,7 @@ export default {
   width: 100%;
 }
 
-/* Estilo para o modal */
+/* Modal styling */
 .modal {
   position: fixed;
   top: 0;
@@ -152,10 +163,10 @@ export default {
   background-color: #444;
 }
 
-/* Estilo para desativar a interatividade do calendário */
+/* Calendar disabled during modal */
 .modal-open .fc-view,
 .modal-open .fc-daygrid-day {
   pointer-events: none;
-  filter: brightness(0.8); /* Visualmente "escurece" as grades */
+  filter: brightness(0.8);
 }
 </style>

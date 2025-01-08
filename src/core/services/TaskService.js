@@ -39,6 +39,13 @@ const TaskService = {
         'Content-Type': 'application/json',
       },
     }),
+    getTasksDueNextWeek: () =>
+      axios.get(`${API_URL}/due-next-week`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      }),
+    
 };
 
 export default TaskService;

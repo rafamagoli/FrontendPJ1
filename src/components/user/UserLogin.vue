@@ -1,6 +1,7 @@
 <script>
 import axios from 'axios';
 import UserService from '@/core/services/UserService'
+
 export default {
   data() {
     return {
@@ -11,16 +12,22 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        await UserService.login(this.username,this.password);
+        await UserService.login(this.username, this.password);
         this.$router.push('/user/dashboard');
       } catch (error) {
         console.error('Login error:', error);
-        alert('Login failed: ' + (error.response?.data?.error || 'An unexpected error occurred'));
+
+        const errorData = error.response?.data || {};
+        const errorMessage = errorData.error || 'An unexpected error occurred';
+        const errorDetails = errorData.details ? `Details: ${errorData.details}` : '';
+
+        alert(`Login failed:\n${errorMessage}\n${errorDetails}`);
       }
     },
   },
 };
 </script>
+
 <template>
   <div class="login-page">
     <!-- Login Card -->
