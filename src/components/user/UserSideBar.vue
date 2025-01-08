@@ -196,14 +196,12 @@ function navigateTo(routeName) {
 </script>
 
 <style>
-#name-sidebar {
-  padding: 30px;
-}
-
 .sidebar-logo {
   display: block;
   margin: 0 auto;
   max-width: 300px;
+  max-height: 200px; /* Aumenta a altura */
+
 }
 
 .text-center {
