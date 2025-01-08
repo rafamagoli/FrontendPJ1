@@ -1,44 +1,43 @@
 <template>
   <div id="addDepartment-page" class="page-background">
-      <div class="main-content">
-          <h1 id="page-title">New Department</h1>
-
-          <div class="form-container">
-              <div class="form-content">
-                  <!-- Department Name -->
-                  <div class="form-group">
-                      <label for="departmentName">Department Name</label>
-                      <input 
-                          type="text" 
-                          id="departmentName" 
-                          v-model="department.name"
-                          placeholder="Enter department name"
-                          required
-                      />
-                  </div>
-
-                  <!-- Associated Discount -->
-                  <div class="form-group">
-                      <label for="discount">Canteen Discount (%)</label>
-                      <input 
-                          type="text" 
-                          id="discount" 
-                          v-model="formattedDiscount"
-                          @input="formatDiscount"
-                          maxlength="7"
-                          required
-                      />
-                  </div>
-
-                  <!-- Submit Button -->
-                  <div class="button-container">
-                      <button @click="createDepartment" class="create-btn">
-                          Create
-                      </button>
-                  </div>
-              </div>
+    <div class="main-content">
+      <!-- Add Department Form -->
+      <section class="add-department-form">
+        <h2>New Department</h2>
+        <form @submit.prevent="createDepartment">
+          <!-- Department Name -->
+          <div class="form-group">
+            <label for="departmentName">Department Name</label>
+            <input 
+              type="text" 
+              id="departmentName" 
+              v-model="department.name"
+              placeholder="Enter department name"
+              required
+            />
           </div>
-      </div>
+
+          <!-- Canteen Discount -->
+          <div class="form-group">
+            <label for="discount">Canteen Discount (%)</label>
+            <input 
+              type="text" 
+              id="discount" 
+              v-model="formattedDiscount"
+              @input="formatDiscount"
+              maxlength="7"
+              required
+            />
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <button type="button" class="cancel-button" @click="cancel">Cancel</button>
+            <button type="submit" class="create-button">Create</button>
+          </div>
+        </form>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -56,6 +55,9 @@ export default {
     };
   },
   methods: {
+    cancel() {
+      this.$router.push("/department/list");
+    },
     formatDiscount(event) {
       const value = event.target.value.replace(/[^0-9]/g, '');
 
@@ -91,7 +93,7 @@ export default {
         await DepartmentService.createDepartment(departmentData);
 
         alert('Department created successfully!');
-        this.$router.push('/departments');
+        this.$router.push('/department/list');
       } catch (error) {
         console.error('Error creating department:', error.response?.data || error.message);
         alert('Error creating department: ' + (error.response?.data?.message || error.message));
@@ -102,65 +104,81 @@ export default {
 </script>
 
 <style scoped>
-
-
-.form-container {
-  background-color: #f6f5f5;
+/* Add Department Form Styling */
+.add-department-form {
+  max-width: 600px;
+  margin: 20px auto;
+  background: white;
   padding: 20px;
   border-radius: 8px;
-  max-width: 800px;
-  margin: 0 auto;
-  margin-top: 50px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.form-content {
-  padding: 20px;
+.add-department-form h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 .form-group {
   margin-bottom: 20px;
-  position: relative;
 }
 
 .form-group label {
   display: block;
+  margin-bottom: 5px;
   font-weight: bold;
-  margin-bottom: 8px;
 }
 
-.form-group input,
-.form-group select {
+.form-group input {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
-.button-container {
+.form-actions {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 30px;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
-.create-btn {
-  background-color: #000;
-  color: white;
-  padding: 10px 20px;
+.cancel-button,
+.create-button {
+  border-radius: 10px;
+  width: 48%;
+  padding: 10px;
+  font-size: 1rem;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
-  min-width: 100px;
+  background: #000;
+  color: white;
 }
 
-.create-btn:hover {
-  background-color: #333;
+.cancel-button:hover,
+.create-button:hover {
+  background: #333;
 }
 
+/* Responsiveness */
 @media (max-width: 768px) {
-  .form-container {
-    margin: 0 20px;
+  .add-department-form {
+    padding: 15px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-button,
+  .create-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .create-button {
+    margin-bottom: 0;
   }
 }
 </style>
