@@ -1,6 +1,6 @@
 <template>
   <div class="main-content">
-    <h1 id="page-title">Active Reservations</h1>
+    <h1 id="page-title">My Active Reservations</h1>
 
     <section class="cards reservation-container">
       <!-- Active Reservations Card -->
@@ -31,7 +31,7 @@
 
       <!-- Calendar Card -->
       <div class="card calendar-section">
-        <h2>Reservations</h2>
+        <h2>Reservation Calendar</h2>
         <div class="calendar-wrapper">
           <UserCalendar :reservations="activeReservations" />
         </div>
