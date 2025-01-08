@@ -80,7 +80,7 @@
               </li>
               <li v-if="currentUser.isEmployee">
                 <button class="nav-link" @click="handleEmployeeClick">
-                  Edit my Profile
+                  Change Password
                 </button>
               </li>
             </ul>
@@ -181,7 +181,7 @@ let currentUser = UserService.getCurrentUser();
 // Lógica para editar o perfil do usuário atual
 function handleEmployeeClick() {
   const username = currentUser.username;
-  router.push(`/employee/edit/${username}`);
+  router.push(`/employee/changepassword/${username}`);
 }
 
 // Função para alternar o submenu ativo
