@@ -29,7 +29,7 @@
           </li>
 
           <!-- Departments menu -->
-          <li class="nav-item">
+          <li class="nav-item" v-if="currentUser.isHRManager || currentUser.isAdmin || currentUser.isManager || currentUser.isCanteenManager">
             <button class="nav-link" @click="toggleSubmenu('departments')">
               Departments <span class="arrow">▼</span>
             </button>
@@ -49,11 +49,14 @@
               Employees <span class="arrow">▼</span>
             </button>
             <ul class="submenu" :class="{ active: activeMenu === 'employees' }">
-              <li>
+              <li v-if="currentUser.isHRManager || currentUser.isAdmin">
                 <button class="nav-link" @click="navigateTo('employee-add')">Add Employee</button>
               </li>
-              <li>
+              <li v-if="currentUser.isHRManager || currentUser.isAdmin">
                 <button class="nav-link" @click="navigateTo('employee-list')">View Employees</button>
+              </li>
+              <li>
+                <button class="nav-link" @click="handleEmployeeClick">Edit my Profile</button>
               </li>
             </ul>
           </li>
@@ -121,10 +124,18 @@ const activeMenu = ref(null);
 
 let currentUser = UserService.getCurrentUser();
 
+// Lógica para editar o perfil do usuário atual
+function handleEmployeeClick() {
+  const username = currentUser.username;
+  router.push(`/employee/edit/${username}`);
+}
+
+// Função para alternar o submenu ativo
 function toggleSubmenu(menu) {
   activeMenu.value = activeMenu.value === menu ? null : menu;
 }
 
+// Navegação para uma rota específica
 function navigateTo(routeName) {
   router.push({ name: routeName });
 }
