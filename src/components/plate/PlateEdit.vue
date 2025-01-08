@@ -1,11 +1,11 @@
 <script>
-import PlateFormInput from "./PlateFormInput.vue";
 import PlateService from "@/core/services/PlateService";
 import IngredientService from "@/core/services/IngredientService";
+import UserCancelButton from "@/components/user/UserCancelButton.vue";
 
 export default {
   components: {
-    PlateFormInput,
+    UserCancelButton,
   },
   data() {
     return {
@@ -22,32 +22,81 @@ export default {
   },
   async created() {
     const plateName = decodeURIComponent(this.$route.params.name);
-    if (plateName) {
-      await this.fetchPlateData(plateName);
-    } else {
-      console.error("No plate name found. Redirecting...");
+
+    if (!plateName) {
+      console.error("Plate name is missing.");
+      alert("Plate name is missing in the URL.");
+      this.$router.push("/plate/list");
+      return;
+    }
+
+    try {
+      const response = await PlateService.getPlateByName(plateName);
+      
+      if (response.data.status === 'success') {
+        const plate = response.data.data.plate;
+        this.plate = {
+          name: plate.name,
+          type: plate.type,
+          price: plate.price,
+          ingredients: plate.ingredients || [],
+        };
+      } else {
+        console.error("Plate not found. Redirecting...");
+        this.$router.push("/plate/list");
+      }
+    } catch (error) {
+      console.error("Error fetching plate:", error.response?.data || error.message);
+      alert("Failed to fetch plate details. Redirecting to list.");
       this.$router.push("/plate/list");
     }
 
     await this.fetchIngredients();
   },
   methods: {
-    async fetchPlateData(plateName) {
+    async handleSubmit() {
       try {
-        const response = await PlateService.getPlateByName(plateName);
-        const data = response.data.data.plate;
+        if (!this.plate.name.trim() || !this.plate.type || !this.plate.price) {
+          alert("Name, type, and price are required!");
+          return;
+        }
 
-        this.plate = {
-          name: data.name,
-          type: data.type,
-          price: data.price,
-          ingredients: data.ingredients || [],
+        const selectedIngredients = this.plate.ingredients
+          .filter((ingredient) => ingredient.name)
+          .map((ingredient) => ingredient.name);
+
+        const updatedPlateData = {
+          name: this.plate.name.trim(),
+          type: this.plate.type,
+          price: parseFloat(this.plate.price),
+          ingredients: selectedIngredients,
         };
-      } catch (error) {
-        console.error("Error fetching plate data:", error);
-        this.error = "Failed to fetch plate details. Redirecting...";
+
+        const plateNameForRequest = decodeURIComponent(this.$route.params.name);
+        await PlateService.updatePlate(plateNameForRequest, updatedPlateData);
+
+        alert("Plate updated successfully!");
         this.$router.push("/plate/list");
+      } catch (error) {
+        console.error("Error updating plate:", error);
+        alert("Failed to update plate. Please try again.");
       }
+    },
+    async deletePlate() {
+      if (confirm("Are you sure you want to delete this plate?")) {
+        try {
+          const plateName = decodeURIComponent(this.$route.params.name);
+          await PlateService.deletePlate(plateName);
+          alert("Plate deleted successfully!");
+          this.$router.push("/plate/list");
+        } catch (error) {
+          console.error("Error deleting plate:", error.response?.data || error.message);
+          alert("Failed to delete plate. Please try again.");
+        }
+      }
+    },
+    cancel() {
+      this.$router.push("/plate/list");
     },
     async fetchIngredients() {
       try {
@@ -61,33 +110,6 @@ export default {
         this.error = "Failed to fetch ingredients.";
       }
     },
-    async handleSubmit() {
-      try {
-        if (!this.plate.name || !this.plate.type || !this.plate.price) {
-          alert("Name, type, and price are required!");
-          return;
-        }
-
-        const selectedIngredients = this.plate.ingredients
-          .filter((ingredient) => ingredient.name)
-          .map((ingredient) => ingredient.name);
-
-        const updatedPlateData = {
-          name: this.plate.name,
-          type: this.plate.type,
-          price: parseFloat(this.plate.price),
-          ingredients: selectedIngredients,
-        };
-
-        const plateNameForRequest = decodeURIComponent(this.$route.params.name);
-        await PlateService.updatePlate(plateNameForRequest, updatedPlateData);
-        alert("Plate updated successfully!");
-        this.$router.push("/plate/list");
-      } catch (error) {
-        console.error("Error updating plate:", error);
-        alert("Failed to update plate. Please try again.");
-      }
-    },
     toggleIngredient(ingredient) {
       const index = this.plate.ingredients.findIndex((i) => i.name === ingredient.name);
       if (index === -1) {
@@ -98,9 +120,6 @@ export default {
     },
     isSelected(ingredient) {
       return this.plate.ingredients.some((i) => i.name === ingredient.name);
-    },
-    cancel() {
-      this.$router.push("/plate/list");
     },
   },
 };
@@ -113,11 +132,16 @@ export default {
         <h2>Edit Plate</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Plate Name -->
-          <PlateFormInput
-            name="Plate Name"
-            identifier="name"
-            v-model="plate.name"
-          />
+          <div class="form-group">
+            <label for="name">Plate Name</label>
+            <input
+              id="name"
+              v-model="plate.name"
+              type="text"
+              required
+              placeholder="Enter Plate Name"
+            />
+          </div>
 
           <!-- Plate Type -->
           <div class="form-group">
@@ -131,12 +155,16 @@ export default {
           </div>
 
           <!-- Price -->
-          <PlateFormInput
-            name="Price"
-            identifier="price"
-            type="number"
-            v-model="plate.price"
-          />
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input
+              id="price"
+              v-model="plate.price"
+              type="number"
+              required
+              placeholder="Enter Price"
+            />
+          </div>
 
           <!-- Ingredients Selection -->
           <div class="form-group">
@@ -159,7 +187,10 @@ export default {
             <button type="button" class="cancel-button" @click="cancel">
               Cancel
             </button>
-            <button type="submit" class="create-button">
+            <button type="button" class="delete-button" @click="deletePlate">
+              Delete
+            </button>
+            <button type="submit" class="update-button">
               Update
             </button>
           </div>
@@ -241,8 +272,9 @@ export default {
 }
 
 .cancel-button,
-.create-button {
-  width: 48%;
+.delete-button,
+.update-button {
+  width: 32%;
   padding: 12px;
   font-size: 1rem;
   border: none;
@@ -254,7 +286,8 @@ export default {
 }
 
 .cancel-button:hover,
-.create-button:hover {
+.delete-button:hover,
+.update-button:hover {
   background: #333;
 }
 
@@ -265,7 +298,8 @@ export default {
   }
 
   .cancel-button,
-  .create-button {
+  .delete-button,
+  .update-button {
     width: 100%;
   }
 }

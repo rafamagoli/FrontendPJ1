@@ -91,28 +91,24 @@ export default {
     <div class="main-content">
       <section class="edit-ingredient-form">
         <h2>Edit Ingredient</h2>
-
         <form @submit.prevent="handleSubmit">
           <!-- Ingredient Name -->
           <div class="form-group">
             <label for="name">Ingredient Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              v-model="ingredient.name" 
-              class="readonly-input" 
+            <input
+              id="name"
+              v-model="ingredient.name"
+              type="text"
+              required
+              placeholder="Enter Ingredient Name"
             />
           </div>
 
-          <!-- Allergen -->
+          <!-- Allergen Checkbox -->
           <div class="form-group">
-            <label for="allergen">Allergen</label>
-            <select id="allergen" v-model="ingredient.allergen" required>
-              <option value="" disabled>Select</option>
-              <option 
-                v-for="option in allergenOptions" 
-                :key="option" 
-                :value="option">
+            <label for="allergen">Contains Allergen</label>
+            <select id="allergen" v-model="ingredient.allergen">
+              <option v-for="option in allergenOptions" :key="option" :value="option">
                 {{ option }}
               </option>
             </select>
@@ -120,17 +116,13 @@ export default {
 
           <!-- Action Buttons -->
           <div class="form-actions">
-            <UserCancelButton :cancel="cancel" />
-
-            <button 
-              type="button" 
-              class="delete-button" 
-              @click="deleteIngredient">
+            <button type="button" class="cancel-button" @click="cancel">
+              Cancel
+            </button>
+            <button type="button" class="delete-button" @click="deleteIngredient">
               Delete
             </button>
-            <button 
-              type="submit" 
-              class="update-button">
+            <button type="submit" class="update-button">
               Update
             </button>
           </div>
@@ -139,7 +131,6 @@ export default {
     </div>
   </div>
 </template>
-
 
 <style scoped>
 .edit-ingredient-form {
@@ -181,15 +172,14 @@ export default {
 
 .form-actions {
   display: flex;
-  justify-content: space-between; /* Space between buttons */
-  gap: 15px; /* Fixed space between buttons */
-  margin-top: 30px; /* Keep top margin */
+  justify-content: space-between;
+  margin-top: 30px;
 }
 
+.cancel-button,
 .delete-button,
-.update-button,
-.cancel-button { /* Add cancel button */
-  flex: 1;
+.update-button {
+  width: 32%;
   padding: 12px;
   font-size: 1rem;
   border: none;
@@ -200,20 +190,21 @@ export default {
   transition: background-color 0.3s ease;
 }
 
+.cancel-button:hover,
 .delete-button:hover,
-.update-button:hover,
-.cancel-button:hover { /* Add hover effect for all buttons */
+.update-button:hover {
   background: #333;
 }
 
 @media (max-width: 768px) {
   .form-actions {
     flex-direction: column;
+    gap: 15px;
   }
 
+  .cancel-button,
   .delete-button,
-  .update-button,
-  .cancel-button {
+  .update-button {
     width: 100%;
   }
 }
