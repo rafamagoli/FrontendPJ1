@@ -25,7 +25,7 @@ export default {
 
         const ingredientData = {
           name: this.ingredient.name.trim(),
-          allergen: this.ingredient.allergen || "No",
+          allergen: this.ingredient.allergen === "Yes" ? true : false,
         };
 
         await IngredientService.createIngredient(ingredientData);
