@@ -1,7 +1,7 @@
 <script>
 import PlateFormInput from './PlateFormInput.vue';
-import IngredientService from "@/core/services/IngredientService"; // Service to fetch ingredients
-import PlateService from "@/core/services/PlateService"; // Service to handle plate creation
+import IngredientService from "@/core/services/IngredientService";
+import PlateService from "@/core/services/PlateService";
 
 export default {
   components: {
@@ -12,19 +12,19 @@ export default {
       plate: {
         name: "",
         price: "",
-        type: "", // Dropdown for Meat, Fish, Vegetarian
-        ingredients: [], // Stores ingredient names instead of IDs
+        type: "",
+        ingredients: [],
       },
-      availableIngredients: [], // Dynamically fetched ingredients
-      plateTypes: ["Meat", "Fish", "Vegetarian"], // Dropdown options for type
+      availableIngredients: [],
+      plateTypes: ["Meat", "Fish", "Vegetarian"],
     };
   },
   async created() {
     try {
       const response = await IngredientService.getAllIngredients();
       this.availableIngredients = response.data.data.ingredients.map((ingredient) => ({
-        id: ingredient._id, // Use _id for internal tracking
-        name: ingredient.name, // Use name for display and backend compatibility
+        id: ingredient._id,
+        name: ingredient.name,
       }));
     } catch (error) {
       console.error("Error fetching ingredients:", error.response?.data || error.message);
@@ -39,7 +39,6 @@ export default {
           return;
         }
 
-        // Prepare plate data for API
         const plateData = {
           name: this.plate.name,
           price: parseFloat(this.plate.price),
