@@ -58,7 +58,7 @@ export default {
       }
     },
     cancel() {
-      this.$router.push("/default/employee/list");
+      this.$router.push("/employee/list");
     },
     isAdmin() {
       const currentUser = UserService.getCurrentUser();
