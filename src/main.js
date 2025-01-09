@@ -39,7 +39,7 @@ const router = createRouter({
   routes: [
     {
       name: "user-login",
-      path: "/",
+      path: "/user/login",
       component: UserLogin,
       meta: {},
     },
@@ -51,7 +51,7 @@ const router = createRouter({
     },
     {
       name: "default-route",
-      path: "/default",
+      path: "/",
       component: DefaultPageLayout,
       meta: {},
       children: [
