@@ -8,41 +8,41 @@
           <div class="form-group">
             <label for="department-name">Department Name</label>
             <input
-            type="text"
-            id="department-name"
-            v-model="department.name"
-            placeholder="Enter department name"
-            required
+              type="text"
+              id="department-name"
+              v-model="department.name"
+              placeholder="Enter department name"
+              required
             />
           </div>
-          
+
           <!-- Canteen Discount -->
           <div class="form-group">
             <label for="canteen-discount">Canteen Discount (%)</label>
             <input
-            type="number"
-            id="canteen-discount"
-            v-model.number="department.canteenDiscount"
-            placeholder="Enter canteen discount"
-            min="0"
-            max="100"
-            required
+              type="number"
+              id="canteen-discount"
+              v-model.number="department.canteenDiscount"
+              placeholder="Enter canteen discount"
+              min="0"
+              max="100"
+              required
             />
           </div>
-          
+
           <!-- Action Buttons -->
           <div class="form-actions">
             <button type="button" class="cancel-button" @click="cancel">
               Cancel
             </button>
-            <button type="submit" class="update-button">Update</button>
             <button type="button" class="delete-button" @click="deleteDepartment">
-              Delete Department
+              Delete
             </button>
+            <button type="submit" class="update-button">Update</button>
           </div>
         </form>
       </section>
-      
+
       <!-- Loading State -->
       <div v-if="loading">
         <p>Loading department details...</p>
@@ -64,77 +64,87 @@ export default {
       loading: true,
     };
   },
-  methods: {
-    async deleteDepartment() {
-    if (confirm("Are you sure you want to delete this department?")) {
-      try {
-        await DepartmentService.deleteDepartment(this.department.name.trim());
-        alert("Department deleted successfully!");
+  async created() {
+    const departmentName = decodeURIComponent(this.$route.params.name);
+
+    if (!departmentName) {
+      console.error("Department name is missing.");
+      alert("Department name is missing in the URL.");
+      this.$router.push("/department/list");
+      return;
+    }
+
+    try {
+      const response = await DepartmentService.getDepartmentByName(departmentName);
+
+      if (response.data) {
+        this.department = {
+          name: response.data.name,
+          canteenDiscount: response.data.canteenDiscount,
+        };
+        this.loading = false;
+      } else {
+        console.error("Department not found. Redirecting...");
         this.$router.push("/department/list");
-      } catch (error) {
-        console.error("Error deleting department:", error.response?.data || error.message);
-        alert("Error deleting department. Please try again.");
       }
+    } catch (error) {
+      console.error("Error fetching department:", error.response?.data || error.message);
+      alert("Failed to fetch department details. Redirecting to list.");
+      this.$router.push("/department/list");
     }
   },
-    async fetchDepartmentDetails() {
-      try {
-        const departmentName = this.$route.params.name.trim();
-        console.log("Fetching department details for:", departmentName);
-
-        const response = await DepartmentService.getDepartmentByName(departmentName);
-        console.log("API Response:", response.data);
-
-        this.department = response.data;
-        this.loading = false;
-      } catch (error) {
-        console.error("Error fetching department details:", error);
-        alert("Unable to fetch department details. Redirecting to list.");
-        this.$router.push("/department/list");
-      }
-    },
-
+  methods: {
     async updateDepartment() {
       try {
-        if (!this.department.name || this.department.canteenDiscount === null) {
-          alert("Please fill out all fields.");
+        if (!this.department.name.trim()) {
+          alert("Department name is required!");
           return;
         }
 
-        await DepartmentService.updateDepartment(this.department.name.trim(), {
-          name: this.department.name,
+        const updatedData = {
+          name: this.department.name.trim(),
           canteenDiscount: this.department.canteenDiscount,
-        });
+        };
+
+        const departmentName = decodeURIComponent(this.$route.params.name);
+        await DepartmentService.updateDepartment(departmentName, updatedData);
 
         alert("Department updated successfully!");
         this.$router.push("/department/list");
       } catch (error) {
-        console.error("Error updating department:", error);
-        alert("Error updating department: " + (error.response?.data?.message || error.message));
+        console.error("Error updating department:", error.response?.data || error.message);
+        alert("Failed to update department. Please try again.");
       }
     },
-
-    cancel() {
-      this.$router.push("/department/list"); // Redireciona para department list
+    async deleteDepartment() {
+      try {
+        await DepartmentService.deleteDepartment(this.department.name);
+        alert("Department deleted successfully!");
+        this.$router.push("/department/list");
+      } catch (error) {
+        console.error("Error deleting department:", error.response?.data || error.message);
+        alert("Failed to delete department. Please try again.");
+      }
     },
-  },
-  async created() {
-    await this.fetchDepartmentDetails();
+    cancel() {
+      this.$router.push("/department/list");
+    },
   },
 };
 </script>
 
 <style scoped>
-/* Responsividade */
+/* Responsiveness */
 @media (max-width: 768px) {
   .form-actions {
-    flex-direction: column; /* Botões em coluna no mobile */
+    flex-direction: column;
   }
 
   .delete-button {
-    width: 100%; /* Ocupa largura total no mobile */
+    width: 100%;
   }
 }
+
 /* Form Container */
 .edit-department-form {
   max-width: 600px;
@@ -185,8 +195,8 @@ export default {
   gap: 10px;
 }
 
-.delete-button,
 .cancel-button,
+.delete-button,
 .update-button {
   flex: 1;
   padding: 10px;
@@ -199,8 +209,8 @@ export default {
   border: none;
 }
 
-.delete-button:hover,
 .cancel-button:hover,
+.delete-button:hover,
 .update-button:hover {
   background-color: #999999;
 }
