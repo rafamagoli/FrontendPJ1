@@ -1,0 +1,1058 @@
+{
+    "users": [
+        {
+            "username": "michaelsmith",
+            "name": "Michael Smith",
+            "nif": 255617488,
+            "password": "nibelis123",
+            "department": null,
+            "balance": 0,
+            "role": "Admin"
+        },
+        {
+            "username": "derrickholloway",
+            "name": "Derrick Holloway",
+            "nif": 288572440,
+            "password": "1vi4q5ie",
+            "department": "Information Technology",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "dianafletcher",
+            "name": "Diana Fletcher",
+            "nif": 979079950,
+            "password": "s8ryfbk7",
+            "department": "Canteen",
+            "balance": 0,
+            "role": "Manager"
+        },
+        {
+            "username": "keithlutz",
+            "name": "Keith Lutz",
+            "nif": 825324858,
+            "password": "nibelis123",
+            "department": null,
+            "balance": 0,
+            "role": "Admin"
+        },
+        {
+            "username": "ericastanley",
+            "name": "Erica Stanley",
+            "nif": 822534410,
+            "password": "oavr8ddp",
+            "department": "Canteen",
+            "balance": 0,
+            "role": "Manager"
+        },
+        {
+            "username": "susanthomas",
+            "name": "Susan Thomas",
+            "nif": 702922595,
+            "password": "nibelis123",
+            "department": null,
+            "balance": 0,
+            "role": "Admin"
+        },
+        {
+            "username": "ericaramirez",
+            "name": "Erica Ramirez",
+            "nif": 614272157,
+            "password": "nibelis123",
+            "department": null,
+            "balance": 0,
+            "role": "Admin"
+        },
+        {
+            "username": "catherinevargas",
+            "name": "Catherine Vargas",
+            "nif": 129729949,
+            "password": "u3vsy1ia",
+            "department": "Information Technology",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "andreamosley",
+            "name": "Andrea Mosley",
+            "nif": 247264997,
+            "password": "8qw3milj",
+            "department": "Canteen",
+            "balance": 0,
+            "role": "Manager"
+        },
+        {
+            "username": "gailferrell",
+            "name": "Gail Ferrell",
+            "nif": 781715890,
+            "password": "qyrxt9vp",
+            "department": "Human Resources",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "amywhitney",
+            "name": "Amy Whitney",
+            "nif": 680824863,
+            "password": "27bo06wh",
+            "department": "Canteen",
+            "balance": 0,
+            "role": "Manager"
+        },
+        {
+            "username": "georgelittle",
+            "name": "George Little",
+            "nif": 788223755,
+            "password": "79zbnpeq",
+            "department": "Human Resources",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "michaeltaylor",
+            "name": "Michael Taylor Jr.",
+            "nif": 137901151,
+            "password": "nibelis123",
+            "department": null,
+            "balance": 0,
+            "role": "Admin"
+        },
+        {
+            "username": "angiebrown",
+            "name": "Angie Brown",
+            "nif": 175464170,
+            "password": "5amj9d9v",
+            "department": "Canteen",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "jacobrodriguez",
+            "name": "Jacob Rodriguez",
+            "nif": 781612225,
+            "password": "j2a521qs",
+            "department": "Human Resources",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "ashleysimmons",
+            "name": "Ashley Simmons",
+            "nif": 124218016,
+            "password": "99cz4dqg",
+            "department": "Human Resources",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "mirandamorrison",
+            "name": "Miranda Morrison",
+            "nif": 681533803,
+            "password": "e83n5ci5",
+            "department": "Canteen",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "christykramer",
+            "name": "Christy Kramer",
+            "nif": 896903494,
+            "password": "4go60d7k",
+            "department": "Information Technology",
+            "balance": 0,
+            "role": "Manager"
+        },
+        {
+            "username": "teresacarter",
+            "name": "Teresa Carter",
+            "nif": 674807502,
+            "password": "dt84pqu9",
+            "department": "Canteen",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "kurtrobbins",
+            "name": "Kurt Robbins",
+            "nif": 943852870,
+            "password": "0k8wfw9k",
+            "department": "Canteen",
+            "balance": 0,
+            "role": "Manager"
+        },
+        {
+            "username": "marthatate",
+            "name": "Martha Tate",
+            "nif": 506266958,
+            "password": "nibelis123",
+            "department": null,
+            "balance": 0,
+            "role": "Admin"
+        },
+        {
+            "username": "jasminewilliams",
+            "name": "Jasmine Williams",
+            "nif": 539591220,
+            "password": "45ewaa2j",
+            "department": "Information Technology",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "vanessarobles",
+            "name": "Vanessa Robles",
+            "nif": 529749718,
+            "password": "nibelis123",
+            "department": null,
+            "balance": 0,
+            "role": "Admin"
+        },
+        {
+            "username": "christychapman",
+            "name": "Christy Chapman",
+            "nif": 817424130,
+            "password": "0cb7ezch",
+            "department": "Canteen",
+            "balance": 0,
+            "role": "Manager"
+        },
+        {
+            "username": "laurenvillarreal",
+            "name": "Lauren Villarreal",
+            "nif": 765498200,
+            "password": "8bdc63hw",
+            "department": "Information Technology",
+            "balance": 0,
+            "role": "Employee"
+        },
+        {
+            "username": "ellenmorse",
+            "name": "Ellen Morse DVM",
+            "nif": 110516320,
+            "password": "nibelis123",
+            "department": null,
+            "balance": 0,
+            "role": "Admin"
+        },
+        {
+            "username": "scottstuart",
+            "name": "Scott Stuart",
+            "nif": 103003096,
+            "password": "nibelis123",
+            "department": null,
+            "balance": 0,
+            "role": "Admin"
+        },
+        {
+            "username": "michaelamaxwell",
+            "name": "Michaela Maxwell DDS",
+            "nif": 146982096,
+            "password": "w4ve9bo6",
+            "department": "Information Technology",
+            "balance": 0,
+            "role": "Manager"
+        },
+        {
+            "username": "tarascott",
+            "name": "Tara Scott",
+            "nif": 545045339,
+            "password": "nibelis123",
+            "department": null,
+            "balance": 0,
+            "role": "Admin"
+        },
+        {
+            "username": "jeremymeyer",
+            "name": "Jeremy Meyer",
+            "nif": 908264070,
+            "password": "1uooujja",
+            "department": "Finance",
+            "balance": 0,
+            "role": "Manager"
+        }
+    ],
+    "departments": [
+        {
+            "name": "Canteen",
+            "canteenDiscount": 36
+        },
+        {
+            "name": "Human Resources",
+            "canteenDiscount": 41
+        },
+        {
+            "name": "Finance",
+            "canteenDiscount": 8
+        },
+        {
+            "name": "Information Technology",
+            "canteenDiscount": 7
+        }
+    ],
+    "ingredients": [
+        {
+            "name": "Salt",
+            "allergen": true
+        },
+        {
+            "name": "Sugar",
+            "allergen": true
+        },
+        {
+            "name": "Butter",
+            "allergen": true
+        },
+        {
+            "name": "Eggs",
+            "allergen": false
+        },
+        {
+            "name": "Milk",
+            "allergen": true
+        },
+        {
+            "name": "Flour",
+            "allergen": true
+        },
+        {
+            "name": "Chicken",
+            "allergen": false
+        },
+        {
+            "name": "Beef",
+            "allergen": true
+        },
+        {
+            "name": "Tomatoes",
+            "allergen": false
+        },
+        {
+            "name": "Cheese",
+            "allergen": true
+        }
+    ],
+    "tasks": [
+        {
+            "taskName": "Troubleshoot hardware issues",
+            "description": "Identify and fix hardware-related problems.",
+            "limit_date": "2025-01-30",
+            "isCompleted": false,
+            "assignedTo": "derrickholloway"
+        },
+        {
+            "taskName": "Manage user access rights",
+            "description": "Control and assign user permissions within the system.",
+            "limit_date": "2025-01-17",
+            "isCompleted": true,
+            "assignedTo": "derrickholloway"
+        },
+        {
+            "taskName": "Develop system documentation",
+            "description": "Create detailed documentation for IT systems and processes.",
+            "limit_date": "2025-01-23",
+            "isCompleted": false,
+            "assignedTo": "derrickholloway"
+        },
+        {
+            "taskName": "Prepare daily menu",
+            "description": "Plan and organize the menu for the day.",
+            "limit_date": "2025-01-13",
+            "isCompleted": true,
+            "assignedTo": "dianafletcher"
+        },
+        {
+            "taskName": "Organize kitchen inventory",
+            "description": "Arrange and label the kitchen inventory for easy access.",
+            "limit_date": "2025-01-12",
+            "isCompleted": true,
+            "assignedTo": "dianafletcher"
+        },
+        {
+            "taskName": "Organize kitchen inventory",
+            "description": "Arrange and label the kitchen inventory for easy access.",
+            "limit_date": "2025-01-30",
+            "isCompleted": false,
+            "assignedTo": "dianafletcher"
+        },
+        {
+            "taskName": "Prepare daily menu",
+            "description": "Plan and organize the menu for the day.",
+            "limit_date": "2025-02-06",
+            "isCompleted": false,
+            "assignedTo": "ericastanley"
+        },
+        {
+            "taskName": "Clean workstations",
+            "description": "Ensure all workstations are sanitized and ready for use.",
+            "limit_date": "2025-02-05",
+            "isCompleted": false,
+            "assignedTo": "ericastanley"
+        },
+        {
+            "taskName": "Train new kitchen staff",
+            "description": "Provide guidance and training to newly hired kitchen staff.",
+            "limit_date": "2025-01-10",
+            "isCompleted": false,
+            "assignedTo": "ericastanley"
+        },
+        {
+            "taskName": "Update software patches",
+            "description": "Install and verify the latest software updates.",
+            "limit_date": "2025-01-20",
+            "isCompleted": false,
+            "assignedTo": "catherinevargas"
+        },
+        {
+            "taskName": "Develop system documentation",
+            "description": "Create detailed documentation for IT systems and processes.",
+            "limit_date": "2025-01-27",
+            "isCompleted": false,
+            "assignedTo": "catherinevargas"
+        },
+        {
+            "taskName": "Update software patches",
+            "description": "Install and verify the latest software updates.",
+            "limit_date": "2025-02-03",
+            "isCompleted": true,
+            "assignedTo": "catherinevargas"
+        },
+        {
+            "taskName": "Prepare daily menu",
+            "description": "Plan and organize the menu for the day.",
+            "limit_date": "2025-01-30",
+            "isCompleted": true,
+            "assignedTo": "andreamosley"
+        },
+        {
+            "taskName": "Prepare daily menu",
+            "description": "Plan and organize the menu for the day.",
+            "limit_date": "2025-01-29",
+            "isCompleted": true,
+            "assignedTo": "andreamosley"
+        },
+        {
+            "taskName": "Train new kitchen staff",
+            "description": "Provide guidance and training to newly hired kitchen staff.",
+            "limit_date": "2025-01-20",
+            "isCompleted": true,
+            "assignedTo": "andreamosley"
+        },
+        {
+            "taskName": "Conduct interviews",
+            "description": "Schedule and carry out interviews with job applicants.",
+            "limit_date": "2025-02-06",
+            "isCompleted": true,
+            "assignedTo": "gailferrell"
+        },
+        {
+            "taskName": "Update employee records",
+            "description": "Ensure all employee information is up-to-date in the system.",
+            "limit_date": "2025-01-22",
+            "isCompleted": false,
+            "assignedTo": "gailferrell"
+        },
+        {
+            "taskName": "Conduct interviews",
+            "description": "Schedule and carry out interviews with job applicants.",
+            "limit_date": "2025-01-20",
+            "isCompleted": false,
+            "assignedTo": "gailferrell"
+        },
+        {
+            "taskName": "Train new kitchen staff",
+            "description": "Provide guidance and training to newly hired kitchen staff.",
+            "limit_date": "2025-01-23",
+            "isCompleted": true,
+            "assignedTo": "amywhitney"
+        },
+        {
+            "taskName": "Clean workstations",
+            "description": "Ensure all workstations are sanitized and ready for use.",
+            "limit_date": "2025-01-22",
+            "isCompleted": false,
+            "assignedTo": "amywhitney"
+        },
+        {
+            "taskName": "Check ingredient stock",
+            "description": "Verify the stock levels of ingredients needed for daily operations.",
+            "limit_date": "2025-02-03",
+            "isCompleted": false,
+            "assignedTo": "amywhitney"
+        },
+        {
+            "taskName": "Organize team-building activities",
+            "description": "Plan and oversee activities to improve team collaboration.",
+            "limit_date": "2025-02-07",
+            "isCompleted": true,
+            "assignedTo": "georgelittle"
+        },
+        {
+            "taskName": "Update employee records",
+            "description": "Ensure all employee information is up-to-date in the system.",
+            "limit_date": "2025-01-22",
+            "isCompleted": false,
+            "assignedTo": "georgelittle"
+        },
+        {
+            "taskName": "Organize team-building activities",
+            "description": "Plan and oversee activities to improve team collaboration.",
+            "limit_date": "2025-01-24",
+            "isCompleted": false,
+            "assignedTo": "georgelittle"
+        },
+        {
+            "taskName": "Clean workstations",
+            "description": "Ensure all workstations are sanitized and ready for use.",
+            "limit_date": "2025-01-11",
+            "isCompleted": true,
+            "assignedTo": "angiebrown"
+        },
+        {
+            "taskName": "Prepare daily menu",
+            "description": "Plan and organize the menu for the day.",
+            "limit_date": "2025-01-15",
+            "isCompleted": true,
+            "assignedTo": "angiebrown"
+        },
+        {
+            "taskName": "Check ingredient stock",
+            "description": "Verify the stock levels of ingredients needed for daily operations.",
+            "limit_date": "2025-01-16",
+            "isCompleted": true,
+            "assignedTo": "angiebrown"
+        },
+        {
+            "taskName": "Organize team-building activities",
+            "description": "Plan and oversee activities to improve team collaboration.",
+            "limit_date": "2025-01-16",
+            "isCompleted": false,
+            "assignedTo": "jacobrodriguez"
+        },
+        {
+            "taskName": "Address employee grievances",
+            "description": "Respond to and resolve any employee-related issues.",
+            "limit_date": "2025-01-16",
+            "isCompleted": false,
+            "assignedTo": "jacobrodriguez"
+        },
+        {
+            "taskName": "Prepare payroll reports",
+            "description": "Generate and verify payroll reports for employees.",
+            "limit_date": "2025-01-13",
+            "isCompleted": true,
+            "assignedTo": "jacobrodriguez"
+        },
+        {
+            "taskName": "Update employee records",
+            "description": "Ensure all employee information is up-to-date in the system.",
+            "limit_date": "2025-01-31",
+            "isCompleted": false,
+            "assignedTo": "ashleysimmons"
+        },
+        {
+            "taskName": "Address employee grievances",
+            "description": "Respond to and resolve any employee-related issues.",
+            "limit_date": "2025-01-29",
+            "isCompleted": false,
+            "assignedTo": "ashleysimmons"
+        },
+        {
+            "taskName": "Organize team-building activities",
+            "description": "Plan and oversee activities to improve team collaboration.",
+            "limit_date": "2025-01-12",
+            "isCompleted": false,
+            "assignedTo": "ashleysimmons"
+        },
+        {
+            "taskName": "Prepare daily menu",
+            "description": "Plan and organize the menu for the day.",
+            "limit_date": "2025-01-29",
+            "isCompleted": true,
+            "assignedTo": "mirandamorrison"
+        },
+        {
+            "taskName": "Check ingredient stock",
+            "description": "Verify the stock levels of ingredients needed for daily operations.",
+            "limit_date": "2025-02-05",
+            "isCompleted": false,
+            "assignedTo": "mirandamorrison"
+        },
+        {
+            "taskName": "Clean workstations",
+            "description": "Ensure all workstations are sanitized and ready for use.",
+            "limit_date": "2025-01-18",
+            "isCompleted": false,
+            "assignedTo": "mirandamorrison"
+        },
+        {
+            "taskName": "Troubleshoot hardware issues",
+            "description": "Identify and fix hardware-related problems.",
+            "limit_date": "2025-01-16",
+            "isCompleted": false,
+            "assignedTo": "christykramer"
+        },
+        {
+            "taskName": "Update software patches",
+            "description": "Install and verify the latest software updates.",
+            "limit_date": "2025-01-27",
+            "isCompleted": true,
+            "assignedTo": "christykramer"
+        },
+        {
+            "taskName": "Manage user access rights",
+            "description": "Control and assign user permissions within the system.",
+            "limit_date": "2025-01-29",
+            "isCompleted": false,
+            "assignedTo": "christykramer"
+        },
+        {
+            "taskName": "Prepare daily menu",
+            "description": "Plan and organize the menu for the day.",
+            "limit_date": "2025-01-19",
+            "isCompleted": false,
+            "assignedTo": "teresacarter"
+        },
+        {
+            "taskName": "Check ingredient stock",
+            "description": "Verify the stock levels of ingredients needed for daily operations.",
+            "limit_date": "2025-01-16",
+            "isCompleted": true,
+            "assignedTo": "teresacarter"
+        },
+        {
+            "taskName": "Check ingredient stock",
+            "description": "Verify the stock levels of ingredients needed for daily operations.",
+            "limit_date": "2025-02-01",
+            "isCompleted": false,
+            "assignedTo": "teresacarter"
+        },
+        {
+            "taskName": "Organize kitchen inventory",
+            "description": "Arrange and label the kitchen inventory for easy access.",
+            "limit_date": "2025-01-18",
+            "isCompleted": false,
+            "assignedTo": "kurtrobbins"
+        },
+        {
+            "taskName": "Check ingredient stock",
+            "description": "Verify the stock levels of ingredients needed for daily operations.",
+            "limit_date": "2025-01-11",
+            "isCompleted": false,
+            "assignedTo": "kurtrobbins"
+        },
+        {
+            "taskName": "Clean workstations",
+            "description": "Ensure all workstations are sanitized and ready for use.",
+            "limit_date": "2025-01-10",
+            "isCompleted": false,
+            "assignedTo": "kurtrobbins"
+        },
+        {
+            "taskName": "Manage user access rights",
+            "description": "Control and assign user permissions within the system.",
+            "limit_date": "2025-01-20",
+            "isCompleted": true,
+            "assignedTo": "jasminewilliams"
+        },
+        {
+            "taskName": "Develop system documentation",
+            "description": "Create detailed documentation for IT systems and processes.",
+            "limit_date": "2025-01-10",
+            "isCompleted": false,
+            "assignedTo": "jasminewilliams"
+        },
+        {
+            "taskName": "Troubleshoot hardware issues",
+            "description": "Identify and fix hardware-related problems.",
+            "limit_date": "2025-02-07",
+            "isCompleted": true,
+            "assignedTo": "jasminewilliams"
+        },
+        {
+            "taskName": "Clean workstations",
+            "description": "Ensure all workstations are sanitized and ready for use.",
+            "limit_date": "2025-02-04",
+            "isCompleted": false,
+            "assignedTo": "christychapman"
+        },
+        {
+            "taskName": "Prepare daily menu",
+            "description": "Plan and organize the menu for the day.",
+            "limit_date": "2025-01-22",
+            "isCompleted": true,
+            "assignedTo": "christychapman"
+        },
+        {
+            "taskName": "Train new kitchen staff",
+            "description": "Provide guidance and training to newly hired kitchen staff.",
+            "limit_date": "2025-02-08",
+            "isCompleted": false,
+            "assignedTo": "christychapman"
+        },
+        {
+            "taskName": "Develop system documentation",
+            "description": "Create detailed documentation for IT systems and processes.",
+            "limit_date": "2025-01-10",
+            "isCompleted": true,
+            "assignedTo": "laurenvillarreal"
+        },
+        {
+            "taskName": "Develop system documentation",
+            "description": "Create detailed documentation for IT systems and processes.",
+            "limit_date": "2025-02-04",
+            "isCompleted": false,
+            "assignedTo": "laurenvillarreal"
+        },
+        {
+            "taskName": "Manage user access rights",
+            "description": "Control and assign user permissions within the system.",
+            "limit_date": "2025-01-12",
+            "isCompleted": true,
+            "assignedTo": "laurenvillarreal"
+        },
+        {
+            "taskName": "Develop system documentation",
+            "description": "Create detailed documentation for IT systems and processes.",
+            "limit_date": "2025-02-08",
+            "isCompleted": false,
+            "assignedTo": "michaelamaxwell"
+        },
+        {
+            "taskName": "Monitor network activity",
+            "description": "Keep track of the network to ensure security and uptime.",
+            "limit_date": "2025-01-14",
+            "isCompleted": false,
+            "assignedTo": "michaelamaxwell"
+        },
+        {
+            "taskName": "Troubleshoot hardware issues",
+            "description": "Identify and fix hardware-related problems.",
+            "limit_date": "2025-02-08",
+            "isCompleted": true,
+            "assignedTo": "michaelamaxwell"
+        },
+        {
+            "taskName": "Prepare financial statements",
+            "description": "Create and review financial documents such as income statements.",
+            "limit_date": "2025-01-22",
+            "isCompleted": false,
+            "assignedTo": "jeremymeyer"
+        },
+        {
+            "taskName": "Update budget forecasts",
+            "description": "Adjust financial projections based on current data.",
+            "limit_date": "2025-02-06",
+            "isCompleted": true,
+            "assignedTo": "jeremymeyer"
+        },
+        {
+            "taskName": "Reconcile accounts",
+            "description": "Match and verify transactions in company accounts.",
+            "limit_date": "2025-01-24",
+            "isCompleted": false,
+            "assignedTo": "jeremymeyer"
+        }
+    ],
+    "reservations": [
+        {
+            "date": "2025-01-11",
+            "plateName": "Caesar Salad",
+            "employee_nif": 182003
+        },
+        {
+            "date": "2025-01-23",
+            "plateName": "Grilled Chicken",
+            "employee_nif": 182003
+        },
+        {
+            "date": "2025-01-21",
+            "plateName": "Caesar Salad",
+            "employee_nif": 183079218
+        },
+        {
+            "date": "2025-01-17",
+            "plateName": "Beef Stew",
+            "employee_nif": 183079218
+        },
+        {
+            "date": "2025-02-02",
+            "plateName": "Caesar Salad",
+            "employee_nif": 605420170
+        },
+        {
+            "date": "2025-01-29",
+            "plateName": "Caesar Salad",
+            "employee_nif": 605420170
+        },
+        {
+            "date": "2025-01-30",
+            "plateName": "Grilled Chicken",
+            "employee_nif": 439005012
+        },
+        {
+            "date": "2025-02-01",
+            "plateName": "Fish Fillet",
+            "employee_nif": 439005012
+        },
+        {
+            "date": "2025-01-17",
+            "plateName": "Grilled Chicken",
+            "employee_nif": 341152376
+        },
+        {
+            "date": "2025-01-23",
+            "plateName": "Beef Stew",
+            "employee_nif": 341152376
+        },
+        {
+            "date": "2025-01-30",
+            "plateName": "Caesar Salad",
+            "employee_nif": 145469738
+        },
+        {
+            "date": "2025-01-25",
+            "plateName": "Caesar Salad",
+            "employee_nif": 145469738
+        },
+        {
+            "date": "2025-02-08",
+            "plateName": "Caesar Salad",
+            "employee_nif": 786499045
+        },
+        {
+            "date": "2025-01-21",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 786499045
+        },
+        {
+            "date": "2025-01-17",
+            "plateName": "Fish Fillet",
+            "employee_nif": 730199378
+        },
+        {
+            "date": "2025-01-21",
+            "plateName": "Beef Stew",
+            "employee_nif": 730199378
+        },
+        {
+            "date": "2025-01-20",
+            "plateName": "Grilled Chicken",
+            "employee_nif": 587355871
+        },
+        {
+            "date": "2025-01-25",
+            "plateName": "Caesar Salad",
+            "employee_nif": 587355871
+        },
+        {
+            "date": "2025-01-21",
+            "plateName": "Fish Fillet",
+            "employee_nif": 465388025
+        },
+        {
+            "date": "2025-02-06",
+            "plateName": "Beef Stew",
+            "employee_nif": 465388025
+        },
+        {
+            "date": "2025-01-10",
+            "plateName": "Fish Fillet",
+            "employee_nif": 2113219
+        },
+        {
+            "date": "2025-01-16",
+            "plateName": "Beef Stew",
+            "employee_nif": 2113219
+        },
+        {
+            "date": "2025-01-24",
+            "plateName": "Caesar Salad",
+            "employee_nif": 505144247
+        },
+        {
+            "date": "2025-02-03",
+            "plateName": "Caesar Salad",
+            "employee_nif": 505144247
+        },
+        {
+            "date": "2025-01-17",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 325276510
+        },
+        {
+            "date": "2025-02-04",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 325276510
+        },
+        {
+            "date": "2025-01-21",
+            "plateName": "Caesar Salad",
+            "employee_nif": 481930489
+        },
+        {
+            "date": "2025-01-25",
+            "plateName": "Fish Fillet",
+            "employee_nif": 481930489
+        },
+        {
+            "date": "2025-01-25",
+            "plateName": "Caesar Salad",
+            "employee_nif": 906912725
+        },
+        {
+            "date": "2025-01-26",
+            "plateName": "Caesar Salad",
+            "employee_nif": 906912725
+        },
+        {
+            "date": "2025-01-29",
+            "plateName": "Beef Stew",
+            "employee_nif": 728060981
+        },
+        {
+            "date": "2025-01-11",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 728060981
+        },
+        {
+            "date": "2025-01-22",
+            "plateName": "Beef Stew",
+            "employee_nif": 901476750
+        },
+        {
+            "date": "2025-01-20",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 901476750
+        },
+        {
+            "date": "2025-02-08",
+            "plateName": "Caesar Salad",
+            "employee_nif": 668880297
+        },
+        {
+            "date": "2025-01-26",
+            "plateName": "Beef Stew",
+            "employee_nif": 668880297
+        },
+        {
+            "date": "2025-01-22",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 507792809
+        },
+        {
+            "date": "2025-02-01",
+            "plateName": "Fish Fillet",
+            "employee_nif": 507792809
+        },
+        {
+            "date": "2025-01-19",
+            "plateName": "Caesar Salad",
+            "employee_nif": 852663625
+        },
+        {
+            "date": "2025-01-11",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 852663625
+        },
+        {
+            "date": "2025-01-25",
+            "plateName": "Grilled Chicken",
+            "employee_nif": 535352638
+        },
+        {
+            "date": "2025-01-15",
+            "plateName": "Grilled Chicken",
+            "employee_nif": 535352638
+        },
+        {
+            "date": "2025-02-07",
+            "plateName": "Fish Fillet",
+            "employee_nif": 933243771
+        },
+        {
+            "date": "2025-01-14",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 933243771
+        },
+        {
+            "date": "2025-02-04",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 756806720
+        },
+        {
+            "date": "2025-01-14",
+            "plateName": "Caesar Salad",
+            "employee_nif": 756806720
+        },
+        {
+            "date": "2025-01-15",
+            "plateName": "Grilled Chicken",
+            "employee_nif": 779077181
+        },
+        {
+            "date": "2025-02-06",
+            "plateName": "Grilled Chicken",
+            "employee_nif": 779077181
+        },
+        {
+            "date": "2025-01-14",
+            "plateName": "Fish Fillet",
+            "employee_nif": 578415471
+        },
+        {
+            "date": "2025-01-10",
+            "plateName": "Beef Stew",
+            "employee_nif": 578415471
+        },
+        {
+            "date": "2025-01-12",
+            "plateName": "Caesar Salad",
+            "employee_nif": 513573735
+        },
+        {
+            "date": "2025-01-13",
+            "plateName": "Beef Stew",
+            "employee_nif": 513573735
+        },
+        {
+            "date": "2025-01-27",
+            "plateName": "Grilled Chicken",
+            "employee_nif": 835872119
+        },
+        {
+            "date": "2025-02-04",
+            "plateName": "Fish Fillet",
+            "employee_nif": 835872119
+        },
+        {
+            "date": "2025-02-07",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 954780427
+        },
+        {
+            "date": "2025-02-03",
+            "plateName": "Grilled Chicken",
+            "employee_nif": 954780427
+        },
+        {
+            "date": "2025-01-22",
+            "plateName": "Beef Stew",
+            "employee_nif": 571472642
+        },
+        {
+            "date": "2025-02-04",
+            "plateName": "Caesar Salad",
+            "employee_nif": 571472642
+        },
+        {
+            "date": "2025-02-05",
+            "plateName": "Vegetarian Pasta",
+            "employee_nif": 412372193
+        },
+        {
+            "date": "2025-01-31",
+            "plateName": "Caesar Salad",
+            "employee_nif": 412372193
+        }
+    ]
+}
