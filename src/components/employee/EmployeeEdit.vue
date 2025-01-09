@@ -22,7 +22,7 @@ export default {
     };
   },
   async created() {
-    const username = decodeURIComponent(this.$route.params.username); // Decode username from the URL
+    const username = decodeURIComponent(this.$route.params.username);
 
     if (!username) {
       console.error("Employee username is missing.");
@@ -35,7 +35,6 @@ export default {
       const employeeResponse = await UserService.getUserByUsername(username);
 
       if (employeeResponse) {
-        // Populate the form fields with the fetched data
         this.employee = {
           name: employeeResponse.name || "",
           department: employeeResponse.department || "",
@@ -50,7 +49,6 @@ export default {
         return;
       }
 
-      // Fetch departments for the dropdown
       const departmentsResponse = await DepartmentService.getAllDepartments();
       this.departments = departmentsResponse.data || [];
       this.loading = false;
@@ -79,7 +77,7 @@ export default {
           role: this.employee.role,
         };
 
-        const username = decodeURIComponent(this.$route.params.username); // Decode username for the API call
+        const username = decodeURIComponent(this.$route.params.username);
         await UserService.updateUserByUsername(username, updatedEmployee);
 
         alert("Employee updated successfully!");
@@ -97,7 +95,7 @@ export default {
     },
     async markAsInactive() {
       try {
-        const username = decodeURIComponent(this.$route.params.username); // Decode username for the API call
+        const username = decodeURIComponent(this.$route.params.username);
 
         await UserService.inactivateUserByUsername(username);
 

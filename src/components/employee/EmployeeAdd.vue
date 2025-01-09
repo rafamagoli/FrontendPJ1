@@ -39,7 +39,6 @@ export default {
       }
 
       try {
-        // Construct the new employee object with balance as a number
         const newEmployee = {
           username: this.employee.username,
           password: this.employee.password,
@@ -49,18 +48,17 @@ export default {
           role: this.employee.role,
         };
 
-        // Call the backend to register the new employee
         await UserService.createUser(newEmployee);
 
         alert("Employee created successfully!");
-        this.$router.push("/employee/list");
+        this.$router.push("/user/dashboard");
       } catch (error) {
         console.error("Error creating employee:", error);
         alert("Error creating employee: " + (error.response?.data?.error || error.message));
       }
     },
     cancel() {
-      this.$router.push("/employee/list");
+      this.$router.push("/default/employee/list");
     },
     isAdmin() {
       const currentUser = UserService.getCurrentUser();
