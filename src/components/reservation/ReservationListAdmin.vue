@@ -100,6 +100,7 @@ export default {
   grid-template-columns: 1fr;
   gap: 20px;
   margin: 20px auto;
+  margin-left: 0px;
   max-width: 800px;
 }
 
