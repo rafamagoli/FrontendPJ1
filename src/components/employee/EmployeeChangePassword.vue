@@ -18,16 +18,23 @@ export default {
     };
   },
   async created() {
-    const username = localStorage.getItem("username");
+    const username = decodeURIComponent(this.$route.params.username); // Retrieve and decode username from the URL
+
+    if (!username) {
+      console.error("Username is missing from the URL.");
+      alert("Username is missing from the URL. Redirecting to dashboard.");
+      this.$router.push("/user/dashboard");
+      return;
+    }
 
     try {
       const employeeResponse = await UserService.getUserByUsername(username);
       console.log("Employee Data from API:", employeeResponse);
 
       this.employee = {
-        name: employeeResponse.name,
-        username: employeeResponse.username,
-        nif: employeeResponse.nif,
+        name: employeeResponse.name || "",
+        username: employeeResponse.username || "",
+        nif: employeeResponse.nif || "",
         password: "",
         confirmPassword: "",
       };
@@ -45,7 +52,9 @@ export default {
       }
 
       try {
-        await UserService.changePassword(this.employee.username, {
+        const username = decodeURIComponent(this.$route.params.username); // Use the username from the URL
+
+        await UserService.changePassword(username, {
           newPassword: this.employee.password,
         });
 
@@ -66,6 +75,7 @@ export default {
   },
 };
 </script>
+
 
 <template>
   <div id="changePassword-page" class="page-background">

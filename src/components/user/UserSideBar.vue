@@ -79,7 +79,7 @@
                 </button>
               </li>
               <li>
-                <button class="nav-link" @click="navigateTo('employee-change-password')">
+                <button class="nav-link" @click="navigateToChangePassword(currentUser.username)">
                   Change Password
                 </button>
               </li>
@@ -184,6 +184,9 @@ function handleEmployeeClick() {
   router.push(`/employee/changepassword/${username}`);
 }
 
+function navigateToChangePassword(username) {
+  router.push({ name: "employee-change-password", params: { username } });
+}
 // Função para alternar o submenu ativo
 function toggleSubmenu(menu) {
   activeMenu.value = activeMenu.value === menu ? null : menu;
