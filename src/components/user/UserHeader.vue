@@ -72,12 +72,12 @@ export default {
         } catch (error) {
           console.error("Error decoding token:", error);
           alert("Failed to decode user information. Please log in again.");
-          this.$router.push("/user/login");
+          this.$router.push("/");
         }
       } else {
         console.error("Token not found");
         alert("Authentication required. Please log in.");
-        this.$router.push("/user/login");
+        this.$router.push("/");
       }
     },
     async updateBalance() {
@@ -108,7 +108,7 @@ export default {
     logout() {
       try {
         UserService.logout();
-        this.$router.push("/user/login");
+        this.$router.push("/");
       } catch (error) {
         console.error("Error during logout:", error);
         alert("An error occurred while logging out.");

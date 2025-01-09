@@ -82,7 +82,7 @@ export default {
     },
     logout() {
       console.log("You have been logged out!");
-      this.$router.push("/user/login");
+      this.$router.push("/");
     },
     toggleSidebar() {
       const sidebar = document.querySelector(".sidebar");
