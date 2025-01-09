@@ -31,7 +31,7 @@
         </div>
       </div>
       <!-- Balance Information -->
-      <span class="balance">{{ balance }} €</span>
+      <span class="balance">{{ currentUser.balance }} €</span>
       <!-- Logout Button -->
       <button @click="logout" class="logout-button">Logout</button>
     </div>
@@ -44,6 +44,7 @@ import UserService from "@/core/services/UserService";
 export default {
   data() {
     return {
+      currentUser: UserService.getCurrentUser(),
       balance: "Loading...",
       showBalanceBox: false,
       newBalance: "",
@@ -65,7 +66,7 @@ export default {
         try {
           const payload = JSON.parse(atob(token.split(".")[1]));
           this.nif = payload.nif;
-          this.balance = payload.balance;
+          this.balance = this.currentUser.balance;
           console.log("Decoded NIF:", this.nif);
           console.log("Decoded Balance:", this.balance);
         } catch (error) {
@@ -93,6 +94,8 @@ export default {
         this.balance = response.data.newBalance;
         alert(response.data.message || "Balance updated successfully!");
         this.showBalanceBox = false;
+        await UserService.updateCurrentUserInformation()
+        location.reload();
       } catch (error) {
         console.error("Error updating balance:", error);
         alert(error.response?.data?.message || "An error occurred while updating the balance.");

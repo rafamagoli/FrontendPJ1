@@ -1,6 +1,7 @@
 <script>
 import PlateService from "@/core/services/PlateService";
 import ReservationService from "@/core/services/ReservationService";
+import UserService from "@/core/services/UserService";
 
 export default {
   data() {
@@ -38,6 +39,8 @@ export default {
 
         alert(response.data.message || "Reservation created successfully!");
         this.$router.push("/reservation/list");
+        await UserService.updateCurrentUserInformation();
+        location.reload();
       } catch (error) {
         console.error("Error creating reservation:", error.response?.data || error.message);
         alert(

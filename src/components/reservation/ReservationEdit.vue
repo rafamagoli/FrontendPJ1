@@ -46,6 +46,7 @@
 <script>
 import ReservationService from "@/core/services/ReservationService";
 import PlateService from "@/core/services/PlateService";
+import UserService from "@/core/services/UserService";
 
 export default {
   data() {
@@ -115,6 +116,8 @@ export default {
         await ReservationService.updateReservation(this.$route.params.id, updatedReservation);
         alert("Reservation updated successfully!");
         this.$router.push("/reservation/list");
+        await UserService.updateCurrentUserInformation();
+        location.reload();
       } catch (error) {
         console.error("Failed to update reservation:", error.response?.data || error.message);
         alert("Failed to update reservation. Please try again.");
@@ -127,6 +130,8 @@ export default {
           await ReservationService.deleteReservation(this.$route.params.id);
           alert("Reservation deleted successfully!");
           this.$router.push("/reservation/list");
+          await UserService.updateCurrentUserInformation();
+          location.reload();
         } catch (error) {
           console.error("Error deleting reservation:", error.response?.data || error.message);
           alert("Failed to delete reservation. Please try again.");
