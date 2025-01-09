@@ -80,7 +80,7 @@
 
         <!-- Back to Login link -->
         <p class="text-center center mt-3">
-          <router-link to="/" class="login-link center">Back to Login</router-link>
+          <router-link to="/user/login" class="login-link center">Back to Login</router-link>
         </p>
       </div>
     </div>
@@ -118,7 +118,7 @@ export default {
 
         if (response.status === 201) {
           alert(response.data.message || "Registration successful!");
-          this.$router.push("/");
+          this.$router.push("/user/login");
         } else {
           alert("Failed to register. Please try again.");
         }

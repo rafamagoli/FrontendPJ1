@@ -39,7 +39,7 @@ const router = createRouter({
   routes: [
     {
       name: "user-login",
-      path: "/user/login",
+      path: "/",
       component: UserLogin,
       meta: {},
     },

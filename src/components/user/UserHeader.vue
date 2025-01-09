@@ -72,12 +72,12 @@ export default {
         } catch (error) {
           console.error("Error decoding token:", error);
           alert("Failed to decode user information. Please log in again.");
-          this.$router.push("/");
+          this.$router.push("/user/login");
         }
       } else {
         console.error("Token not found");
         alert("Authentication required. Please log in.");
-        this.$router.push("/");
+        this.$router.push("/user/login");
       }
     },
     async updateBalance() {
