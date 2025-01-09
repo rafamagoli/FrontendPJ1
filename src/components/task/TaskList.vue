@@ -64,35 +64,39 @@ export default {
         <!-- Active Tasks Section -->
         <section class="tasks-section">
           <h2>Active Tasks</h2>
-          <ul class="task-list">
-            <li
-              v-for="task in activeTasks"
-              :key="task.id"
-              class="task-item"
-              @click="navigateToEditTask(task.id)"
-            >
-              <div class="task-title">{{ task.taskName }}</div>
-              <div class="task-assigned">Assigned to: {{ task.assignedTo }}</div>
-              <div class="task-date">Limit Date: {{ task.limitDate }}</div>
-            </li>
-          </ul>
+          <div class="task-list">
+            <ul>
+              <li
+                v-for="task in activeTasks"
+                :key="task.id"
+                class="task-item"
+                @click="navigateToEditTask(task.id)"
+              >
+                <div class="task-title">{{ task.taskName }}</div>
+                <div class="task-assigned">Assigned to: {{ task.assignedTo }}</div>
+                <div class="task-date">Limit Date: {{ task.limitDate }}</div>
+              </li>
+            </ul>
+          </div>
         </section>
 
         <!-- Completed Tasks Section -->
         <section class="tasks-section">
           <h2>Completed Tasks</h2>
-          <ul class="task-list">
-            <li
-              v-for="task in completedTasks"
-              :key="task.id"
-              class="task-item"
-              @click="navigateToEditTask(task.id)"
-            >
-              <div class="task-title">{{ task.taskName }}</div>
-              <div class="task-assigned">Assigned to: {{ task.assignedTo }}</div>
-              <div class="task-date">Limit Date: {{ task.limitDate }}</div>
-            </li>
-          </ul>
+          <div class="task-list">
+            <ul>
+              <li
+                v-for="task in completedTasks"
+                :key="task.id"
+                class="task-item"
+                @click="navigateToEditTask(task.id)"
+              >
+                <div class="task-title">{{ task.taskName }}</div>
+                <div class="task-assigned">Assigned to: {{ task.assignedTo }}</div>
+                <div class="task-date">Limit Date: {{ task.limitDate }}</div>
+              </li>
+            </ul>
+          </div>
         </section>
       </div>
 
@@ -106,52 +110,54 @@ export default {
   </div>
 </template>
 
-
-<style scoped>
-#page-title {
-  padding-top: 15px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-}
-
-.main-content {
-  margin-left: 250px; /* Push closer to the sidebar */
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+<style>
 .tasks-container {
-  display: flex;
-  justify-content: space-between;
+  display: grid; /* Use grid layout para alinhamento flexível */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Alinha colunas responsivamente */
+  gap: 20px; /* Espaço entre as seções */
   width: 100%;
+  margin-top: 20px;
 }
 
 .tasks-section {
-  width: 40%; /* Occupy 40% of the remaining screen space for each column */
-  margin-right: 10px; /* Add spacing between sections */
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.tasks-section h2 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
 }
 
 .task-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  list-style: disc inside;
+  padding: 10px 20px;
+  background: #fff;
   list-style: none;
-  padding: 0;
   margin: 0;
 }
 
 .task-item {
-  margin-bottom: 15px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  color: #333;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .task-item:hover {
   background-color: #f5f5f5;
+}
+
+.task-item:last-child {
+  border-bottom: none;
 }
 
 .task-title {
@@ -172,10 +178,11 @@ export default {
 }
 
 .create-task-btn {
-  width: 100%; /* Make the button span the entire available width */
-  max-width: 800px; /* Optional: set a maximum width */
-  padding: 12px; /* Increase padding for a larger button appearance */
-  font-size: 1.1rem;
+  width: 100%;
+  max-width: 600px;
+  padding: 12px;
+  font-size: 1.2rem;
+  text-align: center;
   border: none;
   cursor: pointer;
   border-radius: 10px;
@@ -185,5 +192,16 @@ export default {
 
 .create-task-btn:hover {
   background: #333;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .tasks-container {
+    grid-template-columns: 1fr; /* Uma coluna no mobile */
+  }
+
+  .tasks-section {
+    width: 100%; /* Preenche toda a largura no mobile */
+  }
 }
 </style>
