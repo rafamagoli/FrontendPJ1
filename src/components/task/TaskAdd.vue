@@ -21,23 +21,31 @@ export default {
   methods: {
     async fetchEmployees() {
       try {
-        const allUsersResponse = await UserService.getAllUsers();
-        const allUsers = allUsersResponse.data;
         const currentUser = UserService.getCurrentUser();
-
         let filteredUsers = [];
 
         if (currentUser.isAdmin) {
+          // Admin can fetch all employees except other admins
+          const allUsersResponse = await UserService.getAllUsers();
+          const allUsers = allUsersResponse.data;
           filteredUsers = allUsers.filter(
-            (user) => user.role !== "Admin" || user.username === currentUser.username
+            (user) => user.role !== "Admin"
           );
         } else if (currentUser.isManager) {
-          filteredUsers = allUsers.filter(
-            (user) => user.department === currentUser.department && user.role === "Employee"
+          // Managers fetch users from their own department
+          const departmentName = currentUser.department;
+          const response = await UserService.getUsersByDepartment(departmentName);
+          filteredUsers = response.data.filter(
+            (user) => user.username !== currentUser.username
           );
         }
 
-        this.employees = filteredUsers.sort((a, b) => a.username.localeCompare(b.username));
+        // Fetch and map usernames to their names
+        this.employees = filteredUsers.map((user) => ({
+          username: user.username,
+          name: user.name || user.username, // Default to username if name is unavailable
+        })).sort((a, b) => a.name.localeCompare(b.name));
+
         console.log("Filtered and Sorted Employees:", this.employees);
       } catch (error) {
         console.error("Error fetching employees:", error);
@@ -79,10 +87,6 @@ export default {
     },
     cancel() {
       this.$router.push("/task/list");
-    },
-    logout() {
-      console.log("You have been logged out!");
-      this.$router.push("/user/login");
     },
     toggleSidebar() {
       const sidebar = document.querySelector(".sidebar");

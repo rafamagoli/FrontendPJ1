@@ -30,11 +30,27 @@ export default {
     },
     async fetchEmployees() {
       try {
-        const response = await UserService.getAllUsers();
-        this.employees = response.data.map((employee) => ({
-          ...employee,
-          name: employee.name || "Unknown",
-        }));
+        let response;
+
+        // Check user role and fetch employees accordingly
+        if (this.currentUser.isAdmin) {
+          response = await UserService.getAllUsers();
+        } else if (this.currentUser.isManager) {
+          response = await UserService.getUsersByDepartment(
+            this.currentUser.department
+          );
+        } else {
+          console.error("Unauthorized role to fetch employees.");
+          return;
+        }
+
+        // Map employee data, ensure name fallback, and sort alphabetically
+        this.employees = response.data
+          .map((employee) => ({
+            ...employee,
+            name: employee.name || "Unknown",
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name));
       } catch (error) {
         console.error("Error fetching employees:", error);
         alert("Failed to load employees. Please try again.");
@@ -46,7 +62,6 @@ export default {
   },
 };
 </script>
-
 
 <template>
   <div id="employees-page" class="page-background">

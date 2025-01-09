@@ -154,7 +154,6 @@ export default {
             <label for="role">Role</label>
             <select id="role" v-model="employee.role" required>
               <option value="" disabled>Select a role</option>
-              <option value="Admin">Admin</option>
               <option value="Manager">Manager</option>
               <option value="Employee">Employee</option>
             </select>

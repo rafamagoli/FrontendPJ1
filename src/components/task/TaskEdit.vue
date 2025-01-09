@@ -21,7 +21,7 @@ export default {
     await this.fetchEmployees();
 
     try {
-      let task = await TaskService.getTaskById(this.task.id);
+      const task = await TaskService.getTaskById(this.task.id);
       this.task.title = task.taskName;
       this.task.employee = task.assignedTo;
       this.task.description = task.description;
@@ -30,31 +30,41 @@ export default {
       console.log("Fetched task:", task);
     } catch (error) {
       console.error("Error fetching task:", error.response?.data || error.message);
+      alert("Unable to fetch task details. Redirecting to task list.");
+      this.$router.push("/task/list");
     }
   },
   methods: {
     async fetchEmployees() {
       try {
-        const response = await UserService.getAllUsers();
-        const allUsers = response.data;
         const currentUser = this.currentUser;
 
-        let filteredUsers = [];
-
         if (currentUser.isAdmin) {
-          filteredUsers = allUsers.filter(
-            (user) => user.role !== "Admin" || user.username === currentUser.username
-          );
+          // Admin fetches all employees except other admins
+          const allUsersResponse = await UserService.getAllUsers();
+          const allUsers = allUsersResponse.data;
+          this.employees = allUsers
+            .filter((user) => user.role !== "Admin")
+            .map((user) => ({
+              username: user.username,
+              name: user.name || user.username,
+            }));
         } else if (currentUser.isManager) {
-          filteredUsers = allUsers.filter(
-            (user) => user.department === currentUser.department && user.role === "Employee"
-          );
+          // Managers fetch employees in their department
+          const response = await UserService.getUsersByDepartment(currentUser.department);
+          const departmentUsers = response.data;
+          this.employees = departmentUsers
+            .filter((user) => user.username !== currentUser.username)
+            .map((user) => ({
+              username: user.username,
+              name: user.name || user.username,
+            }));
         }
 
-        this.employees = filteredUsers.map((user) => user.username);
         console.log("Filtered Employees:", this.employees);
       } catch (error) {
         console.error("Error fetching employees:", error.response?.data || error.message);
+        alert("Unable to fetch employees. Please try again.");
       }
     },
     async handleSubmit() {

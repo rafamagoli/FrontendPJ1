@@ -10,7 +10,7 @@ const DepartmentService = {
       },
     }),
   getDepartmentByName: (name) =>
-    axios.get(`${API_URL}/${name}`, {
+    axios.get(`${API_URL}/by-department/${departmentName}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('authToken')}`,
       },
