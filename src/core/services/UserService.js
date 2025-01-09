@@ -26,7 +26,7 @@ const UserService = {
     
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     
-    await updateCurrentUserInformation();
+    await this.updateCurrentUserInformation();
   },
   async updateCurrentUserInformation() {
       let user = await this.getUserByUsername(localStorage.getItem('username'));
