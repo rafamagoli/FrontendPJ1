@@ -13,13 +13,12 @@ export default {
         name: "",
         department: "",
         username: "",
-        balance: "0,00",
+        balance: "0.00",
         password: "",
         confirmPassword: "",
         nif: "",
         role: "",
       },
-
       departments: [],
     };
   },
@@ -33,21 +32,14 @@ export default {
         alert("Unable to fetch departments. Please try again.");
       }
     },
-
     async handleSubmit() {
       if (this.employee.password !== this.employee.confirmPassword) {
         alert("Passwords do not match!");
         return;
       }
 
-      if (this.employee.role === 'Manager' && !this.isAdmin()) {
-        alert("You are not authorized to create a manager.");
-        return;
-      }
-
       try {
-        const formattedBalance = parseFloat(this.employee.balance.replace(',', '.'));
-
+        // Construct the new employee object with balance as a number
         const newEmployee = {
           username: this.employee.username,
           password: this.employee.password,
@@ -57,28 +49,22 @@ export default {
           role: this.employee.role,
         };
 
+        // Call the backend to register the new employee
         await UserService.createUser(newEmployee);
 
         alert("Employee created successfully!");
         this.$router.push("/employee/list");
       } catch (error) {
         console.error("Error creating employee:", error);
-        alert("Error creating employee: " + (error.response?.data?.message || error.message));
+        alert("Error creating employee: " + (error.response?.data?.error || error.message));
       }
     },
-
     cancel() {
       this.$router.push("/employee/list");
     },
-
-    logout() {
-      console.log("You have been logged out!");
-      this.$router.push("/user/login");
-    },
-
     isAdmin() {
       const currentUser = UserService.getCurrentUser();
-      return currentUser && currentUser.isAdmin;
+      return currentUser && currentUser.role === "Admin";
     },
   },
   async created() {

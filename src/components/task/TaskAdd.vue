@@ -38,7 +38,6 @@ export default {
         }
 
         this.employees = filteredUsers.sort((a, b) => a.username.localeCompare(b.username));
-
         console.log("Filtered and Sorted Employees:", this.employees);
       } catch (error) {
         console.error("Error fetching employees:", error);

@@ -78,7 +78,7 @@
                   View Employees
                 </button>
               </li>
-              <li v-if="currentUser.isEmployee">
+              <li>
                 <button class="nav-link" @click="navigateTo('employee-change-password')">
                   Change Password
                 </button>

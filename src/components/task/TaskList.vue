@@ -2,47 +2,54 @@
 import TaskService from "@/core/services/TaskService";
 import UserService from "@/core/services/UserService";
 
-
 export default {
   data() {
     return {
-      searchQuery: "",
       tasks: [],
-      currentUser: UserService.getCurrentUser(), // Armazena o usuário atual
+      users: {},
+      currentUser: UserService.getCurrentUser(),
     };
   },
   computed: {
-    filteredTasks() {
-      return this.tasks.filter((task) =>
-        task.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    },
     activeTasks() {
-      return this.tasks.filter((task) => !task.completed);
+      return this.tasks.filter((task) => !task.isCompleted);
     },
     completedTasks() {
-      return this.tasks.filter((task) => task.completed);
+      return this.tasks.filter((task) => task.isCompleted);
     },
   },
   methods: {
-    goToAddTask() {
+    async fetchTasks() {
+      try {
+        const userResponse = await UserService.getAllUsers();
+        this.users = userResponse.data.reduce((acc, user) => {
+          acc[user.username] = user.name || user.username;
+          return acc;
+        }, {});
+        console.log("User mapping:", this.users);
+  
+        const tasks = await TaskService.getAllTasks();
+        this.tasks = tasks.map((task) => ({
+          id: task.id,
+          taskName: task.taskName,
+          assignedTo: this.users[task.assignedTo] || "Unknown",
+          limitDate: task.limit_date.split("T")[0],
+          isCompleted: task.isCompleted || false,
+        }));
+        console.log("Fetched tasks:", this.tasks);
+      } catch (error) {
+        console.error("Error fetching tasks:", error.response?.data || error.message);
+      }
+    },
+    navigateToEditTask(taskId) {
+      this.$router.push(`/task/edit/${taskId}`);
+    },
+    navigateToAddTask() {
       this.$router.push("/task/add");
-    },
-    handleTaskClick(task) {
-      this.$router.push(`/task/edit/${task.id}`);
-    },
-    loadCurrentUser() {
-      // Obtém o usuário atual do UserService
-      console.log("Current User:", this.currentUser); // Para debug
     },
   },
   async mounted() {
-    try {
-      this.tasks = await TaskService.getAllTasks();
-      console.log("Mapped tasks:", this.tasks);
-    } catch (error) {
-      console.error("Error fetching tasks:", error.response?.data || error.message);
-    }
+    await this.fetchTasks();
   },
 };
 </script>
@@ -53,53 +60,48 @@ export default {
       <h1 id="page-title">Tasks</h1>
 
       <!-- Task Management Section -->
-      <section class="cards">
-        <!-- Active Tasks -->
-        <div class="card tasks-card">
+      <div class="tasks-container">
+        <!-- Active Tasks Section -->
+        <section class="tasks-section">
           <h2>Active Tasks</h2>
-          <div class="search-bar">
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Search tasks by name..."
-              class="search-input"
-            />
-          </div>
-          <div class="task-list">
-            <ul>
-              <li
-                v-for="task in filteredTasks"
-                :key="task.id"
-                @click="handleTaskClick(task)"
-                class="task-item"
-              >
-                {{ task.name }}
-              </li>
-            </ul>
-          </div>
-        </div>
-        <!-- Completed Tasks -->
-        <div class="card completed-tasks-card">
+          <ul class="task-list">
+            <li
+              v-for="task in activeTasks"
+              :key="task.id"
+              class="task-item"
+              @click="navigateToEditTask(task.id)"
+            >
+              <div class="task-title">{{ task.taskName }}</div>
+              <div class="task-assigned">Assigned to: {{ task.assignedTo }}</div>
+              <div class="task-date">Limit Date: {{ task.limitDate }}</div>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Completed Tasks Section -->
+        <section class="tasks-section">
           <h2>Completed Tasks</h2>
-          <ul>
+          <ul class="task-list">
             <li
               v-for="task in completedTasks"
               :key="task.id"
-              @click="handleTaskClick(task)"
               class="task-item"
+              @click="navigateToEditTask(task.id)"
             >
-              {{ task.name }}
+              <div class="task-title">{{ task.taskName }}</div>
+              <div class="task-assigned">Assigned to: {{ task.assignedTo }}</div>
+              <div class="task-date">Limit Date: {{ task.limitDate }}</div>
             </li>
           </ul>
-        </div>
+        </section>
+      </div>
 
-        <!-- Add New Task Button -->
-        <div v-if="!currentUser.isEmployee" class="add-task-button">
-          <button @click="goToAddTask" class="create-task-btn">
-            Create New Task
-          </button>
-        </div>
-      </section>
+      <!-- Add New Task Button -->
+      <div v-if="!currentUser.isEmployee" class="create-task-container">
+        <button @click="navigateToAddTask" class="create-task-btn">
+          Create New Task
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -112,35 +114,38 @@ export default {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-.search-bar {
-  margin-bottom: 10px;
+.main-content {
+  margin-left: 250px; /* Push closer to the sidebar */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.search-input {
+.tasks-container {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-  padding: 3.5px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 1px;
+}
+
+.tasks-section {
+  width: 40%; /* Occupy 40% of the remaining screen space for each column */
+  margin-right: 10px; /* Add spacing between sections */
 }
 
 .task-list {
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  padding: 10px;
-  background: #fff;
-}
-
-.task-list ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
 .task-item {
-  padding: 6px 0;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: #333;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -149,44 +154,36 @@ export default {
   background-color: #f5f5f5;
 }
 
-.task-list li:last-child {
-  border-bottom: none;
+.task-title {
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.completed-tasks-card ul {
-  list-style: none;
-  padding: 0;
+.task-assigned,
+.task-date {
+  font-size: 0.9rem;
+  color: #555;
 }
 
-.completed-tasks-card li {
-  padding: 5px 0;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.completed-tasks-card li:hover {
-  background-color: #f5f5f5;
-}
-
-.completed-tasks-card li:last-child {
-  border-bottom: none;
+.create-task-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .create-task-btn {
-  display: block;
-  width: 90%;
-  padding: 10px;
-  background-color: #000000;
-  color: white;
+  width: 100%; /* Make the button span the entire available width */
+  max-width: 800px; /* Optional: set a maximum width */
+  padding: 12px; /* Increase padding for a larger button appearance */
+  font-size: 1.1rem;
   border: none;
-  border-radius: 10px;
-  box-shadow: #333;
-  font-size: 1rem;
   cursor: pointer;
+  border-radius: 10px;
+  background: #000000;
+  color: white;
 }
 
 .create-task-btn:hover {
-  background-color: #a4a4a4;
+  background: #333;
 }
 </style>

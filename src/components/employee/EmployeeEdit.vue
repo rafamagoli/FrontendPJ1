@@ -13,44 +13,58 @@ export default {
         name: "",
         department: "",
         username: "",
-        balance: "",
-        password: "",
-        confirmPassword: "",
+        balance: "0.00",
         nif: "",
         role: "",
       },
       departments: [],
+      loading: true,
     };
   },
   async created() {
-    const username = this.$route.params.username;
+    const username = decodeURIComponent(this.$route.params.username); // Decode username from the URL
+
+    if (!username) {
+      console.error("Employee username is missing.");
+      alert("Employee username is missing in the URL.");
+      this.$router.push("/employee/list");
+      return;
+    }
 
     try {
       const employeeResponse = await UserService.getUserByUsername(username);
-      console.log("Employee Data from API:", employeeResponse);
 
-      this.employee = {
-        ...employeeResponse,
-        confirmPassword: employeeResponse.password || "",
-      };
+      if (employeeResponse) {
+        // Populate the form fields with the fetched data
+        this.employee = {
+          name: employeeResponse.name || "",
+          department: employeeResponse.department || "",
+          username: employeeResponse.username || "",
+          balance: employeeResponse.balance || "0.00",
+          nif: employeeResponse.nif || "",
+          role: employeeResponse.role || "",
+        };
+      } else {
+        console.error("Employee not found. Redirecting...");
+        this.$router.push("/employee/list");
+        return;
+      }
 
+      // Fetch departments for the dropdown
       const departmentsResponse = await DepartmentService.getAllDepartments();
-      console.log("Departments Data from API:", departmentsResponse.data);
-
-      this.departments = departmentsResponse.data;
+      this.departments = departmentsResponse.data || [];
+      this.loading = false;
     } catch (error) {
-      console.error("Error fetching employee or departments:", error);
+      console.error(
+        "Error fetching employee or departments:",
+        error.response?.data || error.message
+      );
       alert("Failed to load data. Redirecting to employee list.");
       this.$router.push("/employee/list");
     }
   },
   methods: {
     async handleSubmit() {
-      if (this.employee.password !== this.employee.confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-      }
-
       try {
         const formattedBalance = parseFloat(
           this.employee.balance.toString().replace(",", ".")
@@ -61,20 +75,20 @@ export default {
           department: this.employee.department,
           username: this.employee.username,
           balance: formattedBalance,
-          password: this.employee.password,
           nif: this.employee.nif,
           role: this.employee.role,
         };
 
-        await UserService.updateUserByUsername(
-          this.employee.username,
-          updatedEmployee
-        );
+        const username = decodeURIComponent(this.$route.params.username); // Decode username for the API call
+        await UserService.updateUserByUsername(username, updatedEmployee);
 
         alert("Employee updated successfully!");
         this.$router.push("/employee/list");
       } catch (error) {
-        console.error("Error updating employee:", error);
+        console.error(
+          "Error updating employee:",
+          error.response?.data || error.message
+        );
         alert(
           "Error updating employee: " +
             (error.response?.data?.message || error.message)
@@ -83,14 +97,17 @@ export default {
     },
     async markAsInactive() {
       try {
-        await UserService.updateUserByUsername(this.employee.username, {
-          role: "Inactive",
-        });
+        const username = decodeURIComponent(this.$route.params.username); // Decode username for the API call
+
+        await UserService.inactivateUserByUsername(username);
 
         alert("Employee marked as inactive successfully!");
         this.$router.push("/employee/list");
       } catch (error) {
-        console.error("Error marking employee as inactive:", error);
+        console.error(
+          "Error marking employee as inactive:",
+          error.response?.data || error.message
+        );
         alert(
           "Error inactivating employee: " +
             (error.response?.data?.message || error.message)
@@ -105,48 +122,34 @@ export default {
 </script>
 
 <template>
-  <div id="editEmployee-page">
+  <div id="editEmployee-page" class="page-background">
     <div class="main-content">
       <!-- Edit Employee Form -->
-      <section class="edit-employee-form">
+      <section class="add-employee-form">
         <h2>Edit Employee</h2>
         <form @submit.prevent="handleSubmit">
           <!-- Name -->
-          <EmployeeAddFormInput
-            name="Name"
-            identifier="name"
-            v-model="employee.name"
-          />
+          <EmployeeAddFormInput name="Name" identifier="name" v-model="employee.name" />
 
           <!-- Department -->
           <div class="form-group">
             <label for="department">Department</label>
-            <select id="department" v-model="employee.department" required>
+            <select id="department" v-model="employee.department">
               <option value="" disabled>Select a department</option>
-              <option
-                v-for="dept in departments"
-                :key="dept.id"
-                :value="dept.id"
-              >
+              <option v-for="dept in departments" :key="dept.id" :value="dept.name">
                 {{ dept.name }}
               </option>
             </select>
           </div>
 
           <!-- Username -->
-          <EmployeeAddFormInput
-            identifier="username"
-            name="Username"
-            v-model="employee.username"
-          />
+          <EmployeeAddFormInput identifier="username" name="Username" v-model="employee.username" disabled />
 
+          <!-- Balance -->
+          <EmployeeAddFormInput identifier="balance" name="Balance" v-model="employee.balance" />
 
           <!-- NIF -->
-          <EmployeeAddFormInput
-            identifier="nif"
-            name="NIF"
-            v-model="employee.nif"
-          />
+          <EmployeeAddFormInput identifier="nif" name="NIF" v-model="employee.nif" />
 
           <!-- Role -->
           <div class="form-group">
@@ -154,20 +157,16 @@ export default {
             <select id="role" v-model="employee.role" required>
               <option value="" disabled>Select a role</option>
               <option value="Admin">Admin</option>
+              <option value="Manager">Manager</option>
               <option value="Employee">Employee</option>
-              <option value="HR Manager">Manager</option>
             </select>
           </div>
 
           <!-- Action Buttons -->
           <div class="form-actions">
-            <button type="button" class="cancel-button" @click="cancel">
-              Cancel
-            </button>
-            <button type="submit" class="update-button">Edit</button>
-            <button type="button" class="inactive-button" @click="markAsInactive">
-              Inactive Employee
-            </button>
+            <button type="button" class="cancel-button" @click="cancel">Cancel</button>
+            <button type="button" class="inactive-button" @click="markAsInactive">Inactive</button>
+            <button type="submit" class="update-button">Update</button>
           </div>
         </form>
       </section>
@@ -175,9 +174,10 @@ export default {
   </div>
 </template>
 
+
 <style scoped>
 /* Edit Employee Form Styling */
-.edit-employee-form {
+.add-employee-form {
   max-width: 600px;
   margin: 20px auto;
   background: white;
@@ -186,7 +186,7 @@ export default {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.edit-employee-form h2 {
+.add-employee-form h2 {
   margin-bottom: 20px;
   font-size: 1.5rem;
   text-align: center;
@@ -221,32 +221,31 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-  gap: 10px; /* Add spacing between buttons */
 }
 
 .cancel-button,
 .update-button,
-.inactive-button { /* Apply same styles to all buttons */
+.inactive-button {
   border-radius: 10px;
-  width: 32%; /* Ensure all buttons are the same width */
+  width: 30%;
   padding: 10px;
   font-size: 1rem;
   border: none;
   cursor: pointer;
   background: #000000;
-  color: white;
+  color: rgb(255, 255, 255);
   text-align: center;
 }
 
 .cancel-button:hover,
 .update-button:hover,
 .inactive-button:hover {
-  background: #999999; /* Same hover effect for all buttons */
+  background: rgb(158, 158, 158);
 }
 
 /* Responsiveness */
 @media (max-width: 768px) {
-  .edit-employee-form {
+  .add-employee-form {
     padding: 15px;
   }
 

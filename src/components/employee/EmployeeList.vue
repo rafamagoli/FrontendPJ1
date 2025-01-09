@@ -31,7 +31,10 @@ export default {
     async fetchEmployees() {
       try {
         const response = await UserService.getAllUsers();
-        this.employees = response.data;
+        this.employees = response.data.map((employee) => ({
+          ...employee,
+          name: employee.name || "Unknown",
+        }));
       } catch (error) {
         console.error("Error fetching employees:", error);
         alert("Failed to load employees. Please try again.");
@@ -43,6 +46,7 @@ export default {
   },
 };
 </script>
+
 
 <template>
   <div id="employees-page" class="page-background">
@@ -89,14 +93,14 @@ export default {
             </li>
           </ul>
         </div>
-
-        <!-- Add New Employee Button -->
-        <div class="add-employee-button" v-if="currentUser.isAdmin">
-          <button @click="goToAddEmployee" class="create-employee-btn">
-            Create New Employee
-          </button>
-        </div>
       </section>
+
+      <!-- Add New Employee Button -->
+      <div class="create-employee-container" v-if="currentUser.isAdmin">
+        <button @click="goToAddEmployee" class="create-employee-btn">
+          Create New Employee
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -169,20 +173,27 @@ export default {
   border-bottom: none;
 }
 
+.create-employee-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  position: relative;
+}
+
 .create-employee-btn {
-  display: block;
-  width: 90%;
-  padding: 10px;
-  background-color: #000000;
-  color: white;
+  width: 100%;
+  max-width: 600px;
+  padding: 12px;
+  font-size: 1.2rem;
+  text-align: center;
   border: none;
-  border-radius: 10px;
-  box-shadow: #333;
-  font-size: 1rem;
   cursor: pointer;
+  border-radius: 10px;
+  background: #000000;
+  color: white;
 }
 
 .create-employee-btn:hover {
-  background-color: #a4a4a4;
+  background: #333;
 }
 </style>

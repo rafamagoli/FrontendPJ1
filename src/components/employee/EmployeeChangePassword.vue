@@ -18,14 +18,12 @@ export default {
     };
   },
   async created() {
-    const username = localStorage.getItem('username');//this.$route.params.username;
+    const username = localStorage.getItem("username");
 
     try {
-      // Busca os dados do funcionário pelo username
       const employeeResponse = await UserService.getUserByUsername(username);
       console.log("Employee Data from API:", employeeResponse);
 
-      // Preenche os campos que serão exibidos
       this.employee = {
         name: employeeResponse.name,
         username: employeeResponse.username,
@@ -36,7 +34,7 @@ export default {
     } catch (error) {
       console.error("Error fetching employee data:", error);
       alert("Failed to load employee data. Redirecting to dashboard.");
-      this.$router.push("/user-dashboard");
+      this.$router.push("/user/dashboard");
     }
   },
   methods: {
@@ -47,13 +45,13 @@ export default {
       }
 
       try {
-        // Atualiza apenas a senha do funcionário
         await UserService.changePassword(this.employee.username, {
-          password: this.employee.password,
+          newPassword: this.employee.password,
         });
 
         alert("Password updated successfully!");
-        this.$router.push("/user-dashboard");
+        // Redirect to the user dashboard
+        this.$router.push("/user/dashboard");
       } catch (error) {
         console.error("Error updating password:", error);
         alert(
@@ -63,7 +61,7 @@ export default {
       }
     },
     cancel() {
-      this.$router.push("/user-dashboard");
+      this.$router.push("/user/dashboard");
     },
   },
 };

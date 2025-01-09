@@ -1,3 +1,96 @@
+<script>
+import TaskService from "@/core/services/TaskService";
+import UserService from "@/core/services/UserService";
+
+export default {
+  data() {
+    return {
+      currentUser: UserService.getCurrentUser(),
+      task: {
+        id: this.$route.params.id || null,
+        title: "",
+        employee: "",
+        description: "",
+        limitDate: "",
+        completed: false,
+      },
+      employees: [],
+    };
+  },
+  async created() {
+    await this.fetchEmployees();
+
+    try {
+      let task = await TaskService.getTaskById(this.task.id);
+      this.task.title = task.taskName;
+      this.task.employee = task.assignedTo;
+      this.task.description = task.description;
+      this.task.limitDate = task.limit_date?.split("T")[0];
+      this.task.completed = task.isCompleted;
+      console.log("Fetched task:", task);
+    } catch (error) {
+      console.error("Error fetching task:", error.response?.data || error.message);
+    }
+  },
+  methods: {
+    async fetchEmployees() {
+      try {
+        const response = await UserService.getAllUsers();
+        const allUsers = response.data;
+        const currentUser = this.currentUser;
+
+        let filteredUsers = [];
+
+        if (currentUser.isAdmin) {
+          filteredUsers = allUsers.filter(
+            (user) => user.role !== "Admin" || user.username === currentUser.username
+          );
+        } else if (currentUser.isManager) {
+          filteredUsers = allUsers.filter(
+            (user) => user.department === currentUser.department && user.role === "Employee"
+          );
+        }
+
+        this.employees = filteredUsers.map((user) => user.username);
+        console.log("Filtered Employees:", this.employees);
+      } catch (error) {
+        console.error("Error fetching employees:", error.response?.data || error.message);
+      }
+    },
+    async handleSubmit() {
+      if (
+        !this.task.employee ||
+        !this.task.title ||
+        !this.task.description ||
+        !this.task.limitDate
+      ) {
+        alert("All fields are required!");
+        return;
+      }
+      try {
+        const updatedTask = {
+          taskName: this.task.title,
+          assignedTo: this.task.employee,
+          description: this.task.description,
+          limit_date: this.task.limitDate,
+          isCompleted: this.task.completed,
+        };
+        console.log("Submitting updated task:", updatedTask);
+        await TaskService.updateTask(this.task.id, updatedTask);
+        alert("Task updated successfully!");
+        this.$router.push("/task/list");
+      } catch (error) {
+        console.error("Error updating task:", error.response?.data || error.message);
+        alert("Unable to update task. Please try again later.");
+      }
+    },
+    cancel() {
+      this.$router.push("/task/list");
+    },
+  },
+};
+</script>
+
 <template>
   <div id="task-edit" class="page-background">
     <div class="main-content">
@@ -6,7 +99,7 @@
         <form @submit.prevent="handleSubmit">
           <!-- Employee Selector -->
           <div class="form-group">
-            <label for="employee">Assigned to {{ task.employee }}</label>
+            <label for="employee">Assigned to</label>
             <select id="employee" v-model="task.employee" required :disabled="currentUser.isEmployee">
               <option value="" disabled>Select an employee</option>
               <option
@@ -70,88 +163,6 @@
   </div>
 </template>
 
-<script>
-import TaskService from "@/core/services/TaskService";
-import UserService from "@/core/services/UserService";
-
-export default {
-  data() {
-    return {
-      currentUser: UserService.getCurrentUser(),
-      task: {
-        id: this.$route.params.id || null,
-        title: "",
-        employee: "",
-        description: "",
-        limitDate: "",
-        completed: false,
-      },
-      employees: [],
-    };
-  },
-  async created() {
-    await this.fetchEmployees();
-
-    try {
-
-      let task = await TaskService.getTaskById(this.task.id);
-      this.task.title = task.taskName;
-      this.task.employee = task.assignedTo;
-      this.task.description = task.description;
-      this.task.limitDate = task.limit_date?.split("T")[0];
-      this.task.completed = task.is_compleated;
-      console.log("Mapped tasks:", task);
-    } catch (error) {
-      console.error("Error fetching tasks:", error.response?.data || error.message);
-    }
-
-  },
-  methods: {
-    async fetchEmployees() {
-      try {
-        const response = await UserService.getAllUsers();
-        console.log("Fetched employees:", response.data);
-        this.employees = response.data.map((user) => user.name);
-      } catch (error) {
-        console.error("Error fetching employees:", error.response?.data || error.message);
-      }
-    },
-    async handleSubmit() {
-      if (
-        !this.task.employee ||
-        !this.task.title ||
-        !this.task.description ||
-        !this.task.limitDate
-      ) {
-        alert("All fields are required!");
-        return;
-      }
-      try {
-        const updatedTask = {
-          title: this.task.title,
-          employee: this.task.employee,
-          description: this.task.description,
-          limitDate: this.task.limitDate,
-          completed: this.task.completed,
-        };
-        console.log("Submitting updated task:", updatedTask); 
-        await TaskService.updateTask(this.task.id, updatedTask);
-        alert("Task updated successfully!");
-        this.$router.push("/task/list");
-      } catch (error) {
-        console.error("Error updating task:", error.response?.data || error.message);
-        alert("Unable to update task. Please try again later.");
-      }
-    },
-
-    cancel() {
-      this.$router.push("/task/list");
-    },
-  },
-};
-</script>
-
-
 <style scoped>
 /* Form styles */
 .add-task-form {
@@ -173,11 +184,11 @@ export default {
   margin-bottom: 15px;
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  font-size: 0.9rem;
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap; /* Prevent text from wrapping */
 }
 
 .form-group input,
@@ -189,8 +200,11 @@ export default {
   border-radius: 4px;
 }
 
-.complete-checkbox {
-  margin-right: 10px;
+/* Adjusted checkbox styles */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align items to the left */
 }
 
 .checkbox-group label {
@@ -199,16 +213,25 @@ export default {
   cursor: pointer;
 }
 
+.complete-checkbox {
+  margin-right: 10px; /* Add space between checkbox and label */
+  transform: scale(1.5); /* Increase checkbox size */
+  width: 20px; /* Optional: explicitly set width */
+  height: 20px; /* Optional: explicitly set height */
+  margin-left: 3px; /* Align with the start of the container */
+}
+
 .form-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+  gap: 10px;
 }
 
 .cancel-button,
 .create-button {
   border-radius: 10px;
-  width: 48%;
+  flex: 1;
   padding: 10px;
   font-size: 1rem;
   border: none;
@@ -222,3 +245,4 @@ export default {
   background: rgb(158, 158, 158);
 }
 </style>
+

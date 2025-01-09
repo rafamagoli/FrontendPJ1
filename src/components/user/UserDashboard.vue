@@ -51,6 +51,7 @@ export default {
   data() {
     return {
       tasks: [],
+      users: {},
       reservations: [],
       currentUser: UserService.getCurrentUser(),
     };
@@ -62,29 +63,23 @@ export default {
   methods: {
     async loadTasks() {
       try {
+        const userResponse = await UserService.getAllUsers();
+        this.users = userResponse.data.reduce((acc, user) => {
+          acc[user.username] = user.name || user.username;
+          return acc;
+        }, {});
+        console.log("User mapping:", this.users);
+
         const response = await TaskService.getTasksDueNextWeek();
-        const allTasks = response.data.data.tasks;
-
-        const currentUser = this.currentUser
-        console.log("Current User:", currentUser);
-
-        if (currentUser.isAdmin) {
-          this.tasks = allTasks;
-        }
-        if (currentUser.isManager) {
-          this.tasks = allTasks.filter(
-            (task) => task.department === currentUser.department
-          );
-        }
-        if (currentUser.isEmployee) {
-          this.tasks = allTasks.filter(
-            (task) => task.assignedTo === currentUser.username
-          );
-        }
+        this.tasks = response.data.data.tasks.map((task) => ({
+          ...task,
+          assignedTo: this.users[task.assignedTo] || "Unknown",
+          limitDate: task.limit_date.split("T")[0],
+        }));
 
         console.log("Filtered Tasks:", this.tasks);
       } catch (error) {
-        console.error("Error loading tasks:", error);
+        console.error("Error loading tasks:", error.response?.data || error.message);
       }
     },
     async loadReservations() {

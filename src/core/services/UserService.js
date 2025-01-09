@@ -77,7 +77,7 @@ const UserService = {
     axios.get(`${API_URL}/balance/${nif}`),
 
   changePassword: (username, passwordData) =>
-    axios.post(`${API_URL}/${username}/change-password`, passwordData),
+    axios.put(`${API_URL}/${username}/change-password`, passwordData),
 };
 
 export default UserService;
