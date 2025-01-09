@@ -37,7 +37,7 @@ const UserService = {
     let currentUser = JSON.parse(currentUserData || "{}");
 
     currentUser.isAdmin = currentUser.role === 'Admin';
-    currentUser.isCanteenManager = currentUser.role === 'Manager' && currentUser.department === 'canteen';
+    currentUser.isCanteenManager = currentUser.role === 'Manager' && currentUser.department === 'Canteen';
     currentUser.isHRManager = currentUser.role === 'Manager' && currentUser.department === 'Human Resources';
     currentUser.isITManager = currentUser.role === 'Manager' && currentUser.department === 'Information Technology';
     currentUser.isFinManager = currentUser.role === 'Manager' && currentUser.department === 'Finance';
