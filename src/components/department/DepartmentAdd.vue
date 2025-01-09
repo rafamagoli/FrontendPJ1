@@ -51,20 +51,14 @@ export default {
         name: "",
         canteenDiscount: 0,
       },
-      formattedDiscount: "0%", // For UI-friendly display
+      formattedDiscount: "0%",
     };
   },
   methods: {
-    /**
-     * Cancel button: Redirects to department list
-     */
     cancel() {
       this.$router.push("/department/list");
     },
 
-    /**
-     * Formats the discount input and updates the `canteenDiscount` property
-     */
     formatDiscount(event) {
       const value = event.target.value.replace(/[^0-9]/g, "");
 
@@ -79,24 +73,18 @@ export default {
       this.department.canteenDiscount = numericValue;
     },
 
-    /**
-     * Creates a new department by calling the API
-     */
     async createDepartment() {
       try {
-        // Validate department name
         if (!this.department.name.trim()) {
           alert("Department name is required.");
           return;
         }
 
-        // Validate discount range
         if (this.department.canteenDiscount < 0 || this.department.canteenDiscount > 100) {
           alert("Canteen discount must be between 0 and 100.");
           return;
         }
 
-        // Prepare data for the API
         const departmentData = {
           name: this.department.name.trim(),
           canteenDiscount: this.department.canteenDiscount,
@@ -104,10 +92,8 @@ export default {
 
         console.log("Payload being sent:", departmentData);
 
-        // Call the API to create the department
         await DepartmentService.createDepartment(departmentData);
 
-        // Notify user of success and redirect to the department list
         alert("Department created successfully!");
         this.$router.push("/department/list");
       } catch (error) {
