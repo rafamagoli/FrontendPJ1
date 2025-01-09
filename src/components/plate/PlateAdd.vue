@@ -16,7 +16,7 @@ export default {
         ingredients: [],
       },
       availableIngredients: [],
-      plateTypes: ["Meat", "Fish", "Vegetarian"],
+      plateTypes: ["Chicken","Meat", "Fish", "Vegetarian"],
     };
   },
   async created() {
